@@ -1,0 +1,86 @@
+<div class="container">
+    <h1 class="mt-4">Product Details Upload</h1>
+    <form>
+
+        <div class="form-group">
+            <label for="setupOption">Setup Option</label>
+            <select class="form-control" id="setupOption" name="setupOption" [(ngModel)]="setupOption">
+                <option value="SliderShow">Main Slider Show </option>
+                <option value="catergories">Catergories</option>
+                <option value="product">Add product</option>
+                <option value="products">Add products</option>
+
+            </select>
+        </div>
+        <div *ngIf="setupOption == 'catergories' ">
+            <div class="form-group">
+                <label for="productName">Title</label>
+                <input type="text" class="form-control" id="productName" name="title" placeholder="Enter title" [(ngModel)]="title">
+            </div>
+
+            <div class="form-group">
+                <label for="productImage">Product Image</label>
+                <input type="file" class="form-control-file" id="productImage" name="productImage" (change)="onFileSelected($event)">
+            </div>
+        </div>
+
+        <div *ngIf="setupOption == 'product' ">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" [(ngModel)]="title">
+            </div>
+            <div class="form-group">
+                <label for="subTitle">Sub Title</label>
+                <input type="text" class="form-control" id="subTitle" name="title" placeholder="Enter subTitle" [(ngModel)]="subTitle">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" class="form-control" id="description" name="description" placeholder="Enter description" [(ngModel)]="description">
+            </div>
+            <div class="form-group">
+                <label for="label">Label</label>
+                <input type="text" class="form-control" id="label" name="label" placeholder="Enter label" [(ngModel)]="label">
+            </div>
+
+            <div class="form-group">
+                <label for="size">Size</label>
+                <input type="text" class="form-control" id="productPrice" name="size" placeholder="Enter size" [(ngModel)]="size">
+            </div>
+
+            <div class="form-group">
+                <label for="type">Type</label>
+                <input type="text" class="form-control" id="type" name="type" placeholder="Enter type" [(ngModel)]="type">
+            </div>
+
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" id="price" name="price" placeholder="Enter price" [(ngModel)]="price">
+            </div>
+           
+            <div class="form-group">
+                <label for="productImage">Product Image</label>
+                <input type="file" class="form-control-file" id="productImage" name="productImage" (change)="onFileSelected($event)">
+            </div>
+        </div>
+        <div *ngIf="setupOption == 'SliderShow' ">
+            <div class="form-group">
+                <label for="productName">Title</label>
+                <input type="text" class="form-control" id="productName" name="title" placeholder="Enter title" [(ngModel)]="title">
+            </div>
+            <div class="form-group">
+                <label for="productDescription">Sub Title</label>
+                <textarea class="form-control" id="productDescription" name="subTitle" rows="3" placeholder="Enter Sub Title" [(ngModel)]="subTitle"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="productPrice">Content</label>
+                <input type="text" class="form-control" id="productPrice" name="content" placeholder="Enter Content" [(ngModel)]="contant">
+            </div>
+           
+            <div class="form-group">
+                <label for="productImage">Product Image</label>
+                <input type="file" class="form-control-file" id="productImage" name="productImage" (change)="onFileSelected($event)">
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="uploadProduct()">Submit</button>
+    </form>
+</div>

@@ -1,1 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
+  /* For mobile devices */
+  @media (max-width: 767px) {
+    .carousel-indicators {
+        display: none !important; /* Hide the indicators on mobile devices */
+
+    }
+    .h1 {
+        font-size: 20px !important;
+        font-weight :300 !important;
+    }
+    .h2 {
+        font-size: 15px !important;
+        font-weight :bold !important;
+
+    }
+    .h5 {
+        font-size: 15px !important;
+    }
+    p {
+        font-size: 15px !important;
+    }
+
+    .carousel-inner .main-slider-show {
+        height: 250px !important; /* Set your desired height */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        font-size: 10px !important;  /* Adjust the font size of the arrows */
+    }
+
+}
+
+
+
+
+/* For tablets and iPads */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .carousel-inner .main-slider-show {
+        height: 400px !important; /* Set your desired height */
+    }
+}

@@ -1,0 +1,339 @@
+
+
+    <!-- Modal -->
+    <div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+          <div class="w-100 pt-1 mb-5 text-right">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="" method="get" class="modal-content modal-body border-0 p-0">
+              <div class="input-group mb-2">
+                  <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ...">
+                  <button type="submit" class="input-group-text bg-success text-light">
+                      <i class="fa fa-fw fa-search text-white"></i>
+                  </button>
+              </div>
+          </form>
+      </div>
+  </div>
+
+
+  <div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel" (slide.bs.carousel)="resetAnimation()">
+    <ol class="carousel-indicators">
+      <li *ngFor="let item of products; let i = index" [attr.data-bs-target]="'#template-mo-zay-hero-carousel'" [attr.data-bs-slide-to]="i" [class.active]="i === 0"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div *ngFor="let item of products; let i = index" class="carousel-item main-slider-show" [class.active]="i === 0" [style.background-image]="'url(' + item.imageUrl + ')'" style="background-size: cover; height : 80vh">
+        <div class="container main-slider-text" style="margin-top: 18%; margin-left: 0%; align-content: flex-start;">
+          <div class="row ">
+            <div class="col-md-8 col-lg-6">
+              <div class="text-center ">
+                <h1 class="h1 fade-in" [innerHTML]="item.title"></h1>
+                <h3 class="h2 fade-in" [innerHTML]="item.subTitle"></h3>
+                <p class="fade-in" [innerHTML]="item.contant"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a class="carousel-control-prev text-decoration-none w-auto ps-3" href="#template-mo-zay-hero-carousel" role="button" data-bs-slide="prev">
+      <i class="fas fa-chevron-left"></i>
+    </a>
+    <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#template-mo-zay-hero-carousel" role="button" data-bs-slide="next">
+      <i class="fas fa-chevron-right"></i>
+    </a>
+</div>
+
+  
+  
+  
+  
+
+<div class="container py-5">
+  <div class="row text-center pt-3">
+    <div class="col-lg-6 m-auto">
+        <h1 class="h1">Categories of The Month</h1>
+        <p>
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+            deserunt mollit anim id est laborum.
+        </p>
+    </div>
+</div>
+  <div class="d-none d-md-block"> <!-- This will hide the carousel on small screens -->
+    <div id="categories-carousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div *ngFor="let categorie of categories; let i = index" class="carousel-item" [class.active]="i === 0">
+         
+            <div class="row justify-content-center text-center">
+              <div class="col-6 col-md-4 p-3 mt-3" *ngFor="let categorie of categories.slice(i, i + 3)">
+                <a [routerLink]="'/shop'"><img [src]="categorie.imageUrl" class="rounded-circle img-fluid border" 
+                style="max-height: 210px !important;
+                max-width: 170px !important;
+                min-width: 170px !important;
+                min-height: 210px !important;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"></a>
+                <h5 class="text-center mt-3 mb-3">{{ categorie.title }}</h5>
+                <p class="text-center"><a [routerLink]="'/shop'" class="btn btn-success">Go Shop</a></p>
+            </div>
+            </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#categories-carousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true" ></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#categories-carousel" data-bs-slide="next" >
+        <span class="carousel-control-next-icon" aria-hidden="true" ></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+  
+  <div class="row row-cols-1 row-cols-md-2 g-4 d-md-none"> <!-- This will display two items in a row on medium and larger screens -->
+
+
+    <div class="col-6 col-md-4 p-3 mt-3" *ngFor="let category of categories">
+      <a [routerLink]="'/shop'"><img [src]="category.imageUrl" class="rounded-circle img-fluid border" 
+      style="max-height: 210px !important;
+      max-width: 170px !important;
+      min-width: 170px !important;
+      min-height: 210px !important;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"></a>
+      <h5 class="text-center mt-3 mb-3">{{ category.title }}</h5>
+      <p class="text-center"><a [routerLink]="'/shop'" class="btn btn-success">Go Shop</a></p>
+  </div>
+    
+  </div>
+  
+  
+  
+</div>
+  <!-- Start Categories of The Month -->
+<!--   
+  <section class="container py-5">
+    <div class="row text-center pt-3">
+        <div class="col-lg-6 m-auto">
+            <h1 class="h1">Categories of The Month</h1>
+            <p>
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                deserunt mollit anim id est laborum.
+            </p>
+        </div>
+    </div>
+<div class="row justify-content-center text-center">
+    <div class="col-6 col-md-4 p-3 mt-3" *ngFor="let category of categories">
+        <a [routerLink]="'/shop'"><img [src]="category.imageUrl" class="rounded-circle img-fluid border" style="max-height: 200px;"></a>
+        <h5 class="text-center mt-3 mb-3">{{ category.title }}</h5>
+        <p class="text-center"><a [routerLink]="'/shop'" class="btn btn-success">Go Shop</a></p>
+    </div>
+</div>
+
+</section> -->
+
+
+
+
+
+
+
+
+  <!-- End Categories of The Month -->
+
+  
+
+  <!-- Start Featured Product -->
+  <!-- <section class="bg-light">
+    <div class="container py-5">
+      <div class="row text-center py-3">
+        <div class="col-lg-6 m-auto">
+          <h1 class="h1">Featured Product</h1>
+          <p>Reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-4 mb-4" *ngFor="let product of featuredProducts">
+          <div class="card h-100">
+            <a routerLink="/product"><img [src]="product.image" class="card-img-top" alt="..."></a>
+            <div class="card-body">
+              <ul class="list-unstyled d-flex justify-content-between">
+                <li>
+                  <i class="text-warning fa fa-star"></i>
+                  <i class="text-warning fa fa-star"></i>
+                  <i class="text-warning fa fa-star"></i>
+                  <i class="text-muted fa fa-star"></i>
+                  <i class="text-muted fa fa-star"></i>
+                </li>
+                <li class="text-muted text-right">${{ product.price }}</li>
+              </ul>
+              <a routerLink="/product" class="h2 text-decoration-none text-dark">{{ product.name }}</a>
+              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt in culpa qui officia deserunt.</p>
+              <p class="text-muted">Reviews ({{ product.reviews }})</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+
+  
+  <div class="container py-5">
+    <h1 class="h1 text-center mb-4 d-md-none">Featured Product</h1>
+    <div class="d-none d-md-block"> <!-- This will hide the carousel on small screens -->
+      <div id="featured-product-carousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div *ngFor="let product of featuredProducts; let i = index" class="carousel-item" [class.active]="i === 0">
+            <div class="container">
+              <div class="row row-cols-1 row-cols-md-3 g-4">
+                <ng-container *ngFor="let product of featuredProducts.slice(i, i + 3)">
+                  <div class="col">
+                    <div class="card h-100">
+                      <a routerLink="/product"><img [src]="product.image" class="card-img-top" alt="..."></a>
+                      <div class="card-body">
+                        <ul class="list-unstyled d-flex justify-content-between mb-2">
+                          <li>
+                            <i class="text-warning fa fa-star"></i>
+                            <i class="text-warning fa fa-star"></i>
+                            <i class="text-warning fa fa-star"></i>
+                            <i class="text-muted fa fa-star"></i>
+                            <i class="text-muted fa fa-star"></i>
+                          </li>
+                          <li class="text-muted">${{ product.price }}</li>
+                        </ul>
+                        <a routerLink="/product" class="h2 text-decoration-none text-dark mb-2">{{ product.name }}</a>
+                        <p class="text-muted mb-0">Reviews ({{ product.reviews }})</p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#featured-product-carousel" data-bs-slide="prev" style="color: aqua;">
+          <span class="carousel-control-prev-icon" aria-hidden="true" style="color: black;"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#featured-product-carousel" data-bs-slide="next" style="color: aqua;">
+          <span class="carousel-control-next-icon" aria-hidden="true" style="color: black;"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-md-2 g-4 d-md-none"> <!-- This will display two items in a row on medium and larger screens -->
+  
+
+      <div class="col-md-4 col-6" *ngFor="let product of products2">
+        <div class="card mb-4 product-wap rounded-0">
+          <div class="card rounded-0">
+            <img class="card-img rounded-0 img-fluid" [src]="product.image">
+            <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+              <ul class="list-unstyled">
+                <li><a class="btn btn-success text-white" href="shop-single.html"><i class="far fa-heart"></i></a></li>
+                <li><a class="btn btn-success text-white mt-2" routerLink="/product"><i class="far fa-eye"></i></a></li>
+                <li><a class="btn btn-success text-white mt-2" href="shop-single.html"><i class="fas fa-cart-plus"></i></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="card-body">
+            <a href="shop-single.html" class="h3 text-decoration-none">{{ product.name }}</a>
+            <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+              <li>M/L/X/XL</li>
+              <li class="pt-2">
+                <span *ngFor="let color of product.colors" class="product-color-dot float-left rounded-circle ml-1" [ngStyle]="{'background-color': color}"></span>
+              </li>
+            </ul>
+            <ul class="list-unstyled d-flex justify-content-center mb-1">
+              <li>
+                <i *ngFor="let star of product.stars" class="text-warning fa fa-star"></i>
+                <i *ngFor="let emptyStar of product.emptyStars" class="text-muted fa fa-star"></i>
+              </li>
+            </ul>
+            <p class="text-center mb-0">{{ product.price }}</p>
+          </div>
+        </div>
+      </div>
+
+      
+    </div>
+    
+    
+    
+  </div>
+  
+  
+  
+  
+  
+  
+
+  <!-- <div id="featured-product-carousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div *ngFor="let product of featuredProducts; let i = index" class="carousel-item" [class.active]="i === 0">
+        <div class="container py-5">
+          <div class="row text-center py-3">
+            <div class="col-lg-6 m-auto">
+              <h1 class="h1">Featured Product</h1>
+              <p>Reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+            </div>
+          </div>
+          <div class="row">
+            <ng-container *ngFor="let product of featuredProducts.slice(i, i + 3); let j = index">
+              <div class="col-12 col-md-4 mb-4">
+                <div class="card h-100">
+                  <a routerLink="/product"><img [src]="product.image" class="card-img-top" alt="..."></a>
+                  <div class="card-body">
+                    <ul class="list-unstyled d-flex justify-content-between">
+                      <li>
+                        <i class="text-warning fa fa-star"></i>
+                        <i class="text-warning fa fa-star"></i>
+                        <i class="text-warning fa fa-star"></i>
+                        <i class="text-muted fa fa-star"></i>
+                        <i class="text-muted fa fa-star"></i>
+                      </li>
+                      <li class="text-muted text-right">${{ product.price }}</li>
+                    </ul>
+                    <a routerLink="/product" class="h2 text-decoration-none text-dark">{{ product.name }}</a>
+                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt in culpa qui officia deserunt.</p>
+                    <p class="text-muted">Reviews ({{ product.reviews }})</p>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#featured-product-carousel" data-bs-slide="prev" style="color: aqua;">
+        <span class="carousel-control-prev-icon" aria-hidden="true" style="color: black;"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#featured-product-carousel" data-bs-slide="next" style="color: aqua;">
+        <span class="carousel-control-next-icon" aria-hidden="true" style="color: black;"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+</div> -->
+
+  
+  
+  
+  
+  
+  <!-- End Featured Product -->
+<app-footer></app-footer>
+ <!-- Start Script -->
+ <script src="assets/js/jquery-1.11.0.min.js"></script>
+ <script src="assets/js/jquery-migrate-1.2.1.min.js"></script>
+ <script src="assets/js/bootstrap.bundle.min.js"></script>
+ <script src="assets/js/templatemo.js"></script>
+ <script src="assets/js/custom.js"></script>
+ <!-- End Script -->
+
+ <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var myCarousel = document.getElementById('template-mo-zay-hero-carousel');
+      var carousel = new bootstrap.Carousel(myCarousel);
+    });
+  </script>

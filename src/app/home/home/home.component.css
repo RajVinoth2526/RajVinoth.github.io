@@ -1,0 +1,55 @@
+.carousel-control-prev-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%230d522f' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+    width: 20px; /* Set the width */
+    height: 50px; 
+
+}
+
+.carousel-control-next-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%230d522f' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+    width: 20px; /* Set the width */
+    height: 50px; 
+}
+
+
+
+@media (min-width: 768px) {
+    #carouselExampleControls {
+        display: none; /* Hide carousel on medium and larger screens */
+    }
+}
+
+@media (max-width: 767px) {
+  .main-slider-text{
+    margin-top: 20% !important;
+    margin-left: -100px !important;
+    align-self: flex-start !important;
+  }
+
+}
+
+
+/* Define fade-in animation */
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Apply fade-in animation to elements with the "fade-in" class */
+.fade-in {
+    animation: fade-in 3s ease-in-out; 
+}
+
+
+/* For tablets and iPads */
+@media (min-width: 768px) and (max-width: 1024px) {
+   .main-slider-text{
+    margin-top: 15% !important;
+   }
+}
+
+
+
+  
+
+
