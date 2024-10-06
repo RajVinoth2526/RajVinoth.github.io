@@ -1,0 +1,18 @@
+/* Height for medium screens and above */
+@media (min-width: 768px) {
+    .img-fluid-3 {
+        height: 350px !important; /* Adjust this value as needed for medium screens */
+    }
+}
+
+/* Height for large screens and above */
+@media (min-width: 992px) {
+    .img-fluid-3 {
+        height: 500px !important; /* Adjust this value as needed for large screens */
+    }
+}
+
+.img-fluid-3{
+    /* min-height: 350px !important; */
+    height: 220px;
+}

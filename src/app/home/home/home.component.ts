@@ -2,7 +2,9 @@ import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
+import { DataService } from 'src/app/service/dataService/data.service';
 // carousel-item.model.ts
 export interface CarouselItem {
   imgSrc: string;
@@ -17,8 +19,11 @@ export interface CarouselItem {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  products : any[] = [];
-  categories : any = [
+  products: any = [];
+  Categories: any = [];
+  mainSliders: any = [];
+  isAdmin: boolean = true;
+  categories: any = [
     // { name: 'Dresses', image: './assets/img/category_img_01.jpg' },
     // { name: 'Shoes', image: './assets/img/category_img_02.jpg' },
     // { name: 'Accessories', image: './assets/img/category_img_03.jpg' },
@@ -42,12 +47,12 @@ export class HomeComponent implements OnInit {
       price: '$300.00'
     },
     {
-    name: 'Product 3',
-    image: 'assets/img/shop_03.jpg',
-    colors: ['#00ff00', '#ffff00', '#ff00ff'], // Example colors
-    stars: [1, 2, 3],
-    emptyStars: [1, 2],
-    price: '$300.00'
+      name: 'Product 3',
+      image: 'assets/img/shop_03.jpg',
+      colors: ['#00ff00', '#ffff00', '#ff00ff'], // Example colors
+      stars: [1, 2, 3],
+      emptyStars: [1, 2],
+      price: '$300.00'
     },
     {
       name: 'Product 4',
@@ -74,12 +79,12 @@ export class HomeComponent implements OnInit {
       price: '$300.00'
     },
     {
-    name: 'Product 7',
-    image: 'assets/img/shop_07.jpg',
-    colors: ['#00ff00', '#ffff00', '#ff00ff'], // Example colors
-    stars: [1, 2, 3],
-    emptyStars: [1, 2],
-    price: '$300.00'
+      name: 'Product 7',
+      image: 'assets/img/shop_07.jpg',
+      colors: ['#00ff00', '#ffff00', '#ff00ff'], // Example colors
+      stars: [1, 2, 3],
+      emptyStars: [1, 2],
+      price: '$300.00'
     },
     {
       name: 'Product 8',
@@ -122,20 +127,36 @@ export class HomeComponent implements OnInit {
 
   itemsPerRow: number = 2;
   constructor(
+    private dataService: DataService,
+    private router: Router,
     private firestore: AngularFirestore,
-    private renderer: Renderer2, 
-    private elementRef: ElementRef
+    private renderer: Renderer2,
+    private elementRef: ElementRef,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
-    this.firestore.collection('products').doc('SlideShow').collection('SlideShow').valueChanges().subscribe((data) => {
-      this.products = data;
+    //this.fetchData();
+    this.dataService.mainSliderData.subscribe((sliders : any) => {
+      if (sliders === null) return
+      
+      this.mainSliders = sliders;
+
     });
 
-    this.firestore.collection('products').doc('catergories').collection('catergories').valueChanges().subscribe((data) => {
-      this.categories = data;
-    });
+    this.dataService.categoryData.subscribe((category : any) => {
+      if (category === null) return
+      
+      this.categories = category;
 
+    })
+
+    this.dataService.productsData.subscribe((products : any) => {
+      if (products === null) return
+      
+      this.products = products;
+
+    })
     
 
   }
@@ -143,12 +164,19 @@ export class HomeComponent implements OnInit {
   resetAnimation() {
     // Toggle the 'fade-in' class to reset animation
     const elements = this.elementRef.nativeElement.querySelectorAll('.fade-in');
-    elements.forEach ((element : HTMLElement)  => {
+    elements.forEach((element: HTMLElement) => {
       this.renderer.removeClass(element, 'fade-in');
       setTimeout(() => {
         this.renderer.addClass(element, 'fade-in');
       }, 10); // Delay to trigger reapply animation
     });
   }
+
+  navigateWithObject(product: any) {
+    this.router.navigate(['/product'], {
+      state: { objectData: product }
+    });
+  }
+
 
 }

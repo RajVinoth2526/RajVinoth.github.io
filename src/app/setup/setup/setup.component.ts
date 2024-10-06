@@ -1,86 +1,261 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { v4 as uuidv4 } from 'uuid';
+import { ToastrService } from 'ngx-toastr';  
+export const Categories= [
+  {
+      category : 'Male',
+      id : 1
+  },
+  {
+      category : 'Girl',
+      id : 2
+  },
+  {
+      category : 'Shoe',
+      id : 3
+  },
+  {
+      category : 'Accessories',
+      id : 4
+  }
+];
+
 @Component({
   selector: 'app-setup',
   templateUrl: './setup.component.html',
   styleUrls: ['./setup.component.css']
 })
 export class SetupComponent implements OnInit {
-
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  selectedFiles: any [] = [];
+  showSelectedFiles: any [] = [];
+  selectedIndex: number = 0;
   title: string = '';
   subTitle: string = '';
   contant: string = '';
   selectedFile!: File;
   setupOption: string = '';
-  price : number = 0;
-  size : string = '';
-  label : string = '';
-  description : string = '';
-  type : string = '';
-  constructor( private firestore: AngularFirestore,
+  price: number = 0;
+  size: string = '';
+  label: string = '';
+  description: string = '';
+  categoryId: number = 0;
+
+  constructor(private firestore: AngularFirestore,
     private db: AngularFireDatabase,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService,
     private storage: AngularFireStorage) { }
   ngOnInit(): void {
   }
+  onFilesDropped(event: any): void {
 
-  onFileSelected(event : any): void {
-    if (event.target.files && event.target.files.length > 0) {
-      this.selectedFile = event.target.files[0];
+    if((this.setupOption == 'catergories' || this.setupOption == 'SliderShow' ) && this.selectedFiles.length == 1) {
+      event.preventDefault();
+      this.toastr.warning('Can not add more than one image !');
+      return
+    } else {
+      event.preventDefault();
+      const files = event.dataTransfer.files;
+      this.handleFiles(files);
+    }
+  
+  }
+
+  onDragOver(event: any): void {
+    event.preventDefault();
+  }
+
+  onFilesSelected(event: any): void {
+    if((this.setupOption == 'catergories' || this.setupOption == 'SliderShow' ) && this.selectedFiles.length == 1) {
+      return
+    } else {
+      const files = event.target.files;
+      this.handleFiles(files);
+    }
+   
+  }
+
+  private handleFiles(files: FileList): void {
+    for (let i = 0; i < files.length; i++) {
+      this.selectedFiles.push(files[i]);
+      const file = files[i];
+      const fileName = file.name; // Get the file name
+      this.readFile(file, fileName); // Pass both file and file name to readFile
+
+   //   const file = files[i];
+   // const reader = new FileReader();
+
+    // reader.onload = (e: any) => {
+    //   const img = new Image();
+    //   img.onload = () => {
+    //     const canvas = document.createElement('canvas');
+    //     const ctx = canvas.getContext('2d')!;
+    //     canvas.width = 600;
+    //     canvas.height = 800;
+    //     ctx.drawImage(img, 0, 0, 600, 800);
+    //     canvas.toBlob((blob) => {
+    //       const resizedFile = new File([blob!], file.name, { type: 'image/jpeg', lastModified: Date.now() });
+    //       // Now you can use `resizedFile` as the resized image
+    //       this.selectedFiles.push(resizedFile);
+    //     }, 'image/jpeg');
+    //   };
+    //   img.src = e.target.result;
+    // };
+
+    //reader.readAsDataURL(file);
+    }
+  }
+  private readFile(file: File, fileName: string): void {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const fileContent = e.target.result;
+      // Now you have both the file name and content, you can handle them as needed
+      this.showSelectedFiles.push({ name: fileName, content: fileContent });
+    };
+    reader.readAsDataURL(file);
+  }
+  deselectImage(index: number): void {
+    this.showSelectedFiles.splice(index, 1);
+    this.selectedFiles.splice(index, 1);
+
+  }
+  // onFilesSelected(event: any) {
+  //   const files: FileList = event.target.files;
+  //   for (let i = 0; i < files.length; i++) {
+  //     this.selectedFiles.push(files[i]);
+  //   }
+  // }
+
+  openImagePicker() {
+    // Trigger click event on the input element to open the file picker dialog
+    const fileInput = document.getElementById('fileInput');
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  selectImage(index: number) {
+    if (this.selectedIndex === index) {
+      this.selectedIndex = -1; // Deselect if already selected
+    } else {
+      this.selectedIndex = index;
     }
   }
 
 
-    async uploadProduct(): Promise<void> {
-      // Step 1: Upload image to Firebase Storage
-      if (!this.selectedFile) {
-        console.error('No file selected.');
-        return;
-      }
-  
-      const filePath = `product-images/${Date.now()}_${this.selectedFile.name}`;
-      const fileRef = this.storage.ref(filePath);
-      const task = this.storage.upload(filePath, this.selectedFile);
-  
-      // Step 2: Get the download URL of the uploaded image
-      const imageUrl = await task.snapshotChanges().toPromise().then(async () => {
+  openFileInput(): void {
+    this.fileInput.nativeElement.click(); // Access nativeElement to trigger click event
+  }
+
+   findCategoryById(id: number) {
+    for (let i = 0; i < Categories.length; i++) {
+        if (Categories[i].id == id) {
+            return Categories[i];
+        }
+    }
+    return null; // Return null if no category with the given id is found
+}
+
+
+
+  async uploadProduct(): Promise<void> {
+    // Step 1: Upload image to Firebase Storage
+    this.spinner.show();
+   let imageURLs : any [] = [];
+   const promises = this.selectedFiles.map(async (img) => {
+    const filePath = `product-images/${Date.now()}_${img.name}`;
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, img);
+
+    // Get the download URL of the uploaded image
+    const imageUrl = await task.snapshotChanges().toPromise().then(async () => {
         return await fileRef.getDownloadURL().toPromise();
-      }).catch(error => {
+    }).catch(error => {
         console.error('Error uploading image:', error);
         throw error;
+    });
+
+    return imageUrl;
+});
+   // Wait for all promises to resolve
+   const resolvedURLs = await Promise.all(promises);
+   imageURLs.push(...resolvedURLs);
+
+
+    // Step 3: Save product details to Firebase Firestore
+
+    if (this.setupOption == 'catergories') {
+      
+      const productId = uuidv4();
+      this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).doc(productId).set({
+        title: this.title,
+        category : this.findCategoryById(this.categoryId),
+        imageUrl: imageURLs,
+        productId : productId
+
+      }).then(() => {
+        this.spinner.hide();
+        this.selectedFiles = [];
+        this.showSelectedFiles = [];
+        this.toastr.success(this.setupOption + 'details uploaded successfully.');
+        console.log('Product details uploaded successfully.');
+      }).catch(error => {
+        this.spinner.hide();
+        this.toastr.warning(error);
+        console.error('Error uploading product details:', error);
       });
-  
-      // Step 3: Save product details to Firebase Firestore
 
-      if(this.setupOption == 'catergories') {
-       
-        this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).add({
-          title: this.title,
-          imageUrl: imageUrl
-        
-        }).then(() => {
-          console.log('Product details uploaded successfully.');
-        }).catch(error => {
-          console.error('Error uploading product details:', error);
-        });
-      } else {
-        this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).add({
-          title: this.title,
+    } else if(this.setupOption == 'SliderShow') {
+      // Inside your component:
+      const productId = uuidv4();
+      this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).doc(productId).set({
+        title: this.title,
         subTitle: this.subTitle,
+        category : this.findCategoryById(this.categoryId),
         contant: this.contant,
-        imageUrl: imageUrl
-        
-        }).then(() => {
-          console.log('Product details uploaded successfully.');
-        }).catch(error => {
-          console.error('Error uploading product details:', error);
-        });
-        
-      }
-      
-      
-    }
-  
+        imageUrl: imageURLs,
+        productId : productId
 
+      }).then(() => {
+        this.spinner.hide();
+        this.selectedFiles = [];
+        this.showSelectedFiles = [];
+        this.toastr.success(this.setupOption + 'details uploaded successfully.');
+        console.log('Product details uploaded successfully.');
+      }).catch(error => {
+        this.spinner.hide();
+        this.toastr.warning(error);
+        console.error('Error uploading product details:', error);
+      });
+    } else if(this.setupOption == 'product') {
+      const productId = uuidv4();
+      this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).doc(productId).set({
+        title: this.title,
+        subTitle: this.subTitle,
+        label : this.label,
+        size : this.size,
+        description : this.description,
+        price : this.price,
+        category : this.findCategoryById(this.categoryId),
+        imageUrl: imageURLs,
+        productId : productId
+
+      }).then(() => {
+        this.spinner.hide();
+        this.selectedFiles = [];
+        this.showSelectedFiles = [];
+        this.toastr.success(this.setupOption + ' details uploaded successfully.');
+        console.log('Product details uploaded successfully.');
+      }).catch(error => {
+        this.spinner.hide();
+        this.toastr.warning(error);
+        console.error('Error uploading product details:', error);
+      });
+    }
+  } 
 }

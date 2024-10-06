@@ -69,11 +69,12 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h5 class="modal-title" id="authModalLabel">Welcome to X mart</h5>
+                <h5 *ngIf="!currentUser" class="modal-title" id="authModalLabel">Welcome to X mart</h5>
+                <h5 *ngIf="currentUser" class="modal-title" id="authModalLabel">{{loginUserDetails.firstName}} {{loginUserDetails.lastName}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- Modal Body with Tabs -->
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="!currentUser">
                 <ul class="nav nav-tabs" id="authTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="signIn-tab" data-bs-toggle="tab" data-bs-target="#signIn"
@@ -225,7 +226,8 @@
             </div>
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button *ngIf="!currentUser" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button *ngIf="currentUser" type="button" class="btn btn-secondary" (click)="signOut()">Sign Out</button>
             </div>
         </div>
     </div>
@@ -234,3 +236,6 @@
 <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-scale-multiple">
     <p style="color: white"> Loading... </p>
 </ngx-spinner>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

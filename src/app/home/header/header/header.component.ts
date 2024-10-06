@@ -7,16 +7,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { User } from 'firebase/auth';
+import { User as loginUser } from 'src/app/Model/x-mart.model';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
+
 export class HeaderComponent implements OnInit {
   signInForm!: FormGroup;
   signUpForm!: FormGroup;
   user$!: Observable<any>;
+  currentUser: any;
+  loginUserDetails: any;
 
   constructor(private dataService: DataService,
     private firestore: AngularFirestore,
@@ -30,6 +35,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchData();
+    this.getUser();
     this.signInForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]], // Corrected form control name
       password: ['', [Validators.required]], // Corrected form control name
@@ -51,6 +57,40 @@ export class HeaderComponent implements OnInit {
 
   }
 
+  getUser() {
+    this.afAuth.authState.subscribe(user => {
+      if (user === null || user === undefined) return;
+
+      this.currentUser = user;
+
+      this.firestore.collection('users').doc(user.uid).valueChanges().subscribe((data) => {
+        if (data == null) return;
+
+        this.loginUserDetails = data as loginUser; // Use 'as' to assert the type
+      });
+    });
+  }
+
+  signOut() {
+    this.afAuth.signOut().then(() => {
+      console.log('User signed out successfully');
+      this.currentUser = null;
+
+      setTimeout(() => {
+        this.setSignInTab();
+      }, 300);
+    }).catch((error) => {
+      console.error('Error signing out:', error);
+    });
+  }
+
+  private setSignInTab() {
+    const signInTab = document.getElementById('signIn-tab') as HTMLElement;
+    if (signInTab) {
+      signInTab.click(); // This simulates a click on the Sign In tab to activate it
+    }
+  }
+
   async fetchData() {
     try {
       this.spinner.show();
@@ -64,7 +104,7 @@ export class HeaderComponent implements OnInit {
 
 
       const cacheKey = 'cache_timestamp';
-      const cacheTTL = 1000 * 60 * 10; // 1 hour in milliseconds
+      const cacheTTL = 1000 * 60 * 0; // 1 hour in milliseconds
 
       const cachedTimestamp = localStorage.getItem(cacheKey);
       const isCacheValid = cachedTimestamp && (Date.now() - parseInt(cachedTimestamp)) < cacheTTL;
@@ -136,7 +176,7 @@ export class HeaderComponent implements OnInit {
 
     try {
       this.spinner.show();
-      const { email, password } = this.signUpForm.value;
+      const { email, password } = this.signInForm.value;
       const result = await this.afAuth.signInWithEmailAndPassword(email, password);
       if (result) {
         this.toastr.success('Login Successfully');
@@ -175,6 +215,7 @@ export class HeaderComponent implements OnInit {
         state,
         postalCode,
       });
+      this.getUser();
       this.spinner.hide();
       this.toastr.success('SignUp Successfully');
 

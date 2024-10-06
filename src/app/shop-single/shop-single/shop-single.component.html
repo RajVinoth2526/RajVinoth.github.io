@@ -20,12 +20,12 @@
 
 
 <!-- Open Content -->
-<section class="bg-light">
+<section class="bg-light" #targetElement>>
     <div class="container pb-5">
         <div class="row">
             <div class="col-lg-5 mt-5">
                 <div class="card mb-3">
-                    <img class="card-img img-fluid" [src]="selectedImageSrc" [alt]="selectedImageAlt" id="product-detail">
+                    <img class="card-img img-fluid" [src]="selectedImageSrc"  id="product-detail">
                 </div>
                 <div class="row">
                     <!--Start Controls-->
@@ -45,8 +45,8 @@
                                 <div class="row">
                                     <!-- Individual Items -->
                                     <div *ngFor="let item of slide" class="col-4">
-                                        <a href="#" (click)="updateSelectedImage(item.src, item.alt)">
-                                            <img class="card-img img-fluid" [src]="item.src" [alt]="item.alt">
+                                        <a href="#" (click)="updateSelectedImage(item, item.alt)">
+                                            <img class="card-img img-fluid" [src]="item" [alt]="item.alt">
                                         </a>
                                     </div>
                                 </div>
@@ -168,11 +168,11 @@
             <div class="col-md-4 col-6" *ngFor="let product of products">
               <div class="card mb-4 product-wap rounded-0">
                 <div class="card rounded-0">
-                  <img class="card-img rounded-0 img-fluid" [src]="product.image">
+                  <img class="card-img rounded-0 img-fluid-3" [src]="product.imageUrl[0]">
                   <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                     <ul class="list-unstyled">
                       <li><a class="btn btn-success text-white" href="shop-single.html"><i class="far fa-heart"></i></a></li>
-                      <li><a class="btn btn-success text-white mt-2" routerLink="/product"><i class="far fa-eye"></i></a></li>
+                      <li><a class="btn btn-success text-white mt-2" (click)="navigateWithObject(product)"><i class="far fa-eye"></i></a></li>
                       <li><a class="btn btn-success text-white mt-2" href="shop-single.html"><i class="fas fa-cart-plus"></i></a></li>
                     </ul>
                   </div>
@@ -181,16 +181,8 @@
                   <a href="shop-single.html" class="h3 text-decoration-none">{{ product.name }}</a>
                   <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
                     <li>M/L/X/XL</li>
-                    <li class="pt-2">
-                      <span *ngFor="let color of product.colors" class="product-color-dot float-left rounded-circle ml-1" [ngStyle]="{'background-color': color}"></span>
-                    </li>
                   </ul>
-                  <ul class="list-unstyled d-flex justify-content-center mb-1">
-                    <li>
-                      <i *ngFor="let star of product.stars" class="text-warning fa fa-star"></i>
-                      <i *ngFor="let emptyStar of product.emptyStars" class="text-muted fa fa-star"></i>
-                    </li>
-                  </ul>
+                  
                   <p class="text-center mb-0">{{ product.price }}</p>
                 </div>
               </div>
