@@ -110,3 +110,6 @@ select {
     margin: auto; /* Center horizontally */
 }
 
+.theme-color {
+  color: var(--primary-color) !important;
+}

@@ -50,6 +50,10 @@
     color: #fff;
 }
 
+.theme-color {
+    color: #fff;;
+}
+
 @media (max-width: 768px) {
     .card-header h3 {
         font-size: 1.25rem;

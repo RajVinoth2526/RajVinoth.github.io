@@ -1,15 +1,15 @@
 <div class="container">
-    <h1 class="mt-4">Product Details Upload</h1>
+    <h1 class="mt-4 theme-color">Product Details Upload</h1>
     <form #productForm="ngForm">
 
         <div class="form-group">
-            <label for="setupOption">Setup Option</label>
+            <label for="setupOption" class="theme-color">Setup Option</label>
             <select class="form-control" id="setupOption" name="setupOption" [(ngModel)]="setupOption" required>
-                <option value="">Select Setup Option</option>
-                <option value="SliderShow">Main Slider Show</option>
-                <option value="catergories">Categories</option>
-                <option value="product">Add product</option>
-                <option value="products">Add products</option>
+                <option value="" class="theme-color" >Select Setup Option</option>
+                <option value="SliderShow" class="theme-color">Main Slider Show</option>
+                <option value="catergories" class="theme-color">Categories</option>
+                <option value="product" class="theme-color">Add product</option>
+                <option value="products" class="theme-color">Add products</option>
             </select>
         </div>
 
