@@ -20,7 +20,7 @@
 
 <div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel"
   (slide.bs.carousel)="resetAnimation()">
-  <ol class="carousel-indicators theme-color">
+  <ol class="carousel-indicators theme-color-carousel">
     <li *ngFor="let item of mainSliders; let i = index" [attr.data-bs-target]="'#template-mo-zay-hero-carousel'"
       [attr.data-bs-slide-to]="i" [class.active]="i === 0"></li>
   </ol>
@@ -68,19 +68,18 @@
           <a [routerLink]="'/shop'" class="image-container">
             <img [src]="categorie.imageUrl" class="img-fluid border">
             <div class="category-overlay">
-                <h5 *ngIf="!isAdmin" class="text-center mt-3 mb-3 theme-color">Shop Now</h5>     
-                <div *ngIf="isAdmin" class="center-buttons position-absolute bottom-1 start-50 translate-middle-x">
-                  <ul class="list-unstyled">
-                    <li><a class="btn btn-success text-white" href="shop-single.html"><i class="fas fa-trash"></i></a></li>
-                    <li><a class="btn btn-success text-white mt-2" routerLink="/product" ><i class="far fa-eye"></i></a></li>
-                    <li><a class="btn btn-success text-white mt-2" href="shop-single.html"><i class="fas fa-cart-plus"></i></a></li>
-                  </ul>
-                </div>
+              <h5 *ngIf="!isAdmin" class="text-center mt-3 mb-3">Shop Now</h5>     
+              <div *ngIf="isAdmin" class="center-buttons position-absolute bottom-1 start-50 translate-middle-x">
+                <ul class="list-unstyled">
+                  <li><a class="btn theme-color-button text-white" href="shop-single.html"><i class="fas fa-trash"></i></a></li>
+                  <li><a class="btn theme-color-button text-white mt-2" routerLink="/product"><i class="far fa-eye"></i></a></li>
+                  <li><a class="btn theme-color-button text-white mt-2" href="shop-single.html"><i class="fas fa-cart-plus"></i></a></li>
+                </ul>
+              </div>
             </div>
-           
-            </a>
-            <p class="text-center mt-3 mb-3">{{ categorie.title }}</p>
-            <p class="text-center"><a [routerLink]="'/shop'" class="btn btn-success theme-color-button">Go Shop</a></p>
+          </a>
+          <p class="text-center mt-3 mb-3 theme-color-secondary">{{ categorie.title }}</p>
+          <p class="text-center"><a [routerLink]="'/shop'" class="btn theme-color-button">Go Shop</a></p>
         </div>
       </div>
     </section>
@@ -275,7 +274,7 @@
 <section class="py-5">
     <div class="container">
         <div class="row text-left p-2 pb-3">
-            <h4>Related Products</h4>
+            <h4 class="theme-color-related-product">Related Products</h4>
         </div>
 
         <!--Start Carousel Wrapper-->
@@ -286,9 +285,9 @@
                   <img class="card-img rounded-0 img-fluid-2" [src]="product.imageUrl[0]">
                   <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                     <ul class="list-unstyled">
-                      <li><a class="btn btn-success text-white" href="shop-single.html"><i class="far fa-heart"></i></a></li>
-                      <li><a class="btn btn-success text-white mt-2" (click)="navigateWithObject(product)"><i class="far fa-eye"></i></a></li>
-                      <li><a class="btn btn-success text-white mt-2" href="shop-single.html"><i class="fas fa-cart-plus"></i></a></li>
+                      <li><a class="btn theme-color-button text-white" href="shop-single.html"><i class="far fa-heart"></i></a></li>
+                      <li><a class="btn theme-color-button text-white mt-2" (click)="navigateWithObject(product)"><i class="far fa-eye"></i></a></li>
+                      <li><a class="btn theme-color-button text-white mt-2" href="shop-single.html"><i class="fas fa-cart-plus"></i></a></li>
                     </ul>
                   </div>
                 </div>

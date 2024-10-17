@@ -112,3 +112,9 @@ input.ng-valid.ng-touched {
     border-color: var(--primary-color) !important; ;
 }
 
+/* Hover styles */
+.theme-color-button:hover {
+    color:var(--secondary-color) !important; /* Change to black on hover */
+    animation: pulse 0.6s ease; /* Apply pulse animation on hover */
+}
+
