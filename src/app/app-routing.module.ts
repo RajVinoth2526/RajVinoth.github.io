@@ -6,6 +6,7 @@ import { AboutComponent } from './about/about/about.component';
 import { ShopComponent } from './shop/shop/shop.component';
 import { ShopSingleComponent } from './shop-single/shop-single/shop-single.component';
 import { SetupComponent } from './setup/setup/setup.component';
+import { AdminProductOrderDetailsComponent } from './Order/admin-product-order-details/admin-product-order-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -14,7 +15,8 @@ const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'shop', component: ShopComponent },
   { path: 'product', component: ShopSingleComponent },
-  { path: 'setup', component: SetupComponent }
+  { path: 'setup', component: SetupComponent },
+  { path: 'Admin-order-details', component: AdminProductOrderDetailsComponent }
 
 
 

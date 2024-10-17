@@ -22,6 +22,7 @@ export class HeaderComponent implements OnInit {
   user$!: Observable<any>;
   currentUser: any;
   loginUserDetails: any;
+  theme:any;
 
   constructor(private dataService: DataService,
     private firestore: AngularFirestore,
@@ -30,7 +31,6 @@ export class HeaderComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private toastr: ToastrService,
   ) {
-
   }
 
   ngOnInit(): void {
@@ -100,7 +100,7 @@ export class HeaderComponent implements OnInit {
       let mainShowData = this.dataService.getMainSliderData();
       let categoriesData = this.dataService.getCategoryData();
       let Products = this.dataService.getProductsData();
-
+      let theme;
 
 
       const cacheKey = 'cache_timestamp';
@@ -140,11 +140,14 @@ export class HeaderComponent implements OnInit {
           });
         });
 
+        
+
 
         // Wait for all promises to resolve
         mainShowData = await sliderShowDataPromise;
         categoriesData = await categoriesDataPromise;
         Products = await getProductsPromise;
+       
 
         // Cache the data in dataService
         this.dataService.updateMainSliderData(mainShowData);
@@ -158,6 +161,20 @@ export class HeaderComponent implements OnInit {
         localStorage.setItem(cacheKey, Date.now().toString());
         this.spinner.hide();
       }
+
+      const getThemePromise = new Promise<any[]>((resolve, reject) => {
+        this.firestore.collection('Theme').valueChanges().subscribe({
+          next: (data) => resolve(data as any[]),
+          error: (err) => reject(err)
+        });
+      });
+      theme = await getThemePromise;
+      this.dataService.updateThemeColor(theme);
+      this.theme = this.dataService.getThemeColor()[0]
+      document.documentElement.style.setProperty('--primary-color', this.theme.primaryColor);
+      document.documentElement.style.setProperty('--secondary-color', this.theme.secondaryColor
+    );
+
 
       this.dataService.updateLoadingIndicator(false);
 

@@ -96,26 +96,7 @@ export class HomeComponent implements OnInit {
     }
     // Add more products as needed
   ];
-  carouselItems: CarouselItem[] = [
-    {
-      imgSrc: 'assets/img/banner_img_01.jpg',
-      title: 'Zay eCommerce',
-      subtitle: 'Tiny and Perfect eCommerce Template',
-      content: 'Zay Shop is an eCommerce HTML5 CSS template with latest version of Bootstrap 5 (beta 1). This template is 100% free provided by TemplateMo website. Image credits go to Freepik Stories, Unsplash and Icons 8.'
-    },
-    {
-      imgSrc: 'assets/img/banner_img_02.jpg',
-      title: 'Proident occaecat',
-      subtitle: 'Aliquip ex ea commodo consequat',
-      content: 'You are permitted to use this Zay CSS template for your commercial websites. You are not permitted to re-distribute the template ZIP file in any kind of template collection websites.'
-    },
-    {
-      imgSrc: 'assets/img/banner_img_03.jpg',
-      title: 'Repr in voluptate',
-      subtitle: 'Ullamco laboris nisi ut',
-      content: 'We bring you 100% free CSS templates for your websites. If you wish to support TemplateMo, please make a small contribution via PayPal or tell your friends about our website. Thank you.'
-    }
-  ];
+  
 
   featuredProducts = [
     { name: 'Gym Weight', image: './assets/img/feature_prod_01.jpg', price: 240, reviews: 24 },

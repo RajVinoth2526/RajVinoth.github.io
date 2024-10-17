@@ -63,10 +63,10 @@
 
 
 :root {
-    --primary-color: #966c0b;
+    --primary-color: #eeeeee;
     --secondary-color: #867909;
     --danger-color: #e74c3c;
-    --text-color: #484747;
+    --text-color: #000000;
     --background-color: #f8f9fa;
 }
 

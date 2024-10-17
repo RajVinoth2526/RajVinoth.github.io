@@ -13,14 +13,14 @@
         </button>
       </div>
     </form>
-  </div>
+  </div>  
 </div>
 
 <!--  Main Slider-->
 
 <div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel"
   (slide.bs.carousel)="resetAnimation()">
-  <ol class="carousel-indicators">
+  <ol class="carousel-indicators theme-color">
     <li *ngFor="let item of mainSliders; let i = index" [attr.data-bs-target]="'#template-mo-zay-hero-carousel'"
       [attr.data-bs-slide-to]="i" [class.active]="i === 0"></li>
   </ol>
@@ -46,14 +46,6 @@
       </div>
     </div>
   </div>
-  <a class="carousel-control-prev text-decoration-none w-auto ps-3" href="#template-mo-zay-hero-carousel" role="button"
-    data-bs-slide="prev">
-    <i class="fas fa-chevron-left"></i>
-  </a>
-  <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#template-mo-zay-hero-carousel" role="button"
-    data-bs-slide="next">
-    <i class="fas fa-chevron-right"></i>
-  </a>
 </div>
 
 
@@ -64,8 +56,8 @@
     <section class="container py-5">
       <div class="row text-center pt-3">
         <div class="col-lg-6 m-auto">
-          <h1 class="h1">Categories of The Month</h1>
-          <p>
+          <h1 class="h1 theme-color">Categories of The Month</h1>
+          <p class="theme-color-secondary">
             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
             deserunt mollit anim id est laborum.
           </p>
@@ -76,7 +68,7 @@
           <a [routerLink]="'/shop'" class="image-container">
             <img [src]="categorie.imageUrl" class="img-fluid border">
             <div class="category-overlay">
-                <h5 *ngIf="!isAdmin" class="text-center mt-3 mb-3">Shop Now</h5>     
+                <h5 *ngIf="!isAdmin" class="text-center mt-3 mb-3 theme-color">Shop Now</h5>     
                 <div *ngIf="isAdmin" class="center-buttons position-absolute bottom-1 start-50 translate-middle-x">
                   <ul class="list-unstyled">
                     <li><a class="btn btn-success text-white" href="shop-single.html"><i class="fas fa-trash"></i></a></li>
@@ -88,7 +80,7 @@
            
             </a>
             <p class="text-center mt-3 mb-3">{{ categorie.title }}</p>
-            <p class="text-center"><a [routerLink]="'/shop'" class="btn btn-success">Go Shop</a></p>
+            <p class="text-center"><a [routerLink]="'/shop'" class="btn btn-success theme-color-button">Go Shop</a></p>
         </div>
       </div>
     </section>

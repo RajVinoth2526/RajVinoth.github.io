@@ -1,15 +1,15 @@
-.carousel-control-prev-icon {
+ /* .carousel-control-prev-icon {
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%230d522f' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
-    width: 20px; /* Set the width */
+    width: 20px; 
     height: 50px; 
 
-}
+} 
 
 .carousel-control-next-icon {
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%230d522f' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
-    width: 20px; /* Set the width */
+    width: 20px; 
     height: 50px; 
-}
+} */
 
 
 
@@ -76,7 +76,7 @@
     padding: 5px;
     font-weight: bolder;
     font-family: 'Courier New', Courier, monospace;
-    background-color: rgb(27, 103, 33);
+    background-color: rgb(1, 9, 2);
     height: 40px;
     border-radius: 4px;
 }
@@ -113,7 +113,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(19, 64, 34, 0.5);
+    background-color: var(--secondary-color) !important;
     color: white;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -131,7 +131,7 @@
 }
 
 .shop-now {
-    background-color: #4e8a60; /* Add your desired background color */
+    background-color:  var(--primary-color) !important;; /* Add your desired background color */
     color: #fff; /* Set text color to contrast with background */
     border-radius: 15px; /* Add border radius for rounded corners */
     padding: 8px 20px; /* Add padding for better spacing */
@@ -141,7 +141,7 @@
 }
 
 .shop-now:hover {
-    background-color: #085e29; /* Change background color on hover */
+    background-color:  var(--secondary-color) !important;; /* Change background color on hover */
     transform: scale(1.05); /* Scale up slightly on hover */
 }
 
@@ -182,3 +182,36 @@
 .price-range input {
     width: 100%;
 }
+
+/* Default styles */
+.theme-color {
+    color: var(--primary-color) !important; /* Default color */
+    animation: none; /* Initial animation state */
+    transition: color 0.3s ease; /* Transition for color */
+}
+
+.theme-color-secondary{
+    color: var(--secondary-color) !important; /* Default color */
+}
+
+/* Keyframes for pulse animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Hover styles */
+.theme-color:hover {
+    color:var(--secondary-color) !important; /* Change to black on hover */
+    animation: pulse 0.6s ease; /* Apply pulse animation on hover */
+}
+
+
+

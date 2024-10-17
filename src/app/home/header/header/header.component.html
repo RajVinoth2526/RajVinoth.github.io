@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light shadow ">
     <div class="container d-flex justify-content-between align-items-center">
 
-        <a class="navbar-brand text-success logo h1 align-self-center" href="index.html">
+        <a class="navbar-brand theme-color logo h1 align-self-center">
             TEENAGE
         </a>
 
@@ -16,19 +16,19 @@
             <div class="flex-fill">
                 <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                     <li class="nav-item">
-                        <a class="nav-link" routerLink="/home">Home</a>
+                        <a class="nav-link theme-color" routerLink="/home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" routerLink="/about">About</a>
+                        <a class="nav-link theme-color" routerLink="/about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" routerLink="/shop">Shop</a>
+                        <a class="nav-link theme-color" routerLink="/shop">Shop</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" routerLink="/contact">Contact</a>
+                        <a class="nav-link theme-color" routerLink="/contact">Contact</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" routerLink="/setup">Setup</a>
+                        <a class="nav-link theme-color" routerLink="/setup">Setup</a>
                     </li>
                 </ul>
             </div>
@@ -45,7 +45,7 @@
                     data-bs-target="#templatemo_search">
                     <i class="fa fa-fw fa-search text-dark mr-2"></i>
                 </a>
-                <a class="nav-icon position-relative text-decoration-none" href="#">
+                <a class="nav-icon position-relative text-decoration-none" routerLink="/Admin-order-details">
                     <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
                     <span
                         class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
@@ -69,7 +69,7 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h5 *ngIf="!currentUser" class="modal-title" id="authModalLabel">Welcome to X mart</h5>
+                <h5 *ngIf="!currentUser" class="modal-title theme-color" id="authModalLabel">Welcome to X mart</h5>
                 <h5 *ngIf="currentUser" class="modal-title" id="authModalLabel">{{loginUserDetails.firstName}} {{loginUserDetails.lastName}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -108,7 +108,7 @@
                                     Please enter your password.
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100" [disabled]="signInForm.invalid">Sign
+                            <button type="submit" class="btn btn-primary w-100 theme-color-button" [disabled]="signInForm.invalid">Sign
                                 In</button>
                         </form>
                     </div>
@@ -216,7 +216,7 @@
                                     Please create a password.
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100" [disabled]="signUpForm.invalid">Sign
+                            <button type="submit" class="btn btn-primary w-100 theme-color-button" [disabled]="signUpForm.invalid">Sign
                                 Up</button>
                         </form>
                     </div>

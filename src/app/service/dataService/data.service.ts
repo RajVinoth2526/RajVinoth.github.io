@@ -18,6 +18,8 @@ export class DataService {
   public mainSliderData = new BehaviorSubject<any>(null);
   public categoryData = new BehaviorSubject<any>(null);
   public productsData = new BehaviorSubject<any>(null);
+  public themeColor = new BehaviorSubject<any>(null);
+
   public loadingIndicator = new BehaviorSubject<boolean>(false);
 
   private mainSliderDataCache: any[] = [];
@@ -37,6 +39,10 @@ export class DataService {
   // Method to update the BehaviorSubject
   updateMainSliderData(newData: any) {
     this.mainSliderData.next(newData);
+  }
+
+  updateThemeColor(newData: any) {
+    this.themeColor.next(newData);
   }
 
   updatecategoryData(newData: any) {
@@ -66,6 +72,10 @@ export class DataService {
       return JSON.parse(cachedData);
     }
     return [];
+  }
+
+  getThemeColor() {
+    return this.themeColor.value;
   }
   
   

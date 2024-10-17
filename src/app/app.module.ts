@@ -26,6 +26,7 @@ import { ConfirmationComponent } from './confirmation/confirmation/confirmation.
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AdminProductOrderDetailsComponent } from './Order/admin-product-order-details/admin-product-order-details.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +38,8 @@ import { MatInputModule } from '@angular/material/input';
     ShopComponent,
     ShopSingleComponent,
     SetupComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    AdminProductOrderDetailsComponent
   ],
   imports: [
     BrowserModule,
