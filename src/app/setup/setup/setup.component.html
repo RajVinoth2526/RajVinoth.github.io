@@ -38,24 +38,30 @@
             <!-- Category Image -->
             <div class="form-group" (drop)="onFilesDropped($event)" (dragover)="onDragOver($event)">
                 <label for="sliderShowImage">Product Images</label>
-                <input #fileInput type="file" class="form-control-file" id="sliderShowImage" name="productImage" (change)="onFilesSelected($event)"  style="display: none;">
-                <div class="drag-drop-area" style="text-align: center;">
-                    <p>Drag & drop images here</p>
-                    <i class="fas fa-plus"></i> 
-                    <!-- <button type="button" class="btn btn-primary" (click)="openFileInput()">Select Images</button> -->
+                
+                <!-- Hidden file input -->
+                <input #fileInput type="file" class="form-control-file" id="sliderShowImage" name="productImage" (change)="onFilesSelected($event)" multiple style="display: none;">
+                
+                <!-- Drag-and-drop area with a clickable area to select images -->
+                <div class="drag-drop-area" style="text-align: center;" (click)="fileInput.click()">
+                  <p>Drag & drop images here</p>
+                  <i class="fas fa-plus"></i>
+                  <p>or</p>
+                  <button type="button" class="btn btn-primary custom-file-btn">Select Images</button>
                 </div>
+                
                 <div class="image-container mt-2">
-                    <div *ngFor="let image of showSelectedFiles; let i = index" class="image-wrapper">
-                        <img [src]="image.content" alt="Selected Image" class="img-fluid" style="max-width: 200px;">
-                        <!-- <div class="select-button">
-                            <input type="radio" name="defaultImage" [value]="i" [(ngModel)]="selectedIndex"> Default
-                        </div> -->
-                        <button type="button" class="btn btn-danger btn-sm deselect-btn" (click)="deselectImage(i)">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
+                  <div *ngFor="let image of showSelectedFiles; let i = index" class="image-wrapper">
+                    <img [src]="image.content" alt="Selected Image" class="img-fluid" style="max-width: 200px;">
+                    
+                    <!-- Option to deselect the image -->
+                    <button type="button" class="btn btn-danger btn-sm deselect-btn" (click)="deselectImage(i)">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
                 </div>
-            </div>
+              </div>
+              
         </div>
 
         <!-- Product Form Group -->
@@ -118,24 +124,36 @@
             <!-- Product Image -->
             <div class="form-group" (drop)="onFilesDropped($event)" (dragover)="onDragOver($event)">
                 <label for="sliderShowImage">Product Images</label>
+                
+                <!-- Hidden file input -->
                 <input #fileInput type="file" class="form-control-file" id="sliderShowImage" name="productImage" (change)="onFilesSelected($event)" multiple style="display: none;">
-                <div class="drag-drop-area" style="text-align: center;">
-                    <p>Drag & drop images here</p>
-                    <i class="fas fa-plus"></i> 
-                    <!-- <button type="button" class="btn btn-primary" (click)="openFileInput()">Select Images</button> -->
+                
+                <!-- Custom drag-drop area with a button to select images -->
+                <div class="drag-drop-area" style="text-align: center;" (click)="fileInput.click()">
+                  <p>Drag & drop images here</p>
+                  <i class="fas fa-plus"></i>
+                  <p>or</p>
+                  <button type="button" class="btn btn-primary custom-file-btn">Select Images</button>
                 </div>
+                
+                <!-- Image container to show selected images and set default -->
                 <div class="image-container mt-2">
-                    <div *ngFor="let image of showSelectedFiles; let i = index" class="image-wrapper">
-                        <img [src]="image.content" alt="Selected Image" class="img-fluid" style="max-width: 200px;">
-                        <div class="select-button">
-                            <input type="radio" name="defaultImage" [value]="i" [(ngModel)]="selectedIndex"> Default
-                        </div>
-                        <button type="button" class="btn btn-danger btn-sm deselect-btn" (click)="deselectImage(i)">
-                            <i class="fas fa-times"></i>
-                        </button>
+                  <div *ngFor="let image of showSelectedFiles; let i = index" class="image-wrapper">
+                    <img [src]="image.content" alt="Selected Image" class="img-fluid" style="max-width: 200px;">
+                    
+                    <!-- Radio button for setting the default image -->
+                    <div class="select-button">
+                      <input type="radio" name="defaultImage" [value]="i" [(ngModel)]="selectedIndex"> Default
                     </div>
+                    
+                    <!-- Delete button for each image -->
+                    <button type="button" class="btn btn-danger btn-sm deselect-btn" (click)="deselectImage(i)">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
                 </div>
-            </div>
+              </div>
+              
             
         </div>
 
@@ -157,30 +175,34 @@
             <!-- SliderShow Image -->
             <div class="form-group" (drop)="onFilesDropped($event)" (dragover)="onDragOver($event)">
                 <label for="sliderShowImage">Product Images</label>
-                <input #fileInput type="file" class="form-control-file" id="sliderShowImage" name="productImage" (change)="onFilesSelected($event)"  style="display: none;">
-                <div class="drag-drop-area" style="text-align: center;">
-                    <p>Drag & drop images here</p>
-                    <i class="fas fa-plus"></i> 
-                    <!-- <button type="button" class="btn btn-primary" (click)="openFileInput()">Select Images</button> -->
+                
+                <!-- Hidden file input -->
+                <input #fileInput type="file" class="form-control-file d-none" id="sliderShowImage" name="productImage" (change)="onFilesSelected($event)">
+                
+                <!-- Custom styled button for file input -->
+                <div class="drag-drop-area" style="text-align: center;" (click)="fileInput.click()">
+                  <p>Drag & drop images here</p>
+                  <i class="fas fa-plus"></i>
+                  <p>or</p>
+                  <button type="button" class="btn btn-primary custom-file-btn">Select Images</button>
                 </div>
+                
                 <div class="image-container mt-2">
-                    <div *ngFor="let image of showSelectedFiles; let i = index" class="image-wrapper">
-                        <img [src]="image.content" alt="Selected Image" class="img-fluid" style="max-width: 200px;">
-                        <!-- <div class="select-button">
-                            <input type="radio" name="defaultImage" [value]="i" [(ngModel)]="selectedIndex"> Default
-                        </div> -->
-                        <button type="button" class="btn btn-danger btn-sm deselect-btn" (click)="deselectImage(i)">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
+                  <div *ngFor="let image of showSelectedFiles; let i = index" class="image-wrapper">
+                    <img [src]="image.content" alt="Selected Image" class="img-fluid" style="max-width: 200px;">
+                    <button type="button" class="btn btn-danger btn-sm deselect-btn" (click)="deselectImage(i)">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
                 </div>
-            </div>
+              </div>
+              
            
             
             
         </div>
 
-        <button type="button" class="btn btn-primary" [disabled]="!productForm.valid" (click)="uploadProduct()">Submit</button>
+        <button *ngIf="this.setupOption!=''" type="button" class="btn theme-color-button" [disabled]="!productForm.valid" (click)="uploadProduct()">Save</button>
     </form>
 </div>
 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-scale-multiple" ><p style="color: white" > Loading... </p></ngx-spinner>
