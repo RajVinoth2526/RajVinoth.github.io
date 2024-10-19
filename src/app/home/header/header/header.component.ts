@@ -1,14 +1,15 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataService } from 'src/app/service/dataService/data.service';
 import { getDoc, doc, Firestore, getDocFromCache } from "firebase/firestore";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { User } from 'firebase/auth';
 import { User as loginUser } from 'src/app/Model/x-mart.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -16,20 +17,23 @@ import { User as loginUser } from 'src/app/Model/x-mart.model';
   styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit,OnDestroy {
   signInForm!: FormGroup;
   signUpForm!: FormGroup;
   user$!: Observable<any>;
   currentUser: any;
   loginUserDetails: any;
   theme:any;
+  userSubscription: Subscription | undefined;
 
   constructor(private dataService: DataService,
     private firestore: AngularFirestore,
-    private spinner: NgxSpinnerService,
-    private fb: FormBuilder,
     private afAuth: AngularFireAuth,
+    private spinner: NgxSpinnerService,
     private toastr: ToastrService,
+    private fb: FormBuilder,
+
+    private router: Router
   ) {
   }
 
@@ -58,24 +62,55 @@ export class HeaderComponent implements OnInit {
   }
 
   getUser() {
+    // Listen to auth state changes
     this.afAuth.authState.subscribe(user => {
-      if (user === null || user === undefined) return;
-
-      this.currentUser = user;
-
-      this.firestore.collection('users').doc(user.uid).valueChanges().subscribe((data) => {
-        if (data == null) return;
-
-        this.loginUserDetails = data as loginUser; // Use 'as' to assert the type
-      });
+      if (user === null || user === undefined) {
+        // If the user is logged out, clear currentUser
+        this.dataService.currentUser.next(null);
+  
+        // Unsubscribe from Firestore listener if it exists
+        if (this.userSubscription) {
+          this.userSubscription.unsubscribe();
+          this.userSubscription = undefined; // Set to undefined instead of null
+        }
+      } else {
+        // User is logged in
+        this.currentUser = user;
+  
+        // Unsubscribe from any previous Firestore listeners to avoid multiple subscriptions
+        if (this.userSubscription) {
+          this.userSubscription.unsubscribe();
+        }
+  
+        // Subscribe to Firestore changes for the current user
+        this.userSubscription = this.firestore
+          .collection('users')
+          .doc(user.uid)
+          .valueChanges()
+          .subscribe(data => {
+            if (!data) return;  // If no data, do nothing
+  
+            // Update current user details
+            this.dataService.currentUser.next(data);
+            this.loginUserDetails = data as loginUser;
+          }) as unknown as Subscription;
+      }
     });
+  }
+  
+  
+  ngOnDestroy() {
+    // Unsubscribe to avoid memory leaks
+    
   }
 
   signOut() {
     this.afAuth.signOut().then(() => {
       console.log('User signed out successfully');
       this.currentUser = null;
-
+      this.loginUserDetails = null;
+      this.dataService.currentUser.next(null);
+      this.router.navigate(['']);
       setTimeout(() => {
         this.setSignInTab();
       }, 300);
@@ -85,11 +120,17 @@ export class HeaderComponent implements OnInit {
   }
 
   private setSignInTab() {
-    const signInTab = document.getElementById('signIn-tab') as HTMLElement;
-    if (signInTab) {
-      signInTab.click(); // This simulates a click on the Sign In tab to activate it
+    const modal = document.getElementById('authModal');
+    if (modal) {
+      modal.addEventListener('shown.bs.modal', () => {
+        const signInTab = document.getElementById('signIn-tab') as HTMLElement;
+        if (signInTab) {
+          signInTab.click(); // This simulates a click on the Sign In tab to activate it
+        }
+      });
     }
   }
+  
 
   async fetchData() {
     try {
@@ -196,6 +237,7 @@ export class HeaderComponent implements OnInit {
       const { email, password } = this.signInForm.value;
       const result = await this.afAuth.signInWithEmailAndPassword(email, password);
       if (result) {
+        this.getUser();
         this.toastr.success('Login Successfully');
         this.spinner.hide();
       }

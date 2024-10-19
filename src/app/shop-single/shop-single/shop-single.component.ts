@@ -2,6 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { DataService } from 'src/app/service/dataService/data.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-shop-single',
@@ -15,13 +17,17 @@ export class ShopSingleComponent implements OnInit {
   selectedImageAlt: string = "";
   products: any[] = [];
   items: any = [];
+  selectedProduct: any;
 
   @ViewChild('targetElement', { static: true }) targetElement!: ElementRef;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private dataService: DataService
+    private dataService: DataService,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService
+    
   ) {
 
   }
@@ -35,12 +41,14 @@ export class ShopSingleComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
 
       if (history.state.objectData && history.state && history.state.objectData) {
-        localStorage.setItem('navigatedProduct', JSON.stringify(history.state.objectData.imageUrl));
-        this.items = history.state.objectData.imageUrl
+        localStorage.setItem('navigatedProduct', JSON.stringify(history.state.objectData));
+        this.items = history.state.objectData.imageUrl;
+        this.selectedProduct = history.state.objectData;
       } else {
         const navigatedProduct = localStorage.getItem('navigatedProduct');
         if (navigatedProduct) {
-          this.items = JSON.parse(navigatedProduct);
+          const parsedProduct = JSON.parse(navigatedProduct);
+          this.items = JSON.parse(parsedProduct.imageUrl);
         }
       }
     });
@@ -78,6 +86,7 @@ export class ShopSingleComponent implements OnInit {
   }
   
   navigateWithObject(product: any) {
+    this.selectedProduct = product;
     localStorage.setItem('navigatedProduct', JSON.stringify(product.imageUrl));
     this.items = [];
     this.items = product.imageUrl;
@@ -85,6 +94,13 @@ export class ShopSingleComponent implements OnInit {
     this.selectedImageSrc = this.items[0];
     this.selectedImageAlt = this.items[0];
     this.scrollToElement();
+  }
+
+  async addProductTocard(product: any ) {
+    this.spinner.show();
+    await this.dataService.addProduct(product);
+    this.spinner.hide();
+
   }
 
 }

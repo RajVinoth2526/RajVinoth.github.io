@@ -1,4 +1,7 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { DataService } from 'src/app/service/dataService/data.service';
 
 interface Order {
   id: number;
@@ -21,8 +24,12 @@ export class AdminProductOrderDetailsComponent implements OnInit {
     { id: 2, customerName: 'Jane Smith', productName: 'Smartphone', quantity: 2, price: 800, status: 'Shipped', paymentMethod: 'Credit Card' },
   ];
   theme: any;
-
-  constructor(private renderer: Renderer2) { 
+  currentUser: any;
+  constructor(
+    private dataService :DataService,
+    private renderer: Renderer2,
+    private afAuth: AngularFireAuth,
+    private firestore: AngularFirestore) { 
     this.theme = {
       backgroundColor: '#210b12', // Specify background color
       textColor: '#210b12' // Specify text color
@@ -30,6 +37,9 @@ export class AdminProductOrderDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.dataService.currentUser.subscribe((user) => {
+      this.currentUser = user;
+    })
     //document.documentElement.style.setProperty('--primary-color', this.theme.primaryColor);
     
     

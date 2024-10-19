@@ -1,0 +1,69 @@
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+
+  .btn-danger {
+    align-self: flex-end;
+  }
+  
+  @media (max-width: 400px) {
+    .card-body {
+      text-align: center;
+    }
+    .card-img {
+      border-radius: 10px 10px 0 0;
+    }
+  }
+
+  .card-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 10px 0 0 10px;
+  }
+  
+  @media (max-width: 400px) {
+    .card-img {
+      border-radius: 10px 10px 0 0;
+    }
+  }
+
+
+
+  /* Hover styles */
+.theme-color {
+  background-color: var(--secondary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+/* Hover styles */
+.theme-color-button:hover {
+  color:var(--secondary-color) !important; /* Change to black on hover */
+  animation: pulse 0.6s ease; /* Apply pulse animation on hover */
+}
+
+.theme-color-button {
+  background-color: var(--primary-color) !important; /* Default color */
+  border-color: var(--primary-color) !important; 
+  animation: none; /* Initial animation state */
+  transition: color 0.3s ease; /* Transition for color */
+}
+
+
+/* Keyframes for pulse animation */
+@keyframes pulse {
+  0% {
+      transform: scale(1);
+  }
+  50% {
+      transform: scale(1.1);
+  }
+  100% {
+      transform: scale(1);
+  }
+}
+  
+  

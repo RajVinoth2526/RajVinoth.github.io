@@ -27,7 +27,7 @@
                     <li class="nav-item">
                         <a class="nav-link theme-color" routerLink="/contact">Contact</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" *ngIf ="loginUserDetails && loginUserDetails.isAdmin">
                         <a class="nav-link theme-color" routerLink="/setup">Setup</a>
                     </li>
                 </ul>
@@ -70,25 +70,25 @@
             <!-- Modal Header -->
             <div class="modal-header">
                 <h5 *ngIf="!currentUser" class="modal-title theme-color" id="authModalLabel">Welcome to X mart</h5>
-                <h5 *ngIf="currentUser" class="modal-title" id="authModalLabel">{{loginUserDetails.firstName}} {{loginUserDetails.lastName}}</h5>
+                <h5 *ngIf="currentUser && loginUserDetails" class="modal-title" id="authModalLabel">Welcome <span class="theme-color">{{loginUserDetails.firstName}} {{loginUserDetails.lastName}}</span></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- Modal Body with Tabs -->
             <div class="modal-body" *ngIf="!currentUser">
                 <ul class="nav nav-tabs" id="authTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="signIn-tab" data-bs-toggle="tab" data-bs-target="#signIn"
+                        <button class="nav-link active theme-color-text" id="signIn-tab" data-bs-toggle="tab" data-bs-target="#signIn"
                             type="button" role="tab" aria-controls="signIn" aria-selected="true">Sign In</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="signUp-tab" data-bs-toggle="tab" data-bs-target="#signUp"
+                        <button class="nav-link theme-color-text" id="signUp-tab" data-bs-toggle="tab" data-bs-target="#signUp"
                             type="button" role="tab" aria-controls="signUp" aria-selected="false">Sign Up</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="authTabContent">
                     <!-- Sign In Form -->
                     <!-- Sign In Form -->
-                    <div class="tab-pane fade show active p-3" id="signIn" role="tabpanel" aria-labelledby="signIn-tab">
+                    <div class="tab-pane fade show active p-3 theme-color-text" id="signIn" role="tabpanel" aria-labelledby="signIn-tab" >
                         <form [formGroup]="signInForm" (ngSubmit)="onSubmitSignIn()" novalidate>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email address</label>
@@ -115,7 +115,7 @@
 
 
                     <!-- Sign Up Form -->
-                    <div class="tab-pane fade p-3" id="signUp" role="tabpanel" aria-labelledby="signUp-tab">
+                    <div class="tab-pane fade p-3 theme-color-text" id="signUp" role="tabpanel" aria-labelledby="signUp-tab">
                         <form [formGroup]="signUpForm" (ngSubmit)="onSubmitSignUp()" novalidate>
                             <div class="mb-3">
                                 <label for="signUpFirstName" class="form-label">First Name</label>
@@ -226,8 +226,7 @@
             </div>
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button *ngIf="!currentUser" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button *ngIf="currentUser" type="button" class="btn btn-secondary" (click)="signOut()">Sign Out</button>
+                <button *ngIf="currentUser" type="button" class="btn theme-color-button" (click)="signOut()">Sign Out</button>
             </div>
         </div>
     </div>

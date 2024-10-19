@@ -1,6 +1,7 @@
 .container {
     max-width: 600px;
     margin: 0 auto;
+    max-height: 90%;;
     text-align: center; /* Aligns all content inside the container to center */
 }
 
@@ -117,6 +118,7 @@ select {
 .theme-color-button {
   background-color: var(--primary-color) !important;
   color : white;
+  margin-bottom: 40px;
   /* color: var(--secondary-color) !important; */
 }
 
