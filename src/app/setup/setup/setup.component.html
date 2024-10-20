@@ -10,6 +10,8 @@
                 <option value="catergories" class="theme-color">Categories</option>
                 <option value="product" class="theme-color">Add product</option>
                 <option value="products" class="theme-color">Add products</option>
+                <option value="themeColor" class="theme-color">Set Theme color</option>
+                <option value="shopName" class="theme-color">Set company name</option>
             </select>
         </div>
 
@@ -29,7 +31,6 @@
                     <option value="2">Women</option>
                     <option value="3">Shoe</option>
                     <option value="4">Accessories</option>
-        
                     <!-- Add more options as needed -->
                 </select>
             </div>
@@ -201,6 +202,26 @@
             
             
         </div>
+
+        <div *ngIf="setupOption == 'themeColor'" class="slider-show-form">
+          <div class="color-picker-container">
+            <label for="primaryColor">Primary Color:</label>
+            <input [(colorPicker)]="primaryColor" (colorPickerChange)="onPrimaryColorChange($event)" 
+                   [style.background]="primaryColor" type="text" id="primaryColor" />
+          
+            <label for="secondaryColor">Secondary Color:</label>
+            <input [(colorPicker)]="secondaryColor" (colorPickerChange)="onSecondaryColorChange($event)" 
+                   [style.background]="secondaryColor" type="text" id="secondaryColor" />
+          </div>
+        </div>
+
+        <div *ngIf="setupOption == 'shopName'" class="slider-show-form">
+          <div style="align-content: flex-start; margin-bottom: 50px;">
+            <label for="inputField">Enter Shop Name:</label>
+            <input type="text" id="inputField" (input)="onShopNameChange($event)" [value]="shopName" />
+          </div>
+          </div>
+        
 
         <button *ngIf="this.setupOption!=''" type="button" class="btn theme-color-button" [disabled]="!productForm.valid" (click)="uploadProduct()">Save</button>
     </form>

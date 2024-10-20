@@ -24,6 +24,7 @@ export class DataService {
   public themeColor = new BehaviorSubject<any>(null);
   public currentUser = new BehaviorSubject<any>(null);
 
+  public shopName = new BehaviorSubject<any>(null);
 
   public loadingIndicator = new BehaviorSubject<boolean>(false);
 
@@ -63,6 +64,10 @@ export class DataService {
     this.productsData.next(newData);
   }
 
+  updateShopName(newData: any) {
+    this.shopName.next(newData);
+  }
+
   updateLoadingIndicator(isLoading: boolean) {
     this.loadingIndicator.next(isLoading);
   }
@@ -86,6 +91,10 @@ export class DataService {
 
   getThemeColor() {
     return this.themeColor.value;
+  }
+
+  getShopName() {
+    return this.shopName.value;
   }
 
 
@@ -190,9 +199,9 @@ export class DataService {
               .collection('product')
               .doc(product.productId)
               .set({
-                id: product.productId,
-                image: product.imageUrl[0],
-                name: product.title,
+                id: product.id,
+                image: product.image,
+                name: product.name,
                 price: product.price,
                 size: product.size,
                 label: product.label,

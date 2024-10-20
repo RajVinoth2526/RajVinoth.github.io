@@ -5,6 +5,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { v4 as uuidv4 } from 'uuid';
 import { ToastrService } from 'ngx-toastr';  
+import { DataService } from 'src/app/service/dataService/data.service';
 export const Categories= [
   {
       category : 'Male',
@@ -44,12 +45,17 @@ export class SetupComponent implements OnInit {
   label: string = '';
   description: string = '';
   categoryId: number = 0;
+  primaryColor: string = '#ff0000';  // Default primary color (red)
+  secondaryColor: string = '#00ff00';  // Default secondary color (green)
+  shopName: string = 'Please Enter Shop Name';
 
+  
   constructor(private firestore: AngularFirestore,
     private db: AngularFireDatabase,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
-    private storage: AngularFireStorage) { }
+    private storage: AngularFireStorage,
+  private dataService: DataService) { }
   ngOnInit(): void {
   }
   onFilesDropped(event: any): void {
@@ -79,6 +85,20 @@ export class SetupComponent implements OnInit {
     }
    
   }
+
+  onShopNameChange(event: Event): void {
+    const input = event.target as HTMLInputElement; // Get the input element
+    this.shopName = input.value; // Update shopName with the input value
+  }
+
+  onPrimaryColorChange(event: string) {
+    this.primaryColor = event;
+  }
+
+  onSecondaryColorChange(event: string) {
+    this.secondaryColor = event;
+  }
+
 
   private handleFiles(files: FileList): void {
     for (let i = 0; i < files.length; i++) {
@@ -130,6 +150,8 @@ export class SetupComponent implements OnInit {
   //     this.selectedFiles.push(files[i]);
   //   }
   // }
+
+  
 
   openImagePicker() {
     // Trigger click event on the input element to open the file picker dialog
@@ -251,6 +273,54 @@ export class SetupComponent implements OnInit {
         this.showSelectedFiles = [];
         this.toastr.success(this.setupOption + ' details uploaded successfully.');
         console.log('Product details uploaded successfully.');
+      }).catch(error => {
+        this.spinner.hide();
+        this.toastr.warning(error);
+        console.error('Error uploading product details:', error);
+      });
+    } else if(this.setupOption == 'themeColor') {
+      const productId = uuidv4();
+      this.firestore.collection('Theme').doc('Theme-colors').set({
+        primaryColor: this.primaryColor,
+        secondaryColor: this.secondaryColor
+
+      }).then(async () => {
+        let theme;
+        const getThemePromise = new Promise<any[]>((resolve, reject) => {
+          this.firestore.collection('Theme').valueChanges().subscribe({
+            next: (data) => resolve(data as any[]),
+            error: (err) => reject(err)
+          });
+        });
+        theme = await getThemePromise;
+        this.dataService.updateThemeColor(theme);
+        document.documentElement.style.setProperty('--primary-color', this.dataService.getThemeColor()[0].primaryColor);
+        document.documentElement.style.setProperty('--secondary-color', this.dataService.getThemeColor()[0].secondaryColor
+      );
+        this.spinner.hide();
+    
+      }).catch(error => {
+        this.spinner.hide();
+        this.toastr.warning(error);
+        console.error('Error uploading product details:', error);
+      });
+    } else if(this.setupOption == 'shopName') {
+      this.firestore.collection('ShopName').doc('Shop-Name').set({
+        shopName: this.shopName,
+        secondaryColor: this.secondaryColor
+
+      }).then(async () => {
+        let shopName;
+        const getShopName = new Promise<any[]>((resolve, reject) => {
+          this.firestore.collection('ShopName').valueChanges().subscribe({
+            next: (data) => resolve(data as any[]),
+            error: (err) => reject(err)
+          });
+        });
+        shopName = await getShopName;
+        this.dataService.shopName.next(shopName);
+        this.spinner.hide();
+    
       }).catch(error => {
         this.spinner.hide();
         this.toastr.warning(error);

@@ -28,6 +28,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AdminProductOrderDetailsComponent } from './Order/admin-product-order-details/admin-product-order-details.component';
 import { UserOrderDetailComponent } from './Order/user-order-detail/user-order-detail.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,6 +59,7 @@ import { UserOrderDetailComponent } from './Order/user-order-detail/user-order-d
     MatInputModule,
     MatDialogModule,
     ReactiveFormsModule,
+    ColorPickerModule,
     ToastrModule.forRoot()  
   ],
   entryComponents: [ConfirmationComponent],

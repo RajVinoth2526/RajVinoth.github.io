@@ -25,6 +25,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
   loginUserDetails: any;
   theme:any;
   userSubscription: Subscription | undefined;
+  shopName!: string;
 
   constructor(private dataService: DataService,
     private firestore: AngularFirestore,
@@ -35,6 +36,10 @@ export class HeaderComponent implements OnInit,OnDestroy {
 
     private router: Router
   ) {
+    this.dataService.shopName.subscribe((data) => {
+      if(data == null) return;
+      this.shopName = data[0].shopName;
+    });
   }
 
   ngOnInit(): void {
@@ -142,6 +147,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
       let categoriesData = this.dataService.getCategoryData();
       let Products = this.dataService.getProductsData();
       let theme;
+      let shopName;
 
 
       const cacheKey = 'cache_timestamp';
@@ -209,7 +215,18 @@ export class HeaderComponent implements OnInit,OnDestroy {
           error: (err) => reject(err)
         });
       });
+
       theme = await getThemePromise;
+
+      const getShopName = new Promise<any[]>((resolve, reject) => {
+        this.firestore.collection('ShopName').valueChanges().subscribe({
+          next: (data) => resolve(data as any[]),
+          error: (err) => reject(err)
+        });
+      });
+      shopName = await getShopName;
+      this.dataService.shopName.next(shopName);
+      
       this.dataService.updateThemeColor(theme);
       this.theme = this.dataService.getThemeColor()[0]
       document.documentElement.style.setProperty('--primary-color', this.theme.primaryColor);
@@ -239,6 +256,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
       if (result) {
         this.getUser();
         this.toastr.success('Login Successfully');
+        this.dataService.syncLocalStorageToFirebase();
         this.spinner.hide();
       }
     } catch (error) {
