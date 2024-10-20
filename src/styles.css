@@ -64,9 +64,9 @@
 
 :root {
     --primary-color: #eeeeee;
-    --secondary-color: #867909;
+    --secondary-color: #f0f0ed;
     --danger-color: #e74c3c;
-    --text-color: #000000;
+    --text-color: #ffffff;
     --background-color: #f8f9fa;
 }
 

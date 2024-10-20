@@ -43,4 +43,4 @@
       </div>
     </div>
 </div>
-<app-user-order-detail *ngIf="currentUser && !currentUser.isAdmin"></app-user-order-detail>
+<app-user-order-detail *ngIf="(currentUser && !currentUser.isAdmin) || !currentUser"></app-user-order-detail>

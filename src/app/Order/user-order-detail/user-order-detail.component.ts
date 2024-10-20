@@ -21,7 +21,6 @@ export class UserOrderDetailComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    
      this.loadCart();
   }
 

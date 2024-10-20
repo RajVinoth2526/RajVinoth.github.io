@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
 
   }
 
-  getUser() {
+  async getUser() {
     // Listen to auth state changes
     this.afAuth.authState.subscribe(user => {
       if (user === null || user === undefined) {
@@ -97,6 +97,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
   
             // Update current user details
             this.dataService.currentUser.next(data);
+            this.dataService.syncLocalStorageToFirebase();
             this.loginUserDetails = data as loginUser;
           }) as unknown as Subscription;
       }

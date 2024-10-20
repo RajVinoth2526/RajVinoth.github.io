@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom  } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -121,7 +121,7 @@ export class DataService {
       if (user) {
         // If user is logged in, store product in Firebase Firestore
         const productId = this.firestore.createId(); // Create a unique ID for the product
-        await this.firestore.collection('customerProductCard').doc(user.uid).collection('product').doc(product.productId).set({
+        await this.firestore.collection('customerAddedProductToCard').doc(user.uid).collection('product').doc(product.productId).set({
           id: product.productId,
           image: product.imageUrl[0],
           name: product.title,
@@ -159,6 +159,10 @@ export class DataService {
     }
   }
 
+  getUSerData() {
+    return this.currentUser.value;
+  }
+
   // Helper function to store product in localStorage
   private storeProductInLocalStorage(product: any): void {
     const productId = this.firestore.createId();
@@ -180,25 +184,31 @@ export class DataService {
   // Function to sync localStorage products to Firebase after login with error handling
   async syncLocalStorageToFirebase(): Promise<void> {
     this.spinner.show();
-
+  
     try {
       const user = await this.afAuth.currentUser; // Ensure user is logged in
-
-      if (user) {
+  
+      if (user && this.getUSerData() && !this.getUSerData().isAdmin) {
         // Get the stored products from localStorage
         const storedProducts = JSON.parse(localStorage.getItem('storedProducts') || '[]');
-
-        if (storedProducts.length > 0) {
+  
+        if (storedProducts && storedProducts.length > 0) {
           // Sync each product to Firebase
           for (const product of storedProducts) {
-            const productId = this.firestore.createId(); // Generate a unique ID for each product
-
-            // Add product to Firestore
-            await this.firestore.collection('customerProductCard')
+           // const productId = this.firestore.createId(); // Generate a unique ID for each product
+  
+            // Ensure that we are fetching fresh data from the server, not cache
+            const productDocRef = this.firestore.collection('customerAddedProductToCard')
               .doc(user.uid)
               .collection('product')
-              .doc(product.productId)
-              .set({
+              .doc(product.id);
+  
+            // Convert Observable to Promise and ensure fresh data from server
+            const productSnapshot = await firstValueFrom(productDocRef.get({ source: 'server' })); // Convert Observable to Promise
+  
+            if (!productSnapshot.exists) {  // `exists` is available on DocumentSnapshot
+              // Add product to Firestore if it doesn't exist
+              await productDocRef.set({
                 id: product.id,
                 image: product.image,
                 name: product.name,
@@ -209,82 +219,71 @@ export class DataService {
                 description: product.description,
                 userId: user.uid
               });
+            }
           }
-
+  
           // Clear localStorage after syncing
           localStorage.removeItem('storedProducts');
           console.log('Products synced successfully to Firebase');
           this.toastr.success('Product successfully added to Card');
-
-        } else {
-          this.toastr.warning('Product added to Card faild');
-
-          console.log('No products found in local storage to sync.');
           this.spinner.hide();
-
+  
+        } else {
+          this.spinner.hide();
         }
-      } else {
-        throw new Error('User is not logged in'); // Error if user is not logged in
-        this.toastr.warning('Product added to Card faild');
+      } else if (!user) {
+        this.toastr.warning('Product added to Card failed');
         this.spinner.hide();
-
-
+  
+        throw new Error('User is not logged in'); // Error if user is not logged in
+  
+      } else {
+        this.spinner.hide();
       }
     } catch (error) {
       // Handle any errors that occur during the sync process
       console.error('Error syncing localStorage to Firebase:', error);
-      this.toastr.warning('Product added to Card faild');
+      this.toastr.warning('Product added to Card failed');
       this.spinner.hide();
-
-
-      // Optionally, display an error message to the user
-      // this.toastr.error('Failed to sync products to Firebase. Please try again.');
     }
   }
-
+  
   // Function to get customer card products with error handling
   async getCustomerCardProducts(): Promise<any[]> {
     this.spinner.show();
-
+  
     try {
       const user = await this.afAuth.currentUser; // Ensure the user is logged in
-
+  
       if (user) {
+        // Fetch products from Firestore, ensuring the data is retrieved from the server only
         const productsObservable = this.firestore
-          .collection('customerProductCard')
+          .collection('customerAddedProductToCard')
           .doc(user.uid)
           .collection('product')
-          .valueChanges();
-
-        // Convert the observable to a promise
-        return new Promise((resolve, reject) => {
-          const subscription = productsObservable.subscribe(
-            (products) => {
-              resolve(products); // Resolve the promise with the product data
-              this.spinner.hide();
-
-              subscription.unsubscribe(); // Unsubscribe after the first emission
-            },
-            (error) => {
-              console.error('Error retrieving products:', error);
-              this.spinner.hide();
-
-              reject(error); // Reject the promise if there's an error
-            }
-          );
-        });
-
-
-      } else {
+          .get({ source: 'server' }); // Ensure data is retrieved from the server
+  
+        // Use firstValueFrom to convert observable to a promise and fetch data
+        const productsSnapshot = await firstValueFrom(productsObservable);
+        const products = productsSnapshot.docs.map(doc => doc.data()); // Map snapshot to an array of product data
+  
         this.spinner.hide();
+        return products || []; // Return the products or an empty array if none are found
+  
+      } else {
+        const cartItems = JSON.parse(localStorage.getItem('storedProducts') || '[]');
+        if(cartItems && cartItems.length > 0) {
+          this.spinner.hide();
+          return cartItems
+        }
 
+        this.spinner.hide();
         console.warn('User is not logged in');
         return []; // Return an empty array if the user is not logged in
       }
     } catch (error) {
       console.error('Error in getCustomerCardProducts:', error);
       this.spinner.hide();
-
       return []; // Return an empty array in case of any other error
     }
   }
@@ -300,7 +299,7 @@ export class DataService {
 
       if (user) {
         // Delete the product from Firestore
-        await this.firestore.collection('customerProductCard')
+        await this.firestore.collection('customerAddedProductToCard')
           .doc(user.uid)
           .collection('product')
           .doc(product.id)
@@ -313,13 +312,13 @@ export class DataService {
 
       } else {
         // If user is not logged in, delete from local storage
-        const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        const cartItems = JSON.parse(localStorage.getItem('storedProducts') || '[]');
         this.toastr.success('Product successfully deleted');
         // Filter out the product to be deleted
-        const updatedCartItems = cartItems.filter((item: { id: string }) => item.id !== product.productId);
+        const updatedCartItems = cartItems.filter((item: { id: string }) => item.id !== product.id);
 
         // Save the updated cart back to local storage
-        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+        localStorage.setItem('storedProducts', JSON.stringify(updatedCartItems));
         console.log(`Product with ID ${product.productId} deleted from local storage.`);
         this.spinner.hide();
 

@@ -57,6 +57,8 @@ export class SetupComponent implements OnInit {
     private storage: AngularFireStorage,
   private dataService: DataService) { }
   ngOnInit(): void {
+    this.primaryColor = this.dataService.getThemeColor()[0].primaryColor;
+    this.secondaryColor = this.dataService.getThemeColor()[0].secondaryColor;
   }
   onFilesDropped(event: any): void {
 
@@ -295,8 +297,7 @@ export class SetupComponent implements OnInit {
         theme = await getThemePromise;
         this.dataService.updateThemeColor(theme);
         document.documentElement.style.setProperty('--primary-color', this.dataService.getThemeColor()[0].primaryColor);
-        document.documentElement.style.setProperty('--secondary-color', this.dataService.getThemeColor()[0].secondaryColor
-      );
+        document.documentElement.style.setProperty('--secondary-color', this.dataService.getThemeColor()[0].secondaryColor);
         this.spinner.hide();
     
       }).catch(error => {
