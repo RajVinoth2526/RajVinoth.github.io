@@ -127,6 +127,7 @@ export class DataService {
           name: product.title,
           price: product.price,
           size: product.size,
+          quantity: product.quantity,
           label: product.label,
           category: product.category,
           description: product.description,
@@ -173,6 +174,7 @@ export class DataService {
       name: product.title,
       price: product.price,
       size: product.size,
+      quantity: product.quantity,
       label: product.label,
       category: product.category,
       description: product.description,
@@ -214,6 +216,7 @@ export class DataService {
                 name: product.name,
                 price: product.price,
                 size: product.size,
+                quantity: product.quantity,
                 label: product.label,
                 category: product.category,
                 description: product.description,
@@ -247,6 +250,68 @@ export class DataService {
       this.spinner.hide();
     }
   }
+
+  async storeOrders(orderData: any): Promise<void> {
+    this.spinner.show();
+  
+    try {
+      const user = await this.afAuth.currentUser; // Ensure user is logged in
+      
+      if (user && this.getUSerData() && !this.getUSerData().isAdmin) {
+
+        const productId = this.firestore.createId(); // Create a unique ID for the product
+        await this.firestore.collection('orders').doc(user.uid).set({
+          cardItems: orderData.item,
+          customerDetails: orderData.customer,
+          paymentMethod: orderData.paymentMethod,
+          createdAt: new Date()
+        });
+        this.spinner.hide();
+        this.toastr.success('Your order is confirmed!');
+        
+      } else {
+        this.spinner.hide();
+      }
+    } catch (error) {
+      // Handle any errors that occur during the sync process
+      console.error('Error syncing localStorage to Firebase:', error);
+      this.toastr.warning('order save failed');
+      this.spinner.hide();
+    }
+  }
+
+    // Function to get customer card products with error handling
+    async getOrders(): Promise<any[]> {
+      this.spinner.show();
+    
+      try {
+        const user = await this.afAuth.currentUser; // Ensure the user is logged in
+    
+        if (user) {
+          // Fetch products from Firestore, ensuring the data is retrieved from the server only
+          const productsObservable = this.firestore
+            .collection('orders')
+            .get({ source: 'server' }); // Ensure data is retrieved from the server
+    
+          // Use firstValueFrom to convert observable to a promise and fetch data
+          const orderSnapshot = await firstValueFrom(productsObservable);
+          const orders = orderSnapshot.docs.map(doc => doc.data()); // Map snapshot to an array of product data
+    
+          this.spinner.hide();
+          return orders || []; // Return the products or an empty array if none are found
+    
+        } else {
+          this.spinner.hide();
+          console.warn('User is not logged in');
+          return []; // Return an empty array if the user is not logged in
+        }
+
+      } catch (error) {
+        console.error('Error in getCustomerCardProducts:', error);
+        this.spinner.hide();
+        return []; // Return an empty array in case of any other error
+      }
+    }
   
   // Function to get customer card products with error handling
   async getCustomerCardProducts(): Promise<any[]> {

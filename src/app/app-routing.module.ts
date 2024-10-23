@@ -7,6 +7,8 @@ import { ShopComponent } from './shop/shop/shop.component';
 import { ShopSingleComponent } from './shop-single/shop-single/shop-single.component';
 import { SetupComponent } from './setup/setup/setup.component';
 import { AdminProductOrderDetailsComponent } from './Order/admin-product-order-details/admin-product-order-details.component';
+import { ConfirmOrderComponent } from './Order/confirm-order/confirm-order.component';
+import { PaymentComponent } from './Order/payment/payment.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -16,11 +18,9 @@ const routes: Routes = [
   { path: 'shop', component: ShopComponent },
   { path: 'product', component: ShopSingleComponent },
   { path: 'setup', component: SetupComponent },
-  { path: 'Admin-order-details', component: AdminProductOrderDetailsComponent }
-
-
-
-
+  { path: 'Admin-order-details', component: AdminProductOrderDetailsComponent },
+  { path: 'confirm-order', component: ConfirmOrderComponent },
+  { path: 'payment', component: PaymentComponent }
 
 
 ];

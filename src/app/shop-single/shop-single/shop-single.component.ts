@@ -18,6 +18,8 @@ export class ShopSingleComponent implements OnInit {
   products: any[] = [];
   items: any = [];
   selectedProduct: any;
+  quantity: number = 1;
+  productSize: string = '';
 
   @ViewChild('targetElement', { static: true }) targetElement!: ElementRef;
 
@@ -55,18 +57,30 @@ export class ShopSingleComponent implements OnInit {
     this.generateSlides();
     this.selectedImageSrc = this.items[0];
     this.selectedImageAlt = this.items[0];
-    // this.router.events.pipe(
-    //   filter((event): event is NavigationEnd => event instanceof NavigationEnd)
-    // ).subscribe((event: NavigationEnd) => {
-    //   // Check if URL after redirects is defined
-    //   if (event.urlAfterRedirects) {
-    //     // Scroll to top of the page
-    //     window.scrollTo(0, 0);
-    //   }
-    // });
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      // Check if URL after redirects is defined
+      if (event.urlAfterRedirects) {
+        // Scroll to top of the page
+        window.scrollTo(0, 0);
+      }
+    });
     this.scrollToElement();
 
 
+  }
+
+  updateQuantity(operator: string) {
+    if(operator === '+' && this.quantity < 15) {
+      this.quantity += 1;
+    } else if( this.quantity > 1) {
+      this.quantity -= 1;
+    }
+  }
+
+  updateSize(size: string) {
+    this.productSize = size;
   }
 
   generateSlides() {
@@ -97,6 +111,8 @@ export class ShopSingleComponent implements OnInit {
   }
 
   async addProductTocard(product: any ) {
+    product.size = this.productSize;
+    product.quantity =  this.quantity;
     this.spinner.show();
     await this.dataService.addProduct(product);
     this.spinner.hide();

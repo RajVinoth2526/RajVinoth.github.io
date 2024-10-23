@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from 'src/app/service/dataService/data.service';
@@ -17,7 +18,8 @@ export class UserOrderDetailComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ){}
 
   ngOnInit(): void {
@@ -43,5 +45,10 @@ export class UserOrderDetailComponent implements OnInit {
     this.cartItems = this.cartItems.filter(item => item.id !== product.productId);
     localStorage.setItem('cart', JSON.stringify(this.cartItems));
     this.calculateTotals();
+  }
+
+  navigateWithObject() {
+    const data = this.cartItems;
+    this.router.navigateByUrl('/confirm-order', { state: { data } });
   }
 }

@@ -19,7 +19,7 @@ interface Order {
   styleUrls: ['./admin-product-order-details.component.css']
 })
 export class AdminProductOrderDetailsComponent implements OnInit {
-  orders: Order[] = [
+  orders: any = [
     { id: 1, customerName: 'John Doe', productName: 'Laptop', quantity: 1, price: 1200, status: 'Pending', paymentMethod: 'Cash' },
     { id: 2, customerName: 'Jane Smith', productName: 'Smartphone', quantity: 2, price: 800, status: 'Shipped', paymentMethod: 'Credit Card' },
   ];
@@ -39,7 +39,8 @@ export class AdminProductOrderDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.dataService.currentUser.subscribe((user) => {
       this.currentUser = user;
-    })
+    });
+    this.orders = this.dataService.getOrders();
     //document.documentElement.style.setProperty('--primary-color', this.theme.primaryColor);
     
     
