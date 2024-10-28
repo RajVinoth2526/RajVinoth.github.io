@@ -20,6 +20,7 @@ export class ShopSingleComponent implements OnInit {
   selectedProduct: any;
   quantity: number = 1;
   productSize: string = '';
+  productId!: string;
 
   @ViewChild('targetElement', { static: true }) targetElement!: ElementRef;
 
@@ -35,28 +36,13 @@ export class ShopSingleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getProductByParamId();
     this.dataService.productsData.subscribe((products: any) => {
       if (products === null) return
 
       this.products = products;
     })
-    this.route.paramMap.subscribe(params => {
-
-      if (history.state.objectData && history.state && history.state.objectData) {
-        localStorage.setItem('navigatedProduct', JSON.stringify(history.state.objectData));
-        this.items = history.state.objectData.imageUrl;
-        this.selectedProduct = history.state.objectData;
-      } else {
-        const navigatedProduct = localStorage.getItem('navigatedProduct');
-        if (navigatedProduct) {
-          const parsedProduct = JSON.parse(navigatedProduct);
-          this.items = JSON.parse(parsedProduct.imageUrl);
-        }
-      }
-    });
-    this.generateSlides();
-    this.selectedImageSrc = this.items[0];
-    this.selectedImageAlt = this.items[0];
+  
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -69,6 +55,15 @@ export class ShopSingleComponent implements OnInit {
     this.scrollToElement();
 
 
+  }
+
+  async getProductByParamId() {
+    this.productId = this.route.snapshot.paramMap.get('id')!;;
+    this.selectedProduct =  await this.dataService.getProductById(this.productId);
+    this.items = this.selectedProduct.imageUrl;
+    this.generateSlides();
+    this.selectedImageSrc = this.items[0];
+    this.selectedImageAlt = this.items[0];
   }
 
   updateQuantity(operator: string) {

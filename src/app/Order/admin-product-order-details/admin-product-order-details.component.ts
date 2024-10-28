@@ -40,10 +40,14 @@ export class AdminProductOrderDetailsComponent implements OnInit {
     this.dataService.currentUser.subscribe((user) => {
       this.currentUser = user;
     });
-    this.orders = this.dataService.getOrders();
+    this.getOders();
     //document.documentElement.style.setProperty('--primary-color', this.theme.primaryColor);
     
     
+  }
+
+  async getOders() {
+    this.orders = await this.dataService.getOrders();
   }
 
   getStatusBadgeClass(status: string): string {

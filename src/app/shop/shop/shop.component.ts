@@ -42,7 +42,7 @@ export class ShopComponent implements OnInit {
   }
 
   navigateWithObject(product: any) {
-    this.router.navigate(['/product'], {
+    this.router.navigate(['/product',product.productId], {
       state: { objectData: product }
     });
   }

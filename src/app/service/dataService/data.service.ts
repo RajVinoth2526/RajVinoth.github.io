@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, firstValueFrom  } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -186,28 +186,28 @@ export class DataService {
   // Function to sync localStorage products to Firebase after login with error handling
   async syncLocalStorageToFirebase(): Promise<void> {
     this.spinner.show();
-  
+
     try {
       const user = await this.afAuth.currentUser; // Ensure user is logged in
-  
+
       if (user && this.getUSerData() && !this.getUSerData().isAdmin) {
         // Get the stored products from localStorage
         const storedProducts = JSON.parse(localStorage.getItem('storedProducts') || '[]');
-  
+
         if (storedProducts && storedProducts.length > 0) {
           // Sync each product to Firebase
           for (const product of storedProducts) {
-           // const productId = this.firestore.createId(); // Generate a unique ID for each product
-  
+            // const productId = this.firestore.createId(); // Generate a unique ID for each product
+
             // Ensure that we are fetching fresh data from the server, not cache
             const productDocRef = this.firestore.collection('customerAddedProductToCard')
               .doc(user.uid)
               .collection('product')
               .doc(product.id);
-  
+
             // Convert Observable to Promise and ensure fresh data from server
             const productSnapshot = await firstValueFrom(productDocRef.get({ source: 'server' })); // Convert Observable to Promise
-  
+
             if (!productSnapshot.exists) {  // `exists` is available on DocumentSnapshot
               // Add product to Firestore if it doesn't exist
               await productDocRef.set({
@@ -224,22 +224,22 @@ export class DataService {
               });
             }
           }
-  
+
           // Clear localStorage after syncing
           localStorage.removeItem('storedProducts');
           console.log('Products synced successfully to Firebase');
           this.toastr.success('Product successfully added to Card');
           this.spinner.hide();
-  
+
         } else {
           this.spinner.hide();
         }
       } else if (!user) {
         this.toastr.warning('Product added to Card failed');
         this.spinner.hide();
-  
+
         throw new Error('User is not logged in'); // Error if user is not logged in
-  
+
       } else {
         this.spinner.hide();
       }
@@ -251,24 +251,54 @@ export class DataService {
     }
   }
 
-  async storeOrders(orderData: any): Promise<void> {
-    this.spinner.show();
-  
-    try {
-      const user = await this.afAuth.currentUser; // Ensure user is logged in
-      
-      if (user && this.getUSerData() && !this.getUSerData().isAdmin) {
+  async storeOdersForAdmin(orderData: any, card: any, user: any) {
 
-        const productId = this.firestore.createId(); // Create a unique ID for the product
-        await this.firestore.collection('orders').doc(user.uid).set({
-          cardItems: orderData.item,
+
+    const orderId = this.firestore.createId(); // Create a unique ID for the product
+        await this.firestore.collection('customerOrder').doc(user.uid).collection('order').doc(orderId).set({
+          card: card,
           customerDetails: orderData.customer,
           paymentMethod: orderData.paymentMethod,
+          orderId: orderId,
+          userId: user.uid,
           createdAt: new Date()
         });
-        this.spinner.hide();
-        this.toastr.success('Your order is confirmed!');
+
+    await this.firestore.collection('orders').doc(user.uid).set({
+      orderId: orderId,
+      userId: user.uid,
+      cardItems: card,
+      customerDetails: orderData.customer,
+      paymentMethod: orderData.paymentMethod,
+      createdAt: new Date()
+    });
+  }
+  async storeOrders(orderData: any): Promise<void> {
+    this.spinner.show();
+
+    try {
+      const user = await this.afAuth.currentUser; // Ensure user is logged in
+
+      if (user && this.getUSerData() && !this.getUSerData().isAdmin) {
+
         
+
+        orderData.cart.forEach((card: any) =>  {
+          if(card == null) return;
+
+          this.storeOdersForAdmin(orderData,card,user);
+        })
+
+        
+
+        orderData.cart.forEach((card: any) => {
+          if(card == null) return;
+          this.deleteProductFromCard(card);
+        });
+        this.spinner.hide();
+        
+        this.toastr.success('Your order is confirmed!');
+
       } else {
         this.spinner.hide();
       }
@@ -280,46 +310,42 @@ export class DataService {
     }
   }
 
-    // Function to get customer card products with error handling
-    async getOrders(): Promise<any[]> {
-      this.spinner.show();
-    
-      try {
-        const user = await this.afAuth.currentUser; // Ensure the user is logged in
-    
-        if (user) {
-          // Fetch products from Firestore, ensuring the data is retrieved from the server only
-          const productsObservable = this.firestore
-            .collection('orders')
-            .get({ source: 'server' }); // Ensure data is retrieved from the server
-    
-          // Use firstValueFrom to convert observable to a promise and fetch data
-          const orderSnapshot = await firstValueFrom(productsObservable);
-          const orders = orderSnapshot.docs.map(doc => doc.data()); // Map snapshot to an array of product data
-    
-          this.spinner.hide();
-          return orders || []; // Return the products or an empty array if none are found
-    
-        } else {
-          this.spinner.hide();
-          console.warn('User is not logged in');
-          return []; // Return an empty array if the user is not logged in
-        }
-
-      } catch (error) {
-        console.error('Error in getCustomerCardProducts:', error);
-        this.spinner.hide();
-        return []; // Return an empty array in case of any other error
-      }
-    }
-  
   // Function to get customer card products with error handling
-  async getCustomerCardProducts(): Promise<any[]> {
+  async getOrders(): Promise<any[]> {
     this.spinner.show();
-  
+
     try {
       const user = await this.afAuth.currentUser; // Ensure the user is logged in
-  
+
+      
+        // Fetch products from Firestore, ensuring the data is retrieved from the server only
+        const productsObservable = this.firestore
+          .collection('orders')
+          .get({ source: 'server' }); // Ensure data is retrieved from the server
+
+        // Use firstValueFrom to convert observable to a promise and fetch data
+        const orderSnapshot = await firstValueFrom(productsObservable);
+        const orders = orderSnapshot.docs.map(doc => doc.data()); // Map snapshot to an array of product data
+
+        this.spinner.hide();
+        return orders || []; // Return the products or an empty array if none are found
+
+     
+
+    } catch (error) {
+      console.error('Error in getCustomerCardProducts:', error);
+      this.spinner.hide();
+      return []; // Return an empty array in case of any other error
+    }
+  }
+
+  // Function to get customer card products with error handling
+  async getCustomerCardProducts(user: any): Promise<any[]> {
+    this.spinner.show();
+
+    try {
+      
+
       if (user) {
         // Fetch products from Firestore, ensuring the data is retrieved from the server only
         const productsObservable = this.firestore
@@ -327,17 +353,17 @@ export class DataService {
           .doc(user.uid)
           .collection('product')
           .get({ source: 'server' }); // Ensure data is retrieved from the server
-  
+
         // Use firstValueFrom to convert observable to a promise and fetch data
         const productsSnapshot = await firstValueFrom(productsObservable);
         const products = productsSnapshot.docs.map(doc => doc.data()); // Map snapshot to an array of product data
-  
+
         this.spinner.hide();
         return products || []; // Return the products or an empty array if none are found
-  
+
       } else {
         const cartItems = JSON.parse(localStorage.getItem('storedProducts') || '[]');
-        if(cartItems && cartItems.length > 0) {
+        if (cartItems && cartItems.length > 0) {
           this.spinner.hide();
           return cartItems
         }
@@ -352,6 +378,26 @@ export class DataService {
       return []; // Return an empty array in case of any other error
     }
   }
+
+  async getProductById(productId: string): Promise<any> {
+    this.spinner.show();
+
+    try {
+      // Convert the observable to a promise
+      const product = await firstValueFrom(
+        this.firestore.collection('products').doc('product').collection('product').doc(productId).valueChanges()
+      );
+
+      this.spinner.hide();
+      return product;
+
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      this.toastr.warning('Product added to cart failed');
+      this.spinner.hide();
+      return null;
+    }
+}
 
 
 

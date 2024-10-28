@@ -96,7 +96,7 @@ export class HomeComponent implements OnInit {
     }
     // Add more products as needed
   ];
-  
+
 
   featuredProducts = [
     { name: 'Gym Weight', image: './assets/img/feature_prod_01.jpg', price: 240, reviews: 24 },
@@ -118,27 +118,27 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     //this.fetchData();
-    this.dataService.mainSliderData.subscribe((sliders : any) => {
+    this.dataService.mainSliderData.subscribe((sliders: any) => {
       if (sliders === null) return
-      
+
       this.mainSliders = sliders;
 
     });
 
-    this.dataService.categoryData.subscribe((category : any) => {
+    this.dataService.categoryData.subscribe((category: any) => {
       if (category === null) return
-      
+
       this.categories = category;
 
     })
 
-    this.dataService.productsData.subscribe((products : any) => {
+    this.dataService.productsData.subscribe((products: any) => {
       if (products === null) return
-      
+
       this.products = products;
 
     })
-    
+
 
   }
 
@@ -153,11 +153,13 @@ export class HomeComponent implements OnInit {
     });
   }
 
+
   navigateWithObject(product: any) {
-    this.router.navigate(['/product'], {
+    this.router.navigate(['/product', product.productId], {
       state: { objectData: product }
     });
   }
+
 
 
 }

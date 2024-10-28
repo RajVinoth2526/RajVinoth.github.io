@@ -3,7 +3,8 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataService } from 'src/app/service/dataService/data.service';
-
+import { ToastrService } from 'ngx-toastr';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 // Define an interface for credit card details
 interface CreditCardDetails {
   cardNumber: string;
@@ -79,7 +80,8 @@ export class ConfirmOrderComponent implements OnInit {
     cvv: ''
   };
 
-  constructor(private router: Router,private  dataService: DataService, private spinner: NgxSpinnerService,) {}
+  constructor(private router: Router,private  dataService: DataService, private spinner: NgxSpinnerService,  private toastr: ToastrService,
+    private afAuth: AngularFireAuth,) {}
 
   ngOnInit(): void {
     this.userData = this.dataService.getUSerData();
@@ -94,7 +96,22 @@ export class ConfirmOrderComponent implements OnInit {
       this.customerDetails.phone = this.userData.phone;
 
     }
-    this.cartItems = history.state.data;
+
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        this.loadCart(user);
+
+      } else {
+       this.toastr.warning("user not login");
+      }
+    });
+    
+
+  }
+
+  async loadCart(user: any): Promise<void> {
+    this.cartItems = await this.dataService.getCustomerCardProducts(user); // Await the Promise here
+
 
   }
 
@@ -119,7 +136,7 @@ export class ConfirmOrderComponent implements OnInit {
         };
 
         this.dataService.storeOrders(orderData);
-
+        this.router.navigate(['/shop']);
         // Clear form and data
         this.cartItems = [];
         this.customerDetails = {
@@ -139,6 +156,8 @@ export class ConfirmOrderComponent implements OnInit {
           cvv: ''
         };
         form.resetForm();
+
+
       }
     } else {
       alert('Please fill all required fields');
