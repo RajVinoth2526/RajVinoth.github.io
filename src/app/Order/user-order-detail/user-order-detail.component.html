@@ -1,45 +1,58 @@
 <div class="container my-4">
-    <div class="row">
-      <!-- Cart Items Section -->
-      <div class="col-lg-8 col-12 mb-4">
-        <div *ngIf="cartItems.length; else emptyCart">
-          <div class="card mb-3" *ngFor="let product of cartItems">
-            <div class="row no-gutters">
-              <div class="col-md-4">
-                <!-- Product Image -->
-                <img [src]="product.image" class="card-img" alt="{{ product.name }}">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body d-flex flex-column justify-content-between">
-                  <h5 class="card-title">{{ product.name }}</h5>
-                  <p class="card-text text-muted">Price: ${{ product.price }}</p>
-                  <p class="card-text">Quantity: {{ product.quantity }}</p>
-                  <button class="btn btn-danger btn-sm" (click)="removeFromCart(product)">
-                    Remove
-                  </button>
-                </div>  
+  <div class="row">
+    <!-- Cart Items Section -->
+    <div class="col-lg-7 col-12 mb-4">
+      <div *ngIf="cartItems.length; else emptyCart">
+        <div
+          class="card mb-3 shadow-sm cart-item"
+          *ngFor="let product of cartItems; let i = index"
+          [@fadeInAnimation]
+        >
+          <div class="row g-0">
+            <div class="col-md-4">
+              <!-- Product Image -->
+              <img [src]="product.image" class="card-img rounded-start" alt="{{ product.name }}" />
+            </div>
+            <div class="col-md-8">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text text-muted">Price: ${{ product.price }}</p>
+                <p class="card-text">Quantity: {{ product.quantity }}</p>
+                <button
+                  class="btn btn-danger btn-sm shadow-sm remove-btn"
+                  (click)="removeFromCart(product)"
+                  [@slideOutAnimation]
+                >
+                  Remove
+                </button>
               </div>
             </div>
           </div>
         </div>
-        <ng-template #emptyCart>
-          <div class="alert alert-warning text-center theme-color">
-            Your cart is empty!
-          </div>
-        </ng-template>
       </div>
-  
-      <!-- Summary Section -->
-      <div class="col-lg-4 col-12">
-        <div class="card theme-color">
-          <div class="card-body">
-            <h5 class="card-title">Order Summary</h5>
-            <p class="card-text">Total Items: {{ totalItems }}</p>
-            <p class="card-text">Total Price: ${{ totalPrice }}</p>
-            <button class="btn btn-primary btn-block theme-color-button" (click)="navigateWithObject()">Proceed to Checkout</button>
-          </div>
+      <ng-template #emptyCart>
+        <div class="alert text-center fw-bold theme-color">
+          Your cart is empty!
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="col-lg-5 col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-body theme-color">
+          <h5 class="card-title fw-bold">Order Summary</h5>
+          <p class="card-text">Total Items: {{ totalItems }}</p>
+          <p class="card-text">Total Price: ${{ totalPrice }}</p>
+          <button
+            class="btn btn-primary btn-block shadow-sm fw-bold theme-color-button"
+            (click)="navigateWithObject()"
+          >
+            Proceed to Checkout
+          </button>
         </div>
       </div>
     </div>
   </div>
-  
+</div>
+

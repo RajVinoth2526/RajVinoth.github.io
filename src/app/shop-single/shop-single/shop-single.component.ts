@@ -52,7 +52,6 @@ export class ShopSingleComponent implements OnInit {
         window.scrollTo(0, 0);
       }
     });
-    this.scrollToElement();
 
 
   }

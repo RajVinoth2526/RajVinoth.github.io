@@ -4,12 +4,26 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from 'src/app/service/dataService/data.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 
 @Component({
   selector: 'app-user-order-detail',
   templateUrl: './user-order-detail.component.html',
-  styleUrls: ['./user-order-detail.component.css']
+  styleUrls: ['./user-order-detail.component.css'],
+  animations: [
+    trigger('fadeInAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.95)' }),
+        animate('300ms ease-in', style({ opacity: 1, transform: 'scale(1)' })),
+      ]),
+    ]),
+    trigger('slideOutAnimation', [
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateX(100%)' })),
+      ]),
+    ]),
+  ],
 })
 export class UserOrderDetailComponent implements OnInit {
   cartItems: any[] = [];
@@ -32,22 +46,20 @@ export class UserOrderDetailComponent implements OnInit {
         this.loadCart(user);
 
       } else {
-       this.toastr.warning("user not login");
+        this.loadCart(null);
       }
     });
   }
 
-  async loadCart(user: any): Promise<void> {
+  async loadCart(user?: any): Promise<void> {
     this.cartItems = await this.dataService.getCustomerCardProducts(user); // Await the Promise here
     this.calculateTotals();
-
-
   }
   
 
   calculateTotals(): void {
     this.totalItems = this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    this.totalPrice = this.cartItems.reduce((sum, item) => sum + (item.price * 1), 0);
+    this.totalPrice = this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   }
 
   async removeFromCart(product: any){

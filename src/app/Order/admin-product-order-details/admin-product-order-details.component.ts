@@ -2,7 +2,7 @@ import { Component, OnInit, Renderer2 } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { DataService } from 'src/app/service/dataService/data.service';
-
+import { Router } from '@angular/router';
 interface Order {
   id: number;
   customerName: string;
@@ -19,15 +19,14 @@ interface Order {
   styleUrls: ['./admin-product-order-details.component.css']
 })
 export class AdminProductOrderDetailsComponent implements OnInit {
-  orders: any = [
-    { id: 1, customerName: 'John Doe', productName: 'Laptop', quantity: 1, price: 1200, status: 'Pending', paymentMethod: 'Cash' },
-    { id: 2, customerName: 'Jane Smith', productName: 'Smartphone', quantity: 2, price: 800, status: 'Shipped', paymentMethod: 'Credit Card' },
-  ];
+  orders: any = [];
+  orderItems: any = [];
   theme: any;
   currentUser: any;
   constructor(
     private dataService :DataService,
     private renderer: Renderer2,
+    private router: Router,
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore) { 
     this.theme = {
@@ -36,11 +35,11 @@ export class AdminProductOrderDetailsComponent implements OnInit {
     };
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.dataService.currentUser.subscribe((user) => {
       this.currentUser = user;
     });
-    this.getOders();
+    await this.getOders();
     //document.documentElement.style.setProperty('--primary-color', this.theme.primaryColor);
     
     
@@ -53,7 +52,10 @@ export class AdminProductOrderDetailsComponent implements OnInit {
   getStatusBadgeClass(status: string): string {
     switch (status) {
       case 'Pending':
-        return 'badge-warning';
+       
+        return 'badge-primary';
+
+        // return 'badge-warning';
       case 'Shipped':
         return 'badge-primary';
       case 'Delivered':
@@ -65,7 +67,7 @@ export class AdminProductOrderDetailsComponent implements OnInit {
     }
   }
 
-  viewOrderDetails(orderId: number): void {
-    console.log('Viewing details for order ID:', orderId);
+  viewOrderDetails(orderId: any): void {
+    this.router.navigate(['/product',orderId.cardItems.id]);
   }
 }

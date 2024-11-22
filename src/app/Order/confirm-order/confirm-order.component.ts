@@ -102,7 +102,7 @@ export class ConfirmOrderComponent implements OnInit {
         this.loadCart(user);
 
       } else {
-       this.toastr.warning("user not login");
+        this.loadCart(null);
       }
     });
     

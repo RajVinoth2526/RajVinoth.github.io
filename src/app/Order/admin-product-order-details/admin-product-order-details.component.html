@@ -1,4 +1,4 @@
-<div *ngIf="currentUser && currentUser.isAdmin" class="container mt-4">
+<div *ngIf="currentUser != undefined && currentUser.isAdmin" class="container mt-4">
   <div class="card shadow-sm border-0">
     <div class="card-header bg-primary text-white">
       <h3 class="mb-0 theme-color">Order Details</h3>
@@ -23,29 +23,22 @@
             <ng-container *ngFor="let order of orders">
               <!-- First Row: Display order details and the first item -->
               <tr>
-                <td [attr.rowspan]="order.cardItems.length">{{ order.orderId }}</td>
-                <td [attr.rowspan]="order.cardItems.length">{{ order.customerDetails.name }}</td>
-                <td>{{ order.cardItems[0].name }}</td>
-                <td>{{ order.cardItems[0].quantity }}</td>
-                <td>{{ order.cardItems[0].price | currency }}</td>
-                <td [attr.rowspan]="order.cardItems.length">
+                <td>{{ order.orderId }}</td>
+                <td>{{ order.customerDetails.name }}</td>
+                <td>{{ order.cardItems.name }}</td>
+                <td>{{ order.cardItems.quantity }}</td>
+                <td>{{ order.cardItems.price | currency }}</td>
+                <td >
                   <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
                     pending
                   </span>
                 </td>
-                <td [attr.rowspan]="order.cardItems.length">{{ order.paymentMethod }}</td>
-                <td [attr.rowspan]="order.cardItems.length">
-                  <button class="btn btn-outline-primary btn-sm" (click)="viewOrderDetails(order.id)">
+                <td>{{ order.paymentMethod }}</td>
+                <td>
+                  <button class="btn btn-outline-primary btn-sm" (click)="viewOrderDetails(order)">
                     <i class="fas fa-eye"></i> View
                   </button>
                 </td>
-              </tr>
-          
-              <!-- Additional Rows: Display remaining items for this order -->
-              <tr *ngFor="let item of order.cardItems.slice(1)">
-                <td>{{ item.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.price | currency }}</td>
               </tr>
             </ng-container>
           </tbody>

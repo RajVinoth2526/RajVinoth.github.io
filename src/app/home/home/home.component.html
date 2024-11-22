@@ -292,20 +292,8 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <a href="shop-single.html" class="h3 text-decoration-none">{{ product.name }}</a>
-                  <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
-                    <li>M/L/X/XL</li>
-                    <li class="pt-2">
-                      <span *ngFor="let color of product.colors" class="product-color-dot float-left rounded-circle ml-1" [ngStyle]="{'background-color': color}"></span>
-                    </li>
-                  </ul>
-                  <ul class="list-unstyled d-flex justify-content-center mb-1">
-                    <li>
-                      <i *ngFor="let star of product.stars" class="text-warning fa fa-star"></i>
-                      <i *ngFor="let emptyStar of product.emptyStars" class="text-muted fa fa-star"></i>
-                    </li>
-                  </ul>
-                  <p class="text-center mb-0">{{ product.price }}</p>
+                  <p style="font-weight: bolder !important;" class="h3 text-decoration-none">product name</p>  
+                  <p class="mb-0" style="font-weight: bolder !important;">Rs -{{ product.price }} /-</p>
                 </div>
               </div>
             </div>

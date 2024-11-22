@@ -255,7 +255,7 @@ export class DataService {
 
 
     const orderId = this.firestore.createId(); // Create a unique ID for the product
-        await this.firestore.collection('customerOrder').doc(user.uid).collection('order').doc(orderId).set({
+        await this.firestore.collection('customerOrder').doc(orderId).set({
           card: card,
           customerDetails: orderData.customer,
           paymentMethod: orderData.paymentMethod,
@@ -264,7 +264,7 @@ export class DataService {
           createdAt: new Date()
         });
 
-    await this.firestore.collection('orders').doc(user.uid).set({
+    await this.firestore.collection('orders').doc(orderId).set({
       orderId: orderId,
       userId: user.uid,
       cardItems: card,
@@ -340,7 +340,7 @@ export class DataService {
   }
 
   // Function to get customer card products with error handling
-  async getCustomerCardProducts(user: any): Promise<any[]> {
+  async getCustomerCardProducts(user?: any): Promise<any[]> {
     this.spinner.show();
 
     try {
