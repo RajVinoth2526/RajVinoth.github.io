@@ -49,7 +49,7 @@ export class SetupComponent implements OnInit {
   categoryId: number = 0;
   primaryColor: string = '#ff0000';  // Default primary color (red)
   secondaryColor: string = '#00ff00';  // Default secondary color (green)
-  shopName: string = 'Please Enter Shop Name';
+  shopName: string = '';
   email!: string;
   phoneNumber!: string;
   address!: string;

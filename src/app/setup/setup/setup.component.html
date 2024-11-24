@@ -287,9 +287,9 @@
     </div>
 
     <div *ngIf="setupOption == 'shopName'" class="slider-show-form">
-      <div style="align-content: flex-start; margin-bottom: 50px;">
-        <label for="inputField">Enter Shop Name:</label>
-        <input type="text" id="inputField" (input)="onShopNameChange($event)" [value]="shopName" />
+      <div class="form-group">
+        <label for="shopName">Enter Shop Name:</label>
+        <input type="text" class="form-control" id="shopName" name="shopName" placeholder="Enter shopName" [(ngModel)]="shopName" required>
       </div>
     </div>
 
