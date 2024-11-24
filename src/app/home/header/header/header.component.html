@@ -224,6 +224,14 @@
 
                 </div>
             </div>
+            <div class="modal-body" *ngIf="currentUser">
+                <button 
+                type="button" 
+                class="btn btn-primary mt-3" 
+                (click)="viewOrderDetails()">
+                View Order Details
+            </button>
+            </div>
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button *ngIf="currentUser" type="button" class="btn theme-color-button" (click)="signOut()">Sign Out</button>

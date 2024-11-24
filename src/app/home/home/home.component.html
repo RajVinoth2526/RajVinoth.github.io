@@ -78,7 +78,6 @@
               </div>
             </div>
           </a>
-          <p class="text-center mt-3 mb-3 theme-color-secondary">{{ categorie.title }}</p>
           <p class="text-center"><a [routerLink]="'/shop'" class="btn theme-color-button">Go Shop</a></p>
         </div>
       </div>
@@ -292,7 +291,7 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <p style="font-weight: bolder !important;" class="h3 text-decoration-none">product name</p>  
+                  <p style="font-weight: bolder !important;" class="h3 text-decoration-none">{{product.title}}</p>
                   <p class="mb-0" style="font-weight: bolder !important;">Rs -{{ product.price }} /-</p>
                 </div>
               </div>

@@ -10,9 +10,8 @@
             <tr>
               <th>Order ID</th>
               <th>Customer Name</th>
-              <th>Product Name</th>
-              <th>Quantity</th>
-              <th>Price</th>
+              <th>Total Quantity</th>
+              <th>Total Price</th>
               <th>Status</th>
               <th>Payment Method</th>
               <th>Actions</th>
@@ -25,17 +24,16 @@
               <tr>
                 <td>{{ order.orderId }}</td>
                 <td>{{ order.customerDetails.name }}</td>
-                <td>{{ order.cardItems.name }}</td>
-                <td>{{ order.cardItems.quantity }}</td>
-                <td>{{ order.cardItems.price | currency }}</td>
+                <td>{{calculateTotalQuantity(order)}}</td>
+                <td>Rs :{{calculateTotalPrice(order)}}</td>
                 <td >
                   <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
-                    pending
+                    pending 
                   </span>
                 </td>
                 <td>{{ order.paymentMethod }}</td>
                 <td>
-                  <button class="btn btn-outline-primary btn-sm" (click)="viewOrderDetails(order)">
+                  <button class="btn btn-outline-primary btn-sm" (click)="viewOrderDetails(order.orderId)">
                     <i class="fas fa-eye"></i> View
                   </button>
                 </td>

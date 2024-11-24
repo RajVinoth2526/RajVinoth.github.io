@@ -31,6 +31,12 @@ import { UserOrderDetailComponent } from './Order/user-order-detail/user-order-d
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ConfirmOrderComponent } from './Order/confirm-order/confirm-order.component';
 import { PaymentComponent } from './Order/payment/payment.component';
+import { ConfirmOrderDetailsComponent } from './confirm-order-details/confirm-order-details.component';
+import { MyOrdersComponent } from './my-orders/my-orders.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +52,9 @@ import { PaymentComponent } from './Order/payment/payment.component';
     AdminProductOrderDetailsComponent,
     UserOrderDetailComponent,
     ConfirmOrderComponent,
-    PaymentComponent
+    PaymentComponent,
+    ConfirmOrderDetailsComponent,
+    MyOrdersComponent
   ],
   imports: [
     BrowserModule,
@@ -64,6 +72,9 @@ import { PaymentComponent } from './Order/payment/payment.component';
     MatDialogModule,
     ReactiveFormsModule,
     ColorPickerModule,
+    MatExpansionModule,      // For mat-accordion and mat-expansion-panel
+    MatTableModule,          // For mat-table
+    MatIconModule,
     ToastrModule.forRoot()  
   ],
   entryComponents: [ConfirmationComponent],

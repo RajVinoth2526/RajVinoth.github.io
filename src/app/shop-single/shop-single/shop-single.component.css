@@ -53,3 +53,8 @@
     padding: 8px 16px; /* Optional: Adjust padding for size buttons */
   }
   
+
+  .img-fluid-shop{
+    /* min-height: 350px !important; */
+    height: 350px;
+}

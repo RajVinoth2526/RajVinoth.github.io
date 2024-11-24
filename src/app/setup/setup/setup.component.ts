@@ -37,6 +37,8 @@ export class SetupComponent implements OnInit {
   selectedIndex: number = 0;
   title: string = '';
   subTitle: string = '';
+  specification: string = '';  
+  colors: string = '';
   contant: string = '';
   selectedFile!: File;
   setupOption: string = '';
@@ -48,6 +50,13 @@ export class SetupComponent implements OnInit {
   primaryColor: string = '#ff0000';  // Default primary color (red)
   secondaryColor: string = '#00ff00';  // Default secondary color (green)
   shopName: string = 'Please Enter Shop Name';
+  email!: string;
+  phoneNumber!: string;
+  address!: string;
+  city!: string;
+  state!: string;
+  postalCode!: string;
+
 
   
   constructor(private firestore: AngularFirestore,
@@ -240,8 +249,10 @@ export class SetupComponent implements OnInit {
       this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).doc(productId).set({
         title: this.title,
         subTitle: this.subTitle,
+        specification: this.specification,
+        colors: this.colors,
         category : this.findCategoryById(this.categoryId),
-        contant: this.contant,
+        contant: '',
         imageUrl: imageURLs,
         productId : productId
 
@@ -261,6 +272,8 @@ export class SetupComponent implements OnInit {
       this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).doc(productId).set({
         title: this.title,
         subTitle: this.subTitle,
+        specification: this.specification,
+        colors: this.colors,
         label : this.label,
         size : this.size,
         description : this.description,
@@ -309,6 +322,32 @@ export class SetupComponent implements OnInit {
       this.firestore.collection('ShopName').doc('Shop-Name').set({
         shopName: this.shopName,
         secondaryColor: this.secondaryColor
+
+      }).then(async () => {
+        let shopName;
+        const getShopName = new Promise<any[]>((resolve, reject) => {
+          this.firestore.collection('ShopName').valueChanges().subscribe({
+            next: (data) => resolve(data as any[]),
+            error: (err) => reject(err)
+          });
+        });
+        shopName = await getShopName;
+        this.dataService.shopName.next(shopName);
+        this.spinner.hide();
+    
+      }).catch(error => {
+        this.spinner.hide();
+        this.toastr.warning(error);
+        console.error('Error uploading product details:', error);
+      });
+    } else if(this.setupOption == 'contactDetails') {
+      this.firestore.collection('contactDetail').doc('contactDetail').set({
+        email : this.email,
+        phoneNumber: this.phoneNumber,
+        address: this.address,
+        city: this.city,
+        state: this.state,
+        postalCode: this.postalCode
 
       }).then(async () => {
         let shopName;

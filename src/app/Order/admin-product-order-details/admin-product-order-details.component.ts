@@ -68,6 +68,23 @@ export class AdminProductOrderDetailsComponent implements OnInit {
   }
 
   viewOrderDetails(orderId: any): void {
-    this.router.navigate(['/product',orderId.cardItems.id]);
+    this.router.navigate(['/confirm-order-details',orderId]);
+
+
   }
+
+  calculateTotalPrice(order: any) {
+    return order.cardItems.reduce(
+      (total:any, product:any) => total + product.quantity * product.price,
+      0
+    );
+  }
+
+  calculateTotalQuantity(order: any) {
+    return order.cardItems.reduce(
+      (total:any, product:any) => total + product.quantity ,
+      0
+    );
+  }
+  
 }

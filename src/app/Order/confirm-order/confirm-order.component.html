@@ -14,20 +14,27 @@
                                 <th>Price</th>
                                 <th>Quantity</th>
                                 <th>Total</th>
+                                <th>View</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let item of cartItems">
                                 <td>{{ item.name }}</td>
-                                <td>{{ item.price | currency }}</td>
-                                <td>{{item.quantity}}</td>
-                                <td>{{item.quantity * item.price }}</td>
+                                <td>Rs: {{ item.price}}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.quantity * item.price }}</td>
+                                <td>
+                                    <button class="btn btn-outline-primary btn-sm" (click)="viewOrderDetails(item.id)">
+                                        <i class="fas fa-eye"></i> View
+                                      </button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                
                 <div class="card-footer text-end">
-                    <h5>Total: <strong>{{ calculateTotal() | currency }}</strong></h5>
+                    <h5>Total: <strong>Rs: {{ calculateTotal()}}</strong></h5>
                 </div>
             </div>
         </div>
@@ -183,7 +190,7 @@
                         <!-- Fixed Place Order Button inside the form -->
                         <div class="card-footer mt-auto">
                             <button type="submit" class="btn theme-color w-100"
-                                [disabled]="cartItems.length === 0 || orderForm.invalid">
+                                [disabled]="cartItems?.length === 0 || orderForm.invalid">
                                 <i class="fas fa-check"></i> {{customerDetails.paymentMethod === 'creditCard' ? 'Pay Now'
                                 : 'Confirm Order' }}
                             </button>

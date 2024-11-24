@@ -97,12 +97,17 @@ export class ConfirmOrderComponent implements OnInit {
 
     }
 
+     // Access the passed state data
+    const receivedData = history.state.data;
+
     this.afAuth.authState.subscribe(user => {
-      if (user) {
+      if (user && !receivedData) {
         this.loadCart(user);
 
-      } else {
+      } else if (!receivedData) {
         this.loadCart(null);
+      } else {
+        this.cartItems = receivedData;
       }
     });
     
@@ -113,6 +118,10 @@ export class ConfirmOrderComponent implements OnInit {
     this.cartItems = await this.dataService.getCustomerCardProducts(user); // Await the Promise here
 
 
+  }
+
+  viewOrderDetails(productId: any): void {
+    this.router.navigate(['/product',productId]);
   }
 
   // Handle payment method change
@@ -166,7 +175,7 @@ export class ConfirmOrderComponent implements OnInit {
 
   // Calculate total price for the cart items
   calculateTotal(): number {
-    return this.cartItems.reduce((total: number, item: { price: number, quantity: number }) => {
+    return this.cartItems?.reduce((total: number, item: { price: number, quantity: number }) => {
       return total + item.price * item.quantity;
     }, 0);
   }

@@ -9,6 +9,8 @@ import { SetupComponent } from './setup/setup/setup.component';
 import { AdminProductOrderDetailsComponent } from './Order/admin-product-order-details/admin-product-order-details.component';
 import { ConfirmOrderComponent } from './Order/confirm-order/confirm-order.component';
 import { PaymentComponent } from './Order/payment/payment.component';
+import { ConfirmOrderDetailsComponent } from './confirm-order-details/confirm-order-details.component';
+import { MyOrdersComponent } from './my-orders/my-orders.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -20,7 +22,10 @@ const routes: Routes = [
   { path: 'setup', component: SetupComponent },
   { path: 'Admin-order-details', component: AdminProductOrderDetailsComponent },
   { path: 'confirm-order', component: ConfirmOrderComponent },
-  { path: 'payment', component: PaymentComponent }
+  { path: 'payment', component: PaymentComponent },
+  { path: 'confirm-order-details/:id', component: ConfirmOrderDetailsComponent },
+  { path: 'my-orders', component: MyOrdersComponent }
+
 
 
 ];

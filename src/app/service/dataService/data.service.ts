@@ -112,6 +112,53 @@ export class DataService {
     this.productsDataCache = [];
   }
 
+  // setEmailTocustomer(orderId: any, customer: any, card: any) {
+  //   const functions = require("firebase-functions");
+  //   const nodemailer = require("nodemailer");
+
+  //   // Configure email transporter
+  //   const transporter = nodemailer.createTransport({
+  //     service: 'gmail', // Use your email provider
+  //     auth: {
+  //       user: 'your-email@gmail.com', // Replace with your email
+  //       pass: 'your-email-password'  // Replace with your email password or app password
+  //     }
+  //   });
+
+  //   // Trigger function on order confirmation
+   
+  //       const mailOptions = {
+  //         from: 'your-email@gmail.com',
+  //         to: customer.email,
+  //         subject: `Order Confirmation - Order #${orderId}`,
+  //         text: `Dear ${customer.name},\n\nThank you for your order!\n\nOrder Details:\n${JSON.stringify(card, null, 2)}`
+  //       };
+
+  //       // Send email
+  //       return transporter.sendMail(mailOptions)
+  //         .then(() => console.log('Order confirmation email sent.'))
+  //         .catch((error: any) => console.error('Error sending email:', error));
+
+
+  // }
+
+  async getShopContact() {
+    this.spinner.show(); // Show loader
+    try {
+      const orders$ = this.firestore
+        .collection('contactDetail').doc('contactDetail')
+        .valueChanges();
+      
+      const orders = await firstValueFrom(orders$); // Wait for the data
+      return orders
+    } catch (error) {
+      this.toastr.success('my orders get faild');
+      return [];
+    } finally {
+      this.spinner.hide(); // Hide loader
+    }
+  }
+
   // Function to store product details with error handling
   async addProduct(product: any): Promise<void> {
     this.spinner.show();
@@ -251,28 +298,53 @@ export class DataService {
     }
   }
 
-  async storeOdersForAdmin(orderData: any, card: any, user: any) {
-
-
-    const orderId = this.firestore.createId(); // Create a unique ID for the product
-        await this.firestore.collection('customerOrder').doc(orderId).set({
-          card: card,
-          customerDetails: orderData.customer,
-          paymentMethod: orderData.paymentMethod,
-          orderId: orderId,
-          userId: user.uid,
-          createdAt: new Date()
-        });
-
-    await this.firestore.collection('orders').doc(orderId).set({
-      orderId: orderId,
-      userId: user.uid,
-      cardItems: card,
-      customerDetails: orderData.customer,
-      paymentMethod: orderData.paymentMethod,
-      createdAt: new Date()
-    });
+  async getOrdersByUserId(userId: string) {
+    this.spinner.show(); // Show loader
+    try {
+      const orders$ = this.firestore
+        .collection('customerOrder', (ref) => ref.where('userId', '==', userId))
+        .valueChanges();
+      
+      const orders = await firstValueFrom(orders$); // Wait for the data
+      return orders
+    } catch (error) {
+      this.toastr.success('my orders get faild');
+      return [];
+    } finally {
+      this.spinner.hide(); // Hide loader
+    }
   }
+
+  async storeOdersForAdmin(orderData: any, card: any, user: any, orderId?: any) {
+    try {
+      // Save order to 'customerOrder' collection
+      await this.firestore.collection('customerOrder').doc(orderId).set({
+        card: card,
+        customerDetails: orderData.customer,
+        paymentMethod: orderData.paymentMethod,
+        orderId: orderId,
+        userId: user? user.uid : 0,
+        createdAt: new Date(),
+      });
+  
+      // Save order to 'orders' collection
+      await this.firestore.collection('orders').doc(orderId).set({
+        orderId: orderId,
+        userId: user? user.uid : 0,
+        cardItems: card,
+        customerDetails: orderData.customer,
+        paymentMethod: orderData.paymentMethod,
+        createdAt: new Date(),
+      });
+  
+      //this.setEmailTocustomer(orderId, orderData.customer, card);
+    } catch (error) {
+      console.error('Error storing order:', error);
+      throw new Error('Failed to store the order. Please try again.'); // Optionally rethrow the error
+    }
+  }
+  
+
   async storeOrders(orderData: any): Promise<void> {
     this.spinner.show();
 
@@ -282,12 +354,10 @@ export class DataService {
       if (user && this.getUSerData() && !this.getUSerData().isAdmin) {
 
         
+        const orderId = this.firestore.createId(); // Create a unique ID for the product
 
-        orderData.cart.forEach((card: any) =>  {
-          if(card == null) return;
-
-          this.storeOdersForAdmin(orderData,card,user);
-        })
+        this.storeOdersForAdmin(orderData,orderData.cart,user,orderId);
+        
 
         
 
@@ -300,7 +370,20 @@ export class DataService {
         this.toastr.success('Your order is confirmed!');
 
       } else {
+        const orderId = this.firestore.createId(); // Create a unique ID for the product
+
+        this.storeOdersForAdmin(orderData,orderData.cart,null,orderId);
+        
+
+        
+
+        orderData.cart.forEach((card: any) => {
+          if(card == null) return;
+          this.deleteProductFromCard(card);
+        });
         this.spinner.hide();
+        
+        this.toastr.success('Your order is confirmed!');
       }
     } catch (error) {
       // Handle any errors that occur during the sync process
@@ -399,6 +482,27 @@ export class DataService {
     }
 }
 
+async getOrderById(orderId: string): Promise<any> {
+  this.spinner.show();
+
+  try {
+    // Convert the observable to a promise
+    const order = await firstValueFrom(
+      this.firestore.collection('orders').doc(orderId).valueChanges()
+    );
+
+    this.spinner.hide();
+    return order;
+
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    this.toastr.warning('order get failed');
+    this.spinner.hide();
+    return null;
+  }
+}
+
+
 
 
   // Function to delete product from cart with error handling
@@ -417,7 +521,9 @@ export class DataService {
           .delete();
 
         console.log(`Product with ID ${product.productId} deleted from Firestore.`);
-        this.toastr.success('Product successfully deleted');
+        if (user && this.getUSerData() && this.getUSerData().isAdmin) {
+          this.toastr.success('Product successfully deleted');
+        }
         this.spinner.hide();
 
 

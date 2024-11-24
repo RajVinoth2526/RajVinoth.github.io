@@ -1,5 +1,6 @@
 .theme-color {
-    color: var(--primary-color) !important;
+    color: var(--secondary-color) !important;
+    background-color:  var(--primary-color) !important; ;
 }
 
 .x-mart-text:hover {

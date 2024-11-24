@@ -20,7 +20,7 @@ export class ShopSingleComponent implements OnInit {
   selectedProduct: any;
   quantity: number = 1;
   productSize: string = '';
-  productId!: string;
+  productId = 'S';
 
   @ViewChild('targetElement', { static: true }) targetElement!: ElementRef;
 
@@ -37,6 +37,7 @@ export class ShopSingleComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProductByParamId();
+    this.updateSize('S');
     this.dataService.productsData.subscribe((products: any) => {
       if (products === null) return
 
@@ -57,7 +58,7 @@ export class ShopSingleComponent implements OnInit {
   }
 
   async getProductByParamId() {
-    this.productId = this.route.snapshot.paramMap.get('id')!;;
+    this.productId = this.route.snapshot.paramMap.get('id')!;
     this.selectedProduct =  await this.dataService.getProductById(this.productId);
     this.items = this.selectedProduct.imageUrl;
     this.generateSlides();
@@ -65,12 +66,24 @@ export class ShopSingleComponent implements OnInit {
     this.selectedImageAlt = this.items[0];
   }
 
+
   updateQuantity(operator: string) {
     if(operator === '+' && this.quantity < 15) {
       this.quantity += 1;
     } else if( this.quantity > 1) {
       this.quantity -= 1;
     }
+  }
+
+  navigateWithObjectToConfirmOrder() {
+    this.selectedProduct.quantity = this.quantity;
+    this.selectedProduct.size = this.productSize;
+    this.selectedProduct.image = this.selectedProduct.imageUrl[0];
+    this.selectedProduct.name = this.selectedProduct.title;
+    this.selectedProduct.id = this.selectedProduct.productId;
+
+    const data = [this.selectedProduct];
+    this.router.navigateByUrl('/confirm-order', { state: { data } });
   }
 
   updateSize(size: string) {

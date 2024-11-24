@@ -1,0 +1,47 @@
+.card {
+    border-radius: 10px;
+  }
+  
+  .badge-warning {
+    background-color: #ffc107;
+    color: #000;
+  }
+  
+  .badge-success {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .badge-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .badge-secondary {
+    background-color: #6c757d;
+    color: #fff;
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .img-thumbnail {
+    border-radius: 10%;
+    border: none;
+  }
+
+
+  .theme-color {
+    background-color: var(--primary-color) !important;
+  }
+  
+  .btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}

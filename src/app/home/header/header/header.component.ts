@@ -305,6 +305,8 @@ export class HeaderComponent implements OnInit,OnDestroy {
   }
 
 
-
+  viewOrderDetails() {
+    this.router.navigate(['/my-orders']);
+  }
 
 }
