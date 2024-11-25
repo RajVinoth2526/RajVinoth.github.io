@@ -27,8 +27,8 @@
                 <td>{{calculateTotalQuantity(order)}}</td>
                 <td>Rs :{{calculateTotalPrice(order)}}</td>
                 <td >
-                  <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
-                    pending 
+                  <span class="badge" [ngClass]="getStatusBadgeClass(order.cardItems[0].status)">
+                    {{order.cardItems[0].status}} 
                   </span>
                 </td>
                 <td>{{ order.paymentMethod }}</td>

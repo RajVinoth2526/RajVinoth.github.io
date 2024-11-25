@@ -46,3 +46,17 @@
     background-color: var(--primary-color);
     color: #fff;
 }
+
+select {
+    appearance: auto;
+    -webkit-appearance: auto; /* For Safari/Chrome */
+  }
+  
+
+select.custom-select {
+    /* background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23000" viewBox="0 0 4 5"><path d="M2 0L0 2h4z"/></svg>'); */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+  }
+  

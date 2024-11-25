@@ -11,6 +11,10 @@ import { ConfirmOrderComponent } from './Order/confirm-order/confirm-order.compo
 import { PaymentComponent } from './Order/payment/payment.component';
 import { ConfirmOrderDetailsComponent } from './confirm-order-details/confirm-order-details.component';
 import { MyOrdersComponent } from './my-orders/my-orders.component';
+import { LoginComponent } from './Auth/login/login.component';
+import { ProfileComponent } from './profile/profile/profile.component';
+import { RegisterComponent } from './Auth/register/register.component';
+import { ForgotPasswordComponent } from './Auth/forgot-password/forgot-password.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -24,7 +28,12 @@ const routes: Routes = [
   { path: 'confirm-order', component: ConfirmOrderComponent },
   { path: 'payment', component: PaymentComponent },
   { path: 'confirm-order-details/:id', component: ConfirmOrderDetailsComponent },
-  { path: 'my-orders', component: MyOrdersComponent }
+  { path: 'my-orders', component: MyOrdersComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'signUp', component: RegisterComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent }
+
 
 
 

@@ -50,17 +50,17 @@ export class AdminProductOrderDetailsComponent implements OnInit {
   }
 
   getStatusBadgeClass(status: string): string {
-    switch (status) {
-      case 'Pending':
+    switch (status.toLowerCase()) {
+      case 'pending':
        
-        return 'badge-primary';
+        return 'badge-pending';
 
         // return 'badge-warning';
-      case 'Shipped':
+      case 'shipped':
         return 'badge-primary';
-      case 'Delivered':
+      case 'delivered':
         return 'badge-success';
-      case 'Cancelled':
+      case 'cancelled':
         return 'badge-danger';
       default:
         return 'badge-secondary';

@@ -17,9 +17,11 @@ export class ShopSingleComponent implements OnInit {
   selectedImageAlt: string = "";
   products: any[] = [];
   items: any = [];
+  availableColors = [];
   selectedProduct: any;
   quantity: number = 1;
   productSize: string = '';
+  selectedColor: string = '';
   productId = 'S';
 
   @ViewChild('targetElement', { static: true }) targetElement!: ElementRef;
@@ -57,13 +59,23 @@ export class ShopSingleComponent implements OnInit {
 
   }
 
-  async getProductByParamId() {
-    this.productId = this.route.snapshot.paramMap.get('id')!;
+  async getProductByParamId(productId?: string) {
+    this.availableColors = [];
+    if(productId) {
+      this.productId = productId;
+    } else {
+      this.productId = this.route.snapshot.paramMap.get('id')!;
+    }
+
     this.selectedProduct =  await this.dataService.getProductById(this.productId);
+    this.availableColors = this.selectedProduct?.colors?.split("/");
+    this.selectedColor = this.availableColors && this.availableColors?.length > 0 ? this.availableColors[0]: '' ;
     this.items = this.selectedProduct.imageUrl;
     this.generateSlides();
     this.selectedImageSrc = this.items[0];
     this.selectedImageAlt = this.items[0];
+    this.scrollToElement();
+    
   }
 
 
@@ -75,9 +87,16 @@ export class ShopSingleComponent implements OnInit {
     }
   }
 
+  selectColor(color: string, product: any): void {
+    this.selectedColor = color;
+    product.color = color;
+    console.log('Selected Color:', this.selectedColor);
+  }
+  
   navigateWithObjectToConfirmOrder() {
     this.selectedProduct.quantity = this.quantity;
     this.selectedProduct.size = this.productSize;
+    this.selectedProduct.color = this.selectedColor;
     this.selectedProduct.image = this.selectedProduct.imageUrl[0];
     this.selectedProduct.name = this.selectedProduct.title;
     this.selectedProduct.id = this.selectedProduct.productId;
@@ -107,19 +126,15 @@ export class ShopSingleComponent implements OnInit {
   }
   
   navigateWithObject(product: any) {
-    this.selectedProduct = product;
-    localStorage.setItem('navigatedProduct', JSON.stringify(product.imageUrl));
-    this.items = [];
-    this.items = product.imageUrl;
-    this.generateSlides();
-    this.selectedImageSrc = this.items[0];
-    this.selectedImageAlt = this.items[0];
-    this.scrollToElement();
+    this.router.navigate(['/product',product.productId], {
+      state: { objectData: product }
+    });
   }
 
   async addProductTocard(product: any ) {
     product.size = this.productSize;
     product.quantity =  this.quantity;
+    product.color = this.selectedColor;
     this.spinner.show();
     await this.dataService.addProduct(product);
     this.spinner.hide();

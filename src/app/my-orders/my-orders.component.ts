@@ -35,29 +35,34 @@ export class MyOrdersComponent implements OnInit {
     return new Date(milliseconds);
   }
 
-  getStatusClass(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return 'badge-warning';
-      case 'completed':
+  getStatusBadgeClass(status: string): string {
+    switch (status) {
+      case 'Pending':
+       
+        return 'badge-primary';
+
+        // return 'badge-warning';
+      case 'Shipped':
+        return 'badge-primary';
+      case 'Delivered':
         return 'badge-success';
-      case 'cancelled':
+      case 'Cancelled':
         return 'badge-danger';
       default:
         return 'badge-secondary';
     }
   }
 
-  getTotalAmount(order: any): number {
-    console.log(order.card); // Log the card data to check its structure
-    if (Array.isArray(order.card)) {
-      return order.card.reduce((total: any, product: any) => total + product.quantity * product.price, 0);
-    } else {
-      console.error('order.card is not an array');
-      return 0; // or handle it accordingly
-    }
+ getTotalAmount(order: any): number {
+ // console.log(order.card); // Log the card data to check its structure
+  if (Array.isArray(order.card)) {
+    return order.card.reduce((total: any, product: any) => total + product.quantity * product.price, 0);
+  } else {
+    return order.card.quantity * order.card.price
+
   }
-  
+}
+
 
   viewOrderDetails(productId: any): void {
     this.router.navigate(['/product',productId]);

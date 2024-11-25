@@ -45,6 +45,15 @@ export class ConfirmOrderDetailsComponent implements OnInit {
     }
   }
 
+  onStatusChange(order: any) {
+    if(order && order.cardItems.length > 0) {
+      order.cardItems.forEach((card: any) => {
+        card.status = order.cardItems[0].status;
+      })
+    }
+    this.dataService.updateOrder(order);
+  }
+
   getTotalAmount(order: any): number {
     return order.cardItems.reduce(
       (total:any, product:any) => total + product.quantity * product.price,

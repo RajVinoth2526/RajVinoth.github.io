@@ -131,6 +131,11 @@ export class ConfirmOrderComponent implements OnInit {
 
   // Updated placeOrder function
   placeOrder(form: NgForm) {
+    if( this.cartItems.length > 0) {
+      this.cartItems.forEach((card: any) => {
+        card.status = "Pending";
+      })
+    }
     if (form.valid) {
       // If the payment method is 'creditCard', navigate to the card payment page
       if (this.customerDetails.paymentMethod === 'creditCard') {

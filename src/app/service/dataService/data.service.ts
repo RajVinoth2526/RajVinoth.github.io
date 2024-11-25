@@ -26,6 +26,9 @@ export class DataService {
 
   public shopName = new BehaviorSubject<any>(null);
 
+  public shopContactDetails$ = new BehaviorSubject<any>(null);
+
+
   public loadingIndicator = new BehaviorSubject<boolean>(false);
 
   private mainSliderDataCache: any[] = [];
@@ -145,12 +148,12 @@ export class DataService {
   async getShopContact() {
     this.spinner.show(); // Show loader
     try {
-      const orders$ = this.firestore
+      const contactDetail = this.firestore
         .collection('contactDetail').doc('contactDetail')
         .valueChanges();
       
-      const orders = await firstValueFrom(orders$); // Wait for the data
-      return orders
+      return await firstValueFrom(contactDetail); // Wait for the data
+
     } catch (error) {
       this.toastr.success('my orders get faild');
       return [];
@@ -176,6 +179,7 @@ export class DataService {
           size: product.size,
           quantity: product.quantity,
           label: product.label,
+          color: product.color,
           category: product.category,
           description: product.description,
           userId: user.uid,
@@ -223,6 +227,7 @@ export class DataService {
       size: product.size,
       quantity: product.quantity,
       label: product.label,
+      color: product.color,
       category: product.category,
       description: product.description,
       createdAt: new Date()
@@ -265,6 +270,7 @@ export class DataService {
                 size: product.size,
                 quantity: product.quantity,
                 label: product.label,
+                color: product.color,
                 category: product.category,
                 description: product.description,
                 userId: user.uid
@@ -301,11 +307,17 @@ export class DataService {
   async getOrdersByUserId(userId: string) {
     this.spinner.show(); // Show loader
     try {
-      const orders$ = this.firestore
-        .collection('customerOrder', (ref) => ref.where('userId', '==', userId))
-        .valueChanges();
-      
-      const orders = await firstValueFrom(orders$); // Wait for the data
+
+      const productsObservable = this.firestore
+          .collection('customerOrder', (ref: any) => ref.where('userId', '==', userId))
+          .get({ source: 'server' }); // Ensure data is retrieved from the server
+
+        // Use firstValueFrom to convert observable to a promise and fetch data
+        const orderSnapshot = await firstValueFrom(productsObservable);
+        const orders = orderSnapshot.docs.map(doc => doc.data()); // Map snapshot to an array of product data
+
+      this.spinner.hide();
+
       return orders
     } catch (error) {
       this.toastr.success('my orders get faild');
@@ -315,7 +327,42 @@ export class DataService {
     }
   }
 
+  async updateOrder(orderData: any) {
+    // Update the order in 'customerOrder' collection
+    this.spinner.show();
+
+    try {
+      await this.firestore.collection('customerOrder').doc(orderData.orderId).set({
+        card: orderData.cardItems,
+        customerDetails: orderData.customerDetails,
+        paymentMethod: orderData.paymentMethod,
+        orderId: orderData.orderId,
+        userId: orderData.userId,
+        createdAt: orderData.createdAt,
+      });
+  
+      // Save updated order to 'orders' collection
+      await this.firestore.collection('orders').doc(orderData.orderId).set({
+        cardItems: orderData.cardItems,
+        customerDetails: orderData.customerDetails,
+        paymentMethod: orderData.paymentMethod,
+        orderId: orderData.orderId,
+        userId: orderData.userId,
+        createdAt: orderData.createdAt,
+      });
+      this.spinner.hide();
+
+    }  catch (error) {
+      this.spinner.hide();
+      console.error('Error storing order:', error);
+
+      throw new Error('Failed to store the order. Please try again.'); // Optionally rethrow the error
+    }
+   
+  }
+
   async storeOdersForAdmin(orderData: any, card: any, user: any, orderId?: any) {
+    this.spinner.show();
     try {
       // Save order to 'customerOrder' collection
       await this.firestore.collection('customerOrder').doc(orderId).set({
@@ -336,9 +383,12 @@ export class DataService {
         paymentMethod: orderData.paymentMethod,
         createdAt: new Date(),
       });
+      this.spinner.hide();
   
       //this.setEmailTocustomer(orderId, orderData.customer, card);
     } catch (error) {
+      this.spinner.hide();
+
       console.error('Error storing order:', error);
       throw new Error('Failed to store the order. Please try again.'); // Optionally rethrow the error
     }

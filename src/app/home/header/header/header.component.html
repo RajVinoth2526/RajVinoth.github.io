@@ -27,7 +27,7 @@
                     <li class="nav-item">
                         <a class="nav-link theme-color" routerLink="/contact">Contact</a>
                     </li>
-                    <li class="nav-item" *ngIf ="loginUserDetails && loginUserDetails.isAdmin">
+                    <li class="nav-item" *ngIf ="loginUserDetails  && loginUserDetails.isAdmin && currentUser">
                         <a class="nav-link theme-color" routerLink="/setup">Setup</a>
                     </li>
                 </ul>
@@ -51,9 +51,9 @@
                         class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark theme-color">7</span>
                 </a>
                 <!-- Button to Open the Modal -->
-                <a class="nav-icon position-relative text-decoration-none" href="#" data-bs-toggle="modal"
-                    data-bs-target="#authModal">
-                    <i class="fa fa-fw fa-user text-dark mr-3 theme-color"></i>
+                <a class="nav-icon position-relative text-decoration-none"
+                    >
+                    <i class="fa fa-fw fa-user text-dark mr-3 theme-color" (click)="naviagteToProfile()" ></i>
                     <span
                         class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark theme-color">+99</span>
                 </a>
@@ -63,182 +63,6 @@
     </div>
 </nav>
 
-<!-- The Modal -->
-<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 *ngIf="!currentUser" class="modal-title theme-color" id="authModalLabel">Welcome to X mart</h5>
-                <h5 *ngIf="currentUser && loginUserDetails" class="modal-title" id="authModalLabel">Welcome <span class="theme-color">{{loginUserDetails.firstName}} {{loginUserDetails.lastName}}</span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <!-- Modal Body with Tabs -->
-            <div class="modal-body" *ngIf="!currentUser">
-                <ul class="nav nav-tabs" id="authTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active theme-color-text" id="signIn-tab" data-bs-toggle="tab" data-bs-target="#signIn"
-                            type="button" role="tab" aria-controls="signIn" aria-selected="true">Sign In</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link theme-color-text" id="signUp-tab" data-bs-toggle="tab" data-bs-target="#signUp"
-                            type="button" role="tab" aria-controls="signUp" aria-selected="false">Sign Up</button>
-                    </li>
-                </ul>
-                <div class="tab-content" id="authTabContent">
-                    <!-- Sign In Form -->
-                    <!-- Sign In Form -->
-                    <div class="tab-pane fade show active p-3 theme-color-text" id="signIn" role="tabpanel" aria-labelledby="signIn-tab" >
-                        <form [formGroup]="signInForm" (ngSubmit)="onSubmitSignIn()" novalidate>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="email" formControlName="email"
-                                    placeholder="Enter your email" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signInForm.get('email') && signInForm.get('email')?.invalid && signInForm.get('email')?.touched">
-                                    Please enter a valid email address.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" formControlName="password"
-                                    placeholder="Enter your password" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signInForm.get('password')?.invalid && signInForm.get('password')?.touched">
-                                    Please enter your password.
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 theme-color-button" [disabled]="signInForm.invalid">Sign
-                                In</button>
-                        </form>
-                    </div>
-
-
-                    <!-- Sign Up Form -->
-                    <div class="tab-pane fade p-3 theme-color-text" id="signUp" role="tabpanel" aria-labelledby="signUp-tab">
-                        <form [formGroup]="signUpForm" (ngSubmit)="onSubmitSignUp()" novalidate>
-                            <div class="mb-3">
-                                <label for="signUpFirstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="signUpFirstName" formControlName="firstName"
-                                    placeholder="Enter your first name" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signUpForm.get('firstName')?.invalid && signUpForm.get('firstName')?.touched">
-                                    Please enter your first name.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="signUpLastName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="signUpLastName" formControlName="lastName"
-                                    placeholder="Enter your last name" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signUpForm.get('lastName')?.invalid && signUpForm.get('lastName')?.touched">
-                                    Please enter your last name.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="signUpEmail" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="signUpEmail" formControlName="email"
-                                    placeholder="Enter your email" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched">
-                                    Please enter a valid email address.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="signUpPhone" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="signUpPhone" formControlName="phone"
-                                    placeholder="Enter your phone number" pattern="\d{10}" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signUpForm.get('phone')?.invalid && signUpForm.get('phone')?.touched">
-                                    Please enter a valid phone number.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="signUpCountry" class="form-label">Country</label>
-                                <select class="form-select" id="signUpCountry" formControlName="country" required>
-                                    <option selected disabled value="">Select your country</option>
-                                    <option value="us">United States</option>
-                                    <option value="ca">Canada</option>
-                                    <option value="uk">United Kingdom</option>
-                                </select>
-                                <div class="invalid-feedback"
-                                    *ngIf="signUpForm.get('country')?.invalid && signUpForm.get('country')?.touched">
-                                    Please select your country.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="signUpAddress1" class="form-label">Address 1</label>
-                                <input type="text" class="form-control" id="signUpAddress1" formControlName="address1"
-                                    placeholder="Street address, P.O. box, company name, c/o" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signUpForm.get('address1')?.invalid && signUpForm.get('address1')?.touched">
-                                    Please enter your address.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="signUpAddress2" class="form-label">Address 2</label>
-                                <input type="text" class="form-control" id="signUpAddress2" formControlName="address2"
-                                    placeholder="Apartment, suite, unit, building, floor, etc.">
-                            </div>
-                            <div class="mb-3">
-                                <label for="signUpCity" class="form-label">City</label>
-                                <input type="text" class="form-control" id="signUpCity" formControlName="city"
-                                    placeholder="Enter your city" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signUpForm.get('city')?.invalid && signUpForm.get('city')?.touched">
-                                    Please enter your city.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="signUpState" class="form-label">State/Province/Region</label>
-                                <input type="text" class="form-control" id="signUpState" formControlName="state"
-                                    placeholder="Enter your state, province, or region" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signUpForm.get('state')?.invalid && signUpForm.get('state')?.touched">
-                                    Please enter your state, province, or region.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="signUpPostalCode" class="form-label">Postal Code</label>
-                                <input type="text" class="form-control" id="signUpPostalCode"
-                                    formControlName="postalCode" placeholder="Enter your postal code" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signUpForm.get('postalCode')?.invalid && signUpForm.get('postalCode')?.touched">
-                                    Please enter your postal code.
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="signUpPassword" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="signUpPassword"
-                                    formControlName="password" placeholder="Create a password" required>
-                                <div class="invalid-feedback"
-                                    *ngIf="signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched">
-                                    Please create a password.
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 theme-color-button" [disabled]="signUpForm.invalid">Sign
-                                Up</button>
-                        </form>
-                    </div>
-
-
-                </div>
-            </div>
-            <div class="modal-body" *ngIf="currentUser">
-                <button 
-                type="button" 
-                class="btn btn-primary mt-3" 
-                (click)="viewOrderDetails()">
-                View Order Details
-            </button>
-            </div>
-            <!-- Modal Footer -->
-            <div class="modal-footer">
-                <button *ngIf="currentUser" type="button" class="btn theme-color-button" (click)="signOut()">Sign Out</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-scale-multiple">
     <p style="color: white"> Loading... </p>

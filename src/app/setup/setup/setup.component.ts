@@ -6,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { v4 as uuidv4 } from 'uuid';
 import { ToastrService } from 'ngx-toastr';  
 import { DataService } from 'src/app/service/dataService/data.service';
+import { Router } from '@angular/router';
 export const Categories= [
   {
       category : 'Male',
@@ -56,6 +57,7 @@ export class SetupComponent implements OnInit {
   city!: string;
   state!: string;
   postalCode!: string;
+  country!: string;
 
 
   
@@ -64,10 +66,17 @@ export class SetupComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private storage: AngularFireStorage,
-  private dataService: DataService) { }
+  private dataService: DataService,
+  private router: Router  ) {
+    this.dataService.currentUser.subscribe((data) => {
+      if(data ==null)   
+        this.router.navigate(['']);
+    })
+   }
   ngOnInit(): void {
     this.primaryColor = this.dataService.getThemeColor()[0].primaryColor;
     this.secondaryColor = this.dataService.getThemeColor()[0].secondaryColor;
+
   }
   onFilesDropped(event: any): void {
 
@@ -347,18 +356,20 @@ export class SetupComponent implements OnInit {
         address: this.address,
         city: this.city,
         state: this.state,
-        postalCode: this.postalCode
+        postalCode: this.postalCode,
+        country: this.country
 
       }).then(async () => {
-        let shopName;
-        const getShopName = new Promise<any[]>((resolve, reject) => {
-          this.firestore.collection('ShopName').valueChanges().subscribe({
+        let contactDetail;
+        const contactDetails = new Promise<any[]>((resolve, reject) => {
+          this.firestore.collection('contactDetail').valueChanges().subscribe({
             next: (data) => resolve(data as any[]),
             error: (err) => reject(err)
           });
         });
-        shopName = await getShopName;
-        this.dataService.shopName.next(shopName);
+        contactDetail = await contactDetails;
+        this.dataService.shopContactDetails$.next(contactDetail);
+
         this.spinner.hide();
     
       }).catch(error => {

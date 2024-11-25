@@ -8,7 +8,32 @@
     border-radius: 0.75rem;
     overflow: hidden;
 }
+.badge-warning {
+    background-color: #ffc107;
+    color: #000;
+  }
+  
 
+  .badge-warning {
+    background-color: #fff701;
+    color: #000;
+  }
+  
+  .badge-success {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .badge-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .badge-secondary {
+    background-color: #6c757d;
+    color: #fff;
+  }
+  
 .card-header {
     font-weight: bold;
     display: flex;

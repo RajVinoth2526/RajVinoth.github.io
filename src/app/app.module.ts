@@ -36,6 +36,10 @@ import { MyOrdersComponent } from './my-orders/my-orders.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { LoginComponent } from './Auth/login/login.component';
+import { ProfileComponent } from './profile/profile/profile.component';
+import { RegisterComponent } from './Auth/register/register.component';
+import { ForgotPasswordComponent } from './Auth/forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +58,11 @@ import { MatIconModule } from '@angular/material/icon';
     ConfirmOrderComponent,
     PaymentComponent,
     ConfirmOrderDetailsComponent,
-    MyOrdersComponent
+    MyOrdersComponent,
+    LoginComponent,
+    ProfileComponent,
+    RegisterComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,

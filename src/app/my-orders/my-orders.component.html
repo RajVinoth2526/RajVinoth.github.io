@@ -19,8 +19,8 @@
                             </span>
                             <div style="display: flex; justify-content: flex-end !important; width: 100%;">
                                 <strong>Status: </strong>
-                                <span [class]="'badge ' + getStatusClass('pending')">
-                                 Pending
+                                <span [class]="'badge ' + getStatusBadgeClass(order.card[0].status)">
+                                    {{ order.card[0].status }}
                                 </span>
                             </div>
                         </mat-panel-title>
@@ -46,8 +46,8 @@
                                 <li><strong>Payment Method:</strong> {{ order.paymentMethod }}</li>
                                 <li>
                                     <strong>Status:</strong>
-                                    <span [class]="'badge ' + getStatusClass('pending')">
-                                     Pending
+                                    <span [class]="'badge ' + getStatusBadgeClass(order.card[0].status)">
+                                        {{order.card[0].status}}
                                     </span>
                                 </li>
                             </ul>
@@ -66,6 +66,8 @@
                                     <th>Image</th>
                                     <th>Product Name</th>
                                     <th>Size</th>
+                                    <th>color</th>
+
                                     <th>Quantity</th>
                                     <th>Price</th>
                                     <th>Total</th>
@@ -80,6 +82,7 @@
                                     </td>
                                     <td>{{ product.name }}</td>
                                     <td>{{ product.size }}</td>
+                                    <td>{{ product.color }}</td>
                                     <td>{{ product.quantity }}</td>
                                     <td>Rs: {{ product.price }}</td>
                                     <td>Rs: {{ product.quantity * product.price }}</td>

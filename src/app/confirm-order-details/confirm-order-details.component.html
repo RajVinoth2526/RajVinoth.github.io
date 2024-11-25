@@ -15,6 +15,11 @@
               <li><strong>Name:</strong> {{ order.customerDetails.name }}</li>
               <li><strong>Email:</strong> {{ order.customerDetails.email }}</li>
               <li><strong>Phone:</strong> {{ order.customerDetails.phone }}</li>
+              <li><strong>Address:</strong> {{ order.customerDetails.streetAddress}}</li>
+              <li><strong>postalCode:</strong> {{ order.customerDetails.postalCode}}</li>
+              <li><strong>city:</strong> {{ order.customerDetails.city}}</li>
+              <li><strong>country:</strong> {{ order.customerDetails.country}}</li>
+
             </ul>
           </div>
           <div class="col-md-6">
@@ -24,10 +29,22 @@
               <li><strong>Payment Method:</strong> {{ order.paymentMethod }}</li>
               <li>
                 <strong>Status:</strong>
-                <span
-                  [class]="'badge ' + getStatusClass(orderDetails.status)"
-                  >pending</span
-                >
+                <span [class]="'badge ' + getStatusClass(order.cardItems[0].status)">
+                    {{ order.cardItems[0].status }}
+                  </span>
+                  <select 
+                  class="form-control custom-select w-50" 
+                  style="width: 200px; margin-top: 10px;" 
+                  [(ngModel)]="order.cardItems[0].status" 
+                  (change)="onStatusChange(order)">
+                  <option value="Pending">Pending</option>
+                  <option value="Processing">Processing</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+                
+                
               </li>
             </ul>
           </div>
@@ -43,6 +60,7 @@
                 <th>Image</th>
                 <th>Product Name</th>
                 <th>size</th>
+                <th>color</th>
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Total</th>
@@ -62,6 +80,7 @@
                 </td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.size }}</td>
+                <td>{{ product.color }}</td>
                 <td>{{ product.quantity }}</td>
                 <td>Rs: {{ product.price}}</td>
                 <td>Rs: {{ product.quantity * product.price}}</td>

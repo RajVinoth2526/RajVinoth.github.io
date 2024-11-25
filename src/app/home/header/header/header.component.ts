@@ -39,7 +39,11 @@ export class HeaderComponent implements OnInit,OnDestroy {
     this.dataService.shopName.subscribe((data) => {
       if(data == null) return;
       this.shopName = data[0].shopName;
-    });
+  });
+
+    this.dataService.currentUser.subscribe((data) => {
+      this.currentUser = data;
+    })
   }
 
   ngOnInit(): void {
@@ -149,6 +153,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
       let Products = this.dataService.getProductsData();
       let theme;
       let shopName;
+      let contactDetail;
 
 
       const cacheKey = 'cache_timestamp';
@@ -188,6 +193,13 @@ export class HeaderComponent implements OnInit,OnDestroy {
           });
         });
 
+        const getContactDetailsPromise = new Promise<any[]>((resolve, reject) => {
+          this.firestore.collection('contactDetail').valueChanges().subscribe({
+            next: (data) => resolve(data as any[]),
+            error: (err) => reject(err)
+          });
+        });
+
         
 
 
@@ -195,6 +207,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
         mainShowData = await sliderShowDataPromise;
         categoriesData = await categoriesDataPromise;
         Products = await getProductsPromise;
+        contactDetail = await getContactDetailsPromise;
        
 
         // Cache the data in dataService
@@ -207,13 +220,14 @@ export class HeaderComponent implements OnInit,OnDestroy {
         localStorage.setItem('categoriesData', JSON.stringify(categoriesData));
         localStorage.setItem('Products', JSON.stringify(Products));
         localStorage.setItem(cacheKey, Date.now().toString());
+        this.dataService.shopContactDetails$.next(contactDetail);
         this.spinner.hide();
       }
 
       const getThemePromise = new Promise<any[]>((resolve, reject) => {
         this.firestore.collection('Theme').valueChanges().subscribe({
-          next: (data) => resolve(data as any[]),
-          error: (err) => reject(err)
+          next: (data: any) => resolve(data as any[]),
+          error: (err: Error) => reject(err)
         });
       });
 
@@ -221,12 +235,24 @@ export class HeaderComponent implements OnInit,OnDestroy {
 
       const getShopName = new Promise<any[]>((resolve, reject) => {
         this.firestore.collection('ShopName').valueChanges().subscribe({
-          next: (data) => resolve(data as any[]),
-          error: (err) => reject(err)
+          next: (data: any) => resolve(data as any[]),
+          error: (err: any) => reject(err)
         });
       });
       shopName = await getShopName;
       this.dataService.shopName.next(shopName);
+
+
+      const getContactDetailsPromise = new Promise<any[]>((resolve, reject) => {
+        this.firestore.collection('contactDetail').valueChanges().subscribe({
+          next: (data:any) => resolve(data as any[]),
+          error: (err: any) => reject(err)
+        });
+      });
+
+      contactDetail = await getContactDetailsPromise;
+
+      this.dataService.shopContactDetails$.next(contactDetail);
       
       this.dataService.updateThemeColor(theme);
       this.theme = this.dataService.getThemeColor()[0]
@@ -244,69 +270,8 @@ export class HeaderComponent implements OnInit,OnDestroy {
     }
   }
 
-  async onSubmitSignIn() {
-    if (this.signInForm.invalid) {
-      this.signInForm.markAllAsTouched();
-      return;
-    }
-
-    try {
-      this.spinner.show();
-      const { email, password } = this.signInForm.value;
-      const result = await this.afAuth.signInWithEmailAndPassword(email, password);
-      if (result) {
-        this.getUser();
-        this.toastr.success('Login Successfully');
-        this.dataService.syncLocalStorageToFirebase();
-        this.spinner.hide();
-      }
-    } catch (error) {
-      this.spinner.hide();
-      this.toastr.warning('' + error);
-
-    }
-  }
-
-  async onSubmitSignUp() {
-    if (this.signUpForm.invalid) {
-      this.signUpForm.markAllAsTouched();
-      return;
-    }
-
-    const { firstName, lastName, email, phone, country, address1, address2, city, state, postalCode, password } = this.signUpForm.value;
-
-    try {
-      this.spinner.show();
-      // Create user with Firebase Authentication
-      const userCredential = await this.afAuth.createUserWithEmailAndPassword(email, password);
-
-      // Store additional user details in Firestore
-      await this.firestore.collection('users').doc(userCredential.user?.uid).set({
-        firstName,
-        lastName,
-        email,
-        phone,
-        country,
-        address1,
-        address2,
-        city,
-        state,
-        postalCode,
-      });
-      this.getUser();
-      this.spinner.hide();
-      this.toastr.success('SignUp Successfully');
-
-    } catch (error) {
-      this.toastr.warning('SignUp Failed');
-      this.spinner.hide();
-
-    }
-  }
-
-
-  viewOrderDetails() {
-    this.router.navigate(['/my-orders']);
+  naviagteToProfile() {
+    this.router.navigate(['profile']);
   }
 
 }
