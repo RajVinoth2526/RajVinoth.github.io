@@ -29,7 +29,7 @@
               <li><strong>Payment Method:</strong> {{ order.paymentMethod }}</li>
               <li>
                 <strong>Status:</strong>
-                <span [class]="'badge ' + getStatusClass(order.cardItems[0].status)">
+                <span [class]="'badge ' + getStatusBadgeClass(order.cardItems[0].status)">
                     {{ order.cardItems[0].status }}
                   </span>
                   <select 

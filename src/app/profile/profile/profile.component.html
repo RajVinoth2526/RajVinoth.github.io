@@ -39,20 +39,27 @@
                 <i class="fas fa-birthday-cake me-2 icon-color"></i> <strong>Birthday:</strong> {{userData.birthday}}
               </li>
             </ul>
-  
-            <!-- Navigation to Orders -->
-            <div class="mt-4">
-              <button class="btn  d-flex align-items-center button-outlin" (click)="goToOrders()">
-                <i class="fas fa-box-open me-2 icon-color"></i> <span class="theme-color-secondary-text">My Orders</span> 
-              </button>
-            </div>
 
-             <!-- Logout Button -->
-             <div class="mt-3 text-end">
-                <button class="btn d-flex align-items-center theme-secondary-color-button" (click)="logout()">
-                  <i class="fas fa-sign-out-alt me-2 icon-color"></i> <span class="icon-color">Logout</span> 
-                </button>
+            <div class="row">
+                <!-- Navigation to Orders -->
+                <div class="col-6 mt-4 button-outlin">
+                  <button class="btn d-flex align-items-center " style=" border-color: var(--primary-color) !important;" (click)="goToOrders()">
+                    <i class="fas fa-box-open me-2 icon-color"></i> 
+                    <span class="theme-color-secondary-text">My Orders</span>
+                  </button>
+                </div>
+              
+                <!-- Logout Button -->
+                <div class="col-6 mt-4 text-end">
+                  <button class="btn d-flex align-items-center theme-secondary-color-button" (click)="logout()">
+                    <i class="fas fa-sign-out-alt me-2 icon-color"></i> 
+                    <span class="icon-color">Logout</span>
+                  </button>
+                </div>
               </div>
+              
+  
+            
           </div>
         </div>
       </div>

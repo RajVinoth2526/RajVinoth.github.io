@@ -13,6 +13,9 @@
                                 <th>Product</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
+                                <th>Color</th>
+                                <th>Size</th>
+
                                 <th>Total</th>
                                 <th>View</th>
                             </tr>
@@ -22,6 +25,8 @@
                                 <td>{{ item.name }}</td>
                                 <td>Rs: {{ item.price}}</td>
                                 <td>{{ item.quantity }}</td>
+                                <td>{{ item.color }}</td>
+                                <td>{{ item.size }}</td>
                                 <td>{{ item.quantity * item.price }}</td>
                                 <td>
                                     <button class="btn btn-outline-primary btn-sm" (click)="viewOrderDetails(item.id)">

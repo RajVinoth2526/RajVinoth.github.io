@@ -8,31 +8,42 @@
     border-radius: 0.75rem;
     overflow: hidden;
 }
+/* Pending status */
 .badge-warning {
-    background-color: #ffc107;
-    color: #000;
+    background-color: #ffc107; /* Yellow */
+    color: white;
   }
   
-
-  .badge-warning {
-    background-color: #fff701;
-    color: #000;
+  /* Processing status */
+  .badge-info {
+    background-color: #17a2b8; /* Blue */
+    color: white;
   }
   
+  /* Shipped status */
+  .badge-primary {
+    background-color: #007bff; /* Blue */
+    color: white;
+  }
+  
+  /* Delivered status */
   .badge-success {
-    background-color: #28a745;
-    color: #fff;
+    background-color: #28a745; /* Green */
+    color: white;
   }
   
+  /* Cancelled status */
   .badge-danger {
-    background-color: #dc3545;
-    color: #fff;
+    background-color: #dc3545; /* Red */
+    color: white;
   }
   
+  /* Default fallback for unknown status */
   .badge-secondary {
-    background-color: #6c757d;
-    color: #fff;
+    background-color: #6c757d; /* Gray */
+    color: white;
   }
+  
   
 .card-header {
     font-weight: bold;

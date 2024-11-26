@@ -50,22 +50,22 @@ export class AdminProductOrderDetailsComponent implements OnInit {
   }
 
   getStatusBadgeClass(status: string): string {
-    switch (status.toLowerCase()) {
+    switch (status.toLocaleLowerCase()) {
       case 'pending':
-       
-        return 'badge-pending';
-
-        // return 'badge-warning';
+        return 'badge-warning'; // Yellow for pending status
+      case 'processing':
+        return 'badge-info'; // Blue for processing
       case 'shipped':
-        return 'badge-primary';
+        return 'badge-primary'; // Blue for shipped
       case 'delivered':
-        return 'badge-success';
+        return 'badge-success'; // Green for delivered
       case 'cancelled':
-        return 'badge-danger';
+        return 'badge-danger'; // Red for cancelled
       default:
-        return 'badge-secondary';
+        return 'badge-secondary'; // Gray for unknown status
     }
   }
+  
 
   viewOrderDetails(orderId: any): void {
     this.router.navigate(['/confirm-order-details',orderId]);

@@ -36,22 +36,22 @@ export class MyOrdersComponent implements OnInit {
   }
 
   getStatusBadgeClass(status: string): string {
-    switch (status) {
-      case 'Pending':
-       
-        return 'badge-primary';
-
-        // return 'badge-warning';
-      case 'Shipped':
-        return 'badge-primary';
-      case 'Delivered':
-        return 'badge-success';
-      case 'Cancelled':
-        return 'badge-danger';
+    switch (status.toLocaleLowerCase()) {
+      case 'pending':
+        return 'badge-warning'; // Yellow for pending status
+      case 'processing':
+        return 'badge-info'; // Blue for processing
+      case 'shipped':
+        return 'badge-primary'; // Blue for shipped
+      case 'delivered':
+        return 'badge-success'; // Green for delivered
+      case 'cancelled':
+        return 'badge-danger'; // Red for cancelled
       default:
-        return 'badge-secondary';
+        return 'badge-secondary'; // Gray for unknown status
     }
   }
+  
 
  getTotalAmount(order: any): number {
  // console.log(order.card); // Log the card data to check its structure

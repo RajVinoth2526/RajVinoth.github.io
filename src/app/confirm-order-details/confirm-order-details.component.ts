@@ -32,18 +32,23 @@ export class ConfirmOrderDetailsComponent implements OnInit {
     return new Date(milliseconds);
   }
 
-  getStatusClass(status: string): string {
-    switch (status.toLowerCase()) {
+  getStatusBadgeClass(status: string): string {
+    switch (status.toLocaleLowerCase()) {
       case 'pending':
-        return 'badge-warning';
-      case 'completed':
-        return 'badge-success';
+        return 'badge-warning'; // Yellow for pending status
+      case 'processing':
+        return 'badge-info'; // Blue for processing
+      case 'shipped':
+        return 'badge-primary'; // Blue for shipped
+      case 'delivered':
+        return 'badge-success'; // Green for delivered
       case 'cancelled':
-        return 'badge-danger';
+        return 'badge-danger'; // Red for cancelled
       default:
-        return 'badge-secondary';
+        return 'badge-secondary'; // Gray for unknown status
     }
   }
+  
 
   onStatusChange(order: any) {
     if(order && order.cardItems.length > 0) {
