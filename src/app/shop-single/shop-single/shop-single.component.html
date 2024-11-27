@@ -46,7 +46,7 @@
                                 <div class="row">
                                     <!-- Individual Items -->
                                     <div *ngFor="let item of slide" class="col-4">
-                                        <a href="#" (click)="updateSelectedImage(item, item.alt)">
+                                        <a  (click)="updateSelectedImage(item, item.alt)">
                                             <img class="card-img img-fluid" [src]="item" [alt]="item.alt">
                                         </a>
                                     </div>
