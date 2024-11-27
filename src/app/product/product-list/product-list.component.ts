@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { DataService } from 'src/app/service/dataService/data.service';
 
 @Component({
@@ -13,6 +14,7 @@ export class ProductListComponent implements OnInit {
   @Output() triggerGetProduct = new EventEmitter<string>();
   constructor(
     private dataService: DataService,
+    private toster: ToastrService,
     private router: Router
   ) { }
 
@@ -35,6 +37,23 @@ export class ProductListComponent implements OnInit {
     }
    
   }
+
+  disabledLoadMoreButton() {
+    return this.products.length < this.dataService.limit.getValue();
+  }
+
+  loadMore() {
+    if (!this.dataService.hasMore.getValue()) {
+      this.toster.info('No more products to load'); // Notify user
+      return;
+    }
+    this.dataService.limit.next(this.dataService.limit.getValue() + 8);
+    this.dataService.getProducts(this.dataService.limit.getValue() , this.dataService.lastDoc.getValue()).subscribe((newProducts) => {
+      this.products = [...this.products, ...newProducts]; // Append new products
+      this.dataService.productsData.next(this.products);
+    });
+  }
+  
 
 
 }

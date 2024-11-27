@@ -26,7 +26,6 @@ export class HeaderComponent implements OnInit,OnDestroy {
   theme:any;
   userSubscription: Subscription | undefined;
   shopName!: string;
-
   constructor(private dataService: DataService,
     private firestore: AngularFirestore,
     private afAuth: AngularFireAuth,
@@ -44,6 +43,11 @@ export class HeaderComponent implements OnInit,OnDestroy {
     this.dataService.currentUser.subscribe((data) => {
       this.currentUser = data;
     })
+
+    this.dataService.hasMore.next(false);
+    this.dataService.lastDoc.next(null);
+    this.dataService.limit.next(8);
+    this.subscriptionForProducts();
   }
 
   ngOnInit(): void {
@@ -68,6 +72,19 @@ export class HeaderComponent implements OnInit,OnDestroy {
       password: ['', Validators.required], // Corrected form control name
     });
 
+  }
+
+  subscriptionForProducts() {
+    this.dataService.getProducts(this.dataService.limit.getValue()).subscribe((data : any) => {
+      if(data == null) return;
+      this.dataService.updateProductsData(data);
+        localStorage.setItem('Products', JSON.stringify(data));
+      // Save the last document for pagination
+      if (data.length < this.dataService.limit.getValue()) {
+        this.dataService.hasMore.next(false);
+      }
+
+    })
   }
 
   async getUser() {
@@ -186,12 +203,12 @@ export class HeaderComponent implements OnInit,OnDestroy {
           });
         });
 
-        const getProductsPromise = new Promise<any[]>((resolve, reject) => {
-          this.firestore.collection('products').doc('product').collection('product').valueChanges().subscribe({
-            next: (data) => resolve(data as any[]),
-            error: (err) => reject(err)
-          });
-        });
+        // const getProductsPromise = new Promise<any[]>((resolve, reject) => {
+        //   this.firestore.collection('products').doc('product').collection('product').valueChanges().subscribe({
+        //     next: (data) => resolve(data as any[]),
+        //     error: (err) => reject(err)
+        //   });
+        // });
 
         const getContactDetailsPromise = new Promise<any[]>((resolve, reject) => {
           this.firestore.collection('contactDetail').valueChanges().subscribe({
@@ -206,19 +223,19 @@ export class HeaderComponent implements OnInit,OnDestroy {
         // Wait for all promises to resolve
         mainShowData = await sliderShowDataPromise;
         categoriesData = await categoriesDataPromise;
-        Products = await getProductsPromise;
+        //Products = await getProductsPromise;
         contactDetail = await getContactDetailsPromise;
        
 
         // Cache the data in dataService
         this.dataService.updateMainSliderData(mainShowData);
         this.dataService.updatecategoryData(categoriesData);
-        this.dataService.updateProductsData(Products);
+        // this.dataService.updateProductsData(Products);
+        // localStorage.setItem('Products', JSON.stringify(Products));
 
         // Update local storage with fresh data and timestamp
         localStorage.setItem('mainShowData', JSON.stringify(mainShowData));
         localStorage.setItem('categoriesData', JSON.stringify(categoriesData));
-        localStorage.setItem('Products', JSON.stringify(Products));
         localStorage.setItem(cacheKey, Date.now().toString());
         this.dataService.shopContactDetails$.next(contactDetail);
         this.spinner.hide();

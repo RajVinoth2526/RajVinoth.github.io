@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, finalize, firstValueFrom, map } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -35,12 +35,12 @@ export class DataService {
   private categoriesDataCache: any[] = [];
   private productsDataCache: any[] = [];
 
+  public lastDoc = new BehaviorSubject<any>(null);
+  public hasMore = new BehaviorSubject<boolean>(true);
+  public limit = new BehaviorSubject<number>(8);
 
 
-
-
-
-
+  
   constructor(
     private firestore: AngularFirestore,
     private afAuth: AngularFireAuth,
@@ -303,6 +303,42 @@ export class DataService {
       this.spinner.hide();
     }
   }
+
+  getProducts(limit: number, lastDoc?: any): Observable<any[]> {
+    this.spinner.show(); // Show loader
+    return this.firestore.collection('products').doc('product').collection('product', ref => {
+      let queryRef = ref.limit(limit);
+      if (lastDoc) {
+        queryRef = queryRef.startAfter(lastDoc);
+      }
+      return queryRef;
+    }).get({ source: 'server' }).pipe(
+      map((productsSnapshot: any) => {
+        const products = productsSnapshot.docs.map((doc : any) => doc.data());
+        if (productsSnapshot.docs.length > 0) {
+          lastDoc = productsSnapshot.docs[productsSnapshot.docs.length - 1]; // Update lastDoc
+          this.hasMore.next(true);
+        } else {
+          lastDoc = null;
+          this.hasMore.next(false);
+
+        }
+      this.lastDoc.next(lastDoc);
+
+        return products;
+      }),
+      catchError((error: Error) => {
+        this.toastr.error('Failed to load orders');
+        this.spinner.hide();
+        throw error;
+      }),
+      finalize(() => {
+        this.spinner.hide(); // Ensure spinner is hidden
+      })
+    );
+  }
+  
+  
 
   async getOrdersByUserId(userId: string) {
     this.spinner.show(); // Show loader
