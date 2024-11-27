@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/service/dataService/data.service';
 
@@ -9,6 +9,8 @@ import { DataService } from 'src/app/service/dataService/data.service';
 })
 export class ProductListComponent implements OnInit {
   products: any = [];
+  @Input() fromShopSingle = false;
+  @Output() triggerGetProduct = new EventEmitter<string>();
   constructor(
     private dataService: DataService,
     private router: Router
@@ -24,9 +26,14 @@ export class ProductListComponent implements OnInit {
   }
 
   navigateWithObject(product: any) {
-    this.router.navigate(['/product', product.productId], {
-      state: { objectData: product }
-    });
+    if(this.fromShopSingle) {
+      this.triggerGetProduct.emit(product.productId);
+    } else {
+      this.router.navigate(['/product', product.productId], {
+        state: { objectData: product }
+      });
+    }
+   
   }
 
 

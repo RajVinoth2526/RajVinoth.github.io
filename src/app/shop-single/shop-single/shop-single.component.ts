@@ -25,7 +25,7 @@ export class ShopSingleComponent implements OnInit {
   productId = 'S';
 
   @ViewChild('targetElement', { static: true }) targetElement!: ElementRef;
-
+  fromShopSingle = true;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -57,6 +57,10 @@ export class ShopSingleComponent implements OnInit {
     });
 
 
+  }
+
+  triggerProductByid(productId: string) {
+    this.getProductByParamId(productId);
   }
 
   async getProductByParamId(productId?: string) {
@@ -119,6 +123,8 @@ export class ShopSingleComponent implements OnInit {
   updateSelectedImage(src: string, alt: string) {
     this.selectedImageSrc = src;
     this.selectedImageAlt = alt;
+    this.scrollToElement();
+
   }
 
   scrollToElement() {

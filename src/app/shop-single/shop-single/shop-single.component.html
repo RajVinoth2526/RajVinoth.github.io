@@ -210,33 +210,10 @@
             </div>
           </div> -->
 
-        <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-4 col-6" *ngFor="let product of products">
-                <div class="card mb-4 product-wap rounded-0">
-                    <div class="card rounded-0 position-relative">
-                        <img class="card-img rounded-0 img-fluid-shop" [src]="product.imageUrl[0]">
-
-                        <div
-                            class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
-                            <ul class="list-unstyled">
-                                <li><a class="btn theme-color-button text-white" href="shop-single.html"><i
-                                            class="far fa-heart"></i></a></li>
-                                <li><a class="btn theme-color-button text-white mt-2"
-                                        (click)="getProductByParamId(product.productId)"><i class="far fa-eye"></i></a>
-                                </li>
-                                <li><a class="btn theme-color-button text-white mt-2" href="shop-single.html"><i
-                                            class="fas fa-cart-plus"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p style="font-weight: bolder !important;" class="h3 text-decoration-none">{{product.title}}</p>
-                        <p class="mb-0" style="font-weight: bolder !important;">Rs -{{ product.price }} /-</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+          <app-product-list
+          [fromShopSingle]="fromShopSingle"
+          (triggerGetProduct)="triggerProductByid($event);"
+          ></app-product-list>
 
     </div>
 </section>
