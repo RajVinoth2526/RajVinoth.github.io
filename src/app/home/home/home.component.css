@@ -92,43 +92,6 @@
     }
 }
 
-.image-container {
-    position: relative;
-    display: inline-block;
-    overflow: hidden;
-    width: 290px; /* Adjust width as needed */
-    height: 350px; /* Adjust height as needed */
-    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.1);   
-}
-
-.image-container img {
-    width: 100% ;
-    height: 100%;
-    transition: transform 0.3s ease;
-}
-
-.category-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Add an RGBA background for smooth fade */
-    color: white;
-    opacity: 0; /* Start hidden */
-    transition: opacity 0.5s ease; /* Smooth fade-in transition */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.image-container:hover .category-overlay {
-    opacity: 1;
-}
-
-.image-container:hover img {
-    transform: scale(1.1);
-}
 
 .shop-now {
     background-color:  var(--primary-color) !important;; /* Add your desired background color */
@@ -240,6 +203,103 @@
 }
 
 
+.related-prodects {
+    background-color: #ffffff;
+
+    
+}
 
 
 
+/* General styles for the banner section */
+.sec-banner {
+    background-color: #ffffff;
+    padding-top: 80px;
+    padding-bottom: 50px;
+}
+
+/* Block wrapper styles */
+.block1 {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.block1:hover {
+    transform: scale(1.05);
+}
+
+/* Image styles */
+.block1 img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0px;
+}
+
+/* Link styles */
+.block1-txt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 34px 38px;
+    background: rgba(83, 83, 83, 0.2);
+    transition: opacity 0.3s ease;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.block1:hover .block1-txt {
+    opacity: 1;
+}
+
+/* Text child styles */
+.block1-txt-child1 {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100%; /* Ensure full height to center vertically */
+    text-align: center; /* Center the text */
+}
+
+.block1-name {
+    font-size: 3rem;
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; /* This matches the "Bold" style */
+}
+
+.block1:hover .block1-name {
+    color: var(--primary-color) !important;
+}
+
+.block1-info {
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+/* Shop Now link styles */
+.block1-txt-child2 {
+    align-self: flex-end;
+}
+
+.block1-link {
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    transition: transform 0.3s ease, text-decoration 0.3s ease;
+}
+
+.block1-link:hover {
+    transform: scale(1.1);
+    text-decoration: underline;
+}

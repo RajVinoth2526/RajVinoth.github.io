@@ -51,9 +51,32 @@
 
 
 <!--  Main Slider end-->
+  <!-- Banner -->
+  <div class="sec-banner bg0 p-t-80 p-b-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto" *ngFor="let category of categories" >
+          <!-- Block1 -->
+          <div class="block1 wrap-pic-w" (click)="goToShop()">
+            <img [src]="category.imageUrl" >
+  
+            <a  class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
+              <div class="block1-txt-child1 flex-col-l" style="justify-content: center; align-items: center;">
+                <span class="block1-name ltext-102 trans-04 p-b-8">
+                  {{category.title}}
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
 
     <!-- Start Categories of The Month -->
-    <section class="container py-5">
+    <!-- <section class="container py-5">
       <div class="row text-center pt-3">
         <div class="col-lg-6 m-auto">
           <h1 class="h1 theme-color">Categories of The Month</h1>
@@ -62,26 +85,26 @@
             deserunt mollit anim id est laborum.
           </p>
         </div>
-      </div>
-      <div class="row">
+      </div> -->
+      <!-- <div class="row">
         <div *ngFor="let categorie of categories; let i = index" class="col-12 col-md-4 p-5 mt-3" style="text-align: center;">
           <a [routerLink]="'/shop'" class="image-container">
             <img [src]="categorie.imageUrl" class="img-fluid border">
             <div class="category-overlay">
               <h5 *ngIf="!isAdmin" class="text-center mt-3 mb-3">Shop Now</h5>     
               <div *ngIf="isAdmin" class="center-buttons position-absolute bottom-1 start-50 translate-middle-x">
-                <ul class="list-unstyled">
+                <ul class="list-unstyled"> -->
                   <!-- <li><a class="btn theme-color-button text-white" href="shop.html"><i class="fas fa-trash"></i></a></li> -->
-                  <li><a class="btn theme-color-button text-white mt-2" routerLink="/shop"><i class="far fa-eye"></i></a></li>
+                  <!-- <li><a class="btn theme-color-button text-white mt-2" routerLink="/shop"><i class="far fa-eye"></i></a></li> -->
                   <!-- <li><a class="btn theme-color-button text-white mt-2" href="shop.html"><i class="fas fa-cart-plus"></i></a></li> -->
-                </ul>
+                <!-- </ul>
               </div>
             </div>
           </a>
           <p class="text-center"><a [routerLink]="'/shop'" class="btn theme-color-button">Go Shop</a></p>
         </div>
       </div>
-    </section>
+    </section> -->
     
   <!-- End Categories of The Month -->
 <!-- Product Category-->
@@ -224,60 +247,17 @@
     </div>
   </section> -->
 
-  <div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12">
-            <!-- Filter Button -->
-            <div class="dropdown">
-                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-filter"></i> Filter
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="filterDropdown">
-                    <li>
-                        <div class="filter-section">
-                            <h5>Filter Products</h5>
-                            <!-- Search Bar -->
-                            <div class="mb-3">
-                                <label for="searchInput" class="form-label">Search</label>
-                                <input type="text" class="form-control" id="searchInput" placeholder="Search products">
-                            </div>
-                            <!-- Category Filter -->
-                            <div class="mb-3">
-                                <label for="categorySelect" class="form-label">Category</label>
-                                <select class="form-select" id="categorySelect">
-                                    <option selected>Choose category</option>
-                                    <option value="1">Dresses</option>
-                                    <option value="2">Shirts</option>
-                                    <option value="3">Trousers</option>
-                                </select>
-                            </div>
-                            <!-- Price Range Filter -->
-                            <div class="mb-3">
-                                <label class="form-label">Price Range</label>
-                                <div class="price-range">
-                                    <input type="number" class="form-control" id="minPrice" placeholder="Min price" min="0">
-                                    <input type="number" class="form-control" id="maxPrice" placeholder="Max price" min="0">
-                                </div>
-                            </div>
-                            <!-- Filter Button -->
-                            <button type="button" class="btn btn-primary w-100">Apply Filters</button>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Start Article -->
-<section class="py-5">
+<section class="py-5 related-prodects">
     <div class="container">
         <div class="row text-left p-2 pb-3">
             <h4 class="theme-color-related-product">Related Products</h4>
         </div>
 
-        <!--Start Carousel Wrapper-->
+        <!-- Start Carousel Wrapper -->
         <div class="row">
+
             <div class="col-md-3 col-6" *ngFor="let product of products">
               <div class="card mb-4 product-wap rounded-0">
                 <div class="card rounded-0">
@@ -298,7 +278,7 @@
             </div>
           </div>
 
-
+          
     </div>
 </section>
 <!-- End Article -->

@@ -160,6 +160,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  goToShop() {
+    this.router.navigate(['/shop']);
+  }
+
 
 
 }
