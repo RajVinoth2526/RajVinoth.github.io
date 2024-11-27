@@ -321,7 +321,7 @@ export class DataService {
         } else {
           lastDoc = null;
           this.hasMore.next(false);
-
+          this.toastr.info('No more products to load'); // Notify use
         }
       this.lastDoc.next(lastDoc);
 
