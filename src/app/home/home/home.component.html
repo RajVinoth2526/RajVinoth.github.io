@@ -29,7 +29,7 @@
       [style.background-image]="'url(' + item.imageUrl[0] + ')'" style="background-size: cover; height : 80vh">
       
        <!-- Delete Button -->
-       <i 
+       <i *ngIf="userData && userData.isAdmin" 
        class="bi bi-trash position-absolute top-0 end-0 m-3 cursor-pointer text-danger"
        (click)="openConfirmationForMainSliderDelete(item, i)" 
        style="font-size: 24px;">
