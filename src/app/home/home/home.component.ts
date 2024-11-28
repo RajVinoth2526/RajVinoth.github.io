@@ -5,6 +5,8 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/service/dataService/data.service';
+import { ConfirmationComponent } from 'src/app/confirmation/confirmation/confirmation.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 // carousel-item.model.ts
 export interface CarouselItem {
   imgSrc: string;
@@ -23,6 +25,7 @@ export class HomeComponent implements OnInit {
   Categories: any = [];
   mainSliders: any = [];
   isAdmin: boolean = true;
+  userData: any;
   categories: any = [
     // { name: 'Dresses', image: './assets/img/category_img_01.jpg' },
     // { name: 'Shoes', image: './assets/img/category_img_02.jpg' },
@@ -107,13 +110,15 @@ export class HomeComponent implements OnInit {
   ];
 
   itemsPerRow: number = 2;
+  matDialogRef!: MatDialogRef<ConfirmationComponent>;
   constructor(
     private dataService: DataService,
     private router: Router,
     private firestore: AngularFirestore,
     private renderer: Renderer2,
     private elementRef: ElementRef,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -138,6 +143,11 @@ export class HomeComponent implements OnInit {
       this.products = products;
 
     })
+
+    this.dataService.currentUser.subscribe((data: any) => {
+      if(data == null) return;
+      this.userData = data;
+    });
 
 
   }
@@ -164,6 +174,37 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/shop']);
   }
 
+  openConfirmationForMainSliderDelete(slider: any, index: number) {
+    this.matDialogRef = this.dialog.open(ConfirmationComponent, {
+      width: '450px',
+      height: '180px',
+      data: slider,
+      disableClose: true
+    });
+
+    this.matDialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.dataService.handleDeleteByAdmin("products", "SliderShow", slider.productId, this.mainSliders, index);
+      }
+    });
+
+  }
+
+  openConfirmationForDelete(category: any, index: number) {
+    this.matDialogRef = this.dialog.open(ConfirmationComponent, {
+      width: '450px',
+      height: '180px',
+      data: category,
+      disableClose: true
+    });
+
+    this.matDialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.dataService.handleDeleteByAdmin("products", "catergories", category.productId, this.categories, index);
+      }
+    });
+
+  }
 
 
 }

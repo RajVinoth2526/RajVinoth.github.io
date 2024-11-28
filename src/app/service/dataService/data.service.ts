@@ -639,4 +639,53 @@ async getOrderById(orderId: string): Promise<any> {
   }
 
 
+
+
+  async fetchCategoriesData(collection: string): Promise<any[]> {
+    let productData: any[] = [];
+    this.spinner.show();
+  
+    try {
+      productData = await firstValueFrom(
+        this.firestore
+          .collection('products')
+          .doc(collection)
+          .collection(collection)
+          .valueChanges()
+      );
+  
+      this.spinner.hide();
+      return productData;
+    } catch (error) {
+      console.error('Error fetching Categories Data:', error);
+      this.toastr.warning('Failed to load categories data');
+      this.spinner.hide();
+      return [];
+    }
+  }
+  
+  
+  
+
+  handleDeleteByAdmin(collection1: string, collection2: string, productId: string, products: any [], index: number) {
+    this.firestore.collection(collection1).doc(collection2).collection(collection2).doc(productId).delete()
+    .then(async () => {
+      if(collection2 == "product") {
+        products.splice(index, 1);
+        this.productsData.next(products)
+      } else  if(collection2 == "catergories") {
+        const categories = await this.fetchCategoriesData(collection2);     
+        this.mainSliderData.next(categories)
+      } else if ( collection2 == "SliderShow") {
+        const sliders = await this.fetchCategoriesData(collection2);
+        this.mainSliderData.next(sliders)
+      }
+      this.toastr.success(' product deleted successfully.');
+    })
+    .catch((error) => {
+      this.toastr.warning(error);
+    });
+  }
+
+
 }

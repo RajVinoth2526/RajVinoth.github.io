@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { ConfirmationComponent } from 'src/app/confirmation/confirmation/confirmation.component';
 import { DataService } from 'src/app/service/dataService/data.service';
 
 @Component({
@@ -10,15 +13,25 @@ import { DataService } from 'src/app/service/dataService/data.service';
 })
 export class ProductListComponent implements OnInit {
   products: any = [];
+  userData: any =[];
   @Input() fromShopSingle = false;
   @Output() triggerGetProduct = new EventEmitter<string>();
+  matDialogRef!: MatDialogRef<ConfirmationComponent>;
   constructor(
-    private dataService: DataService,
+    private dataService: DataService,   
+    private afAuth: AngularFireAuth,
     private toster: ToastrService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+
+   this.dataService.currentUser.subscribe((data: any) => {
+    if(data == null) return;
+    this.userData = data;
+   });
+  
     this.dataService.productsData.subscribe((products: any) => {
       if (products === null) return
 
@@ -38,6 +51,25 @@ export class ProductListComponent implements OnInit {
    
   }
 
+  openConfirmationForDelete(product: any, index: number) {
+    this.matDialogRef = this.dialog.open(ConfirmationComponent, {
+      width: '450px',
+      height: '180px',
+      data: product,
+      disableClose: true
+    });
+
+    this.matDialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.deleteProduct(product.productId, index);
+      }
+    });
+
+  }
+  deleteProduct(productId: string, index: number) {
+    this.dataService.handleDeleteByAdmin("products","product", productId, this.products, index);
+  }
+
   disabledLoadMoreButton() {
     return this.products.length < this.dataService.limit.getValue();
   }
@@ -53,7 +85,6 @@ export class ProductListComponent implements OnInit {
       this.dataService.productsData.next(this.products);
     });
   }
-  
 
 
 }

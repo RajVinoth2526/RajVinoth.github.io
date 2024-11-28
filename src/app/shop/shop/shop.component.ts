@@ -52,31 +52,7 @@ export class ShopComponent implements OnInit {
   }
 
 
-  openConfirmationForDelete(product: any) {
-    this.matDialogRef = this.dialog.open(ConfirmationComponent, {
-      width: '450px',
-      height: '180px',
-      data: product,
-      disableClose: true
-    });
-
-    this.matDialogRef.afterClosed().subscribe(res => {
-      if (res) {
-        this.deleteProduct(product.productId);
-      }
-    });
-
-  }
-  deleteProduct(productId: any) {
-    this.firestore.collection('products').doc('product').collection('product').doc(productId).delete()
-      .then(() => {
-        this.toastr.success(' product deleted successfully.');
-      })
-      .catch((error) => {
-        this.toastr.warning(error);
-      });
-
-  }
+  
 
   cancelDelete() {
     this.isDeleteButtonClicked = false;
