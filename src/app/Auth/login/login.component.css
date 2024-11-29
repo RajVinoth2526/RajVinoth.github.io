@@ -62,3 +62,10 @@
         transform: scale(1);
     }
 }
+
+@media (max-width: 767.98px) {
+    .custom-mobile-margin {
+      margin-top:10px !important; /* Adjust as needed */
+    }
+  }
+  

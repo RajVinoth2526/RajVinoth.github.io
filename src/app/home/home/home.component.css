@@ -45,6 +45,7 @@
 @media (min-width: 768px) and (max-width: 1024px) {
    .main-slider-text{
     margin-top: 15% !important;
+
    }
 }
 
@@ -117,8 +118,9 @@
 /* Height for medium screens and above */
 @media (min-width: 768px) {
     .img-fluid-2 {
-        height: 350px !important; /* Adjust this value as needed for medium screens */
+        height: 200px !important; /* Adjust this value as needed for medium screens */
     }
+    
 }
 
 /* Height for large screens and above */
@@ -305,3 +307,16 @@
     text-decoration: underline;
 }
 
+
+
+  /* Mobile view margin */
+  @media (max-width: 768px) {
+    .sec-banner-mobile-view {
+        padding-bottom: 15px; /* Adjust this to the value you want for mobile */
+    }
+
+    .main-slider-text{
+       font-size: 10px;
+    
+       }
+  }
