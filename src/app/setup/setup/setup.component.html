@@ -177,14 +177,39 @@
             <textarea class="form-control" id="specification" name="specification" placeholder="Enter specification"
               [(ngModel)]="specification" rows="4" required></textarea>
           </div>
-          <!-- Type -->
+          <!-- category -->
           <div class="form-group">
             <label for="category">Category</label>
             <select class="form-control" id="category" name="category" [(ngModel)]="categoryId" required>
               <option value="" disabled selected>Select Category</option>
               <option value="1">Men</option>
               <option value="2">Women</option>
-              <option value="3">Shoe</option>
+
+              <!-- Add more options as needed -->
+            </select>
+          </div>
+
+           <!-- sub category -->
+           <div class="form-group">
+            <label for="subCategory">Sub Category</label>
+            <select class="form-control" id="subCategory" name="subCategory" [(ngModel)]="subCategoryId" required>
+              <option value="" disabled selected>Select Sub Category</option>
+              <option value="1">Casual</option>
+              <option value="2">Formal</option>
+              <!-- <option value="3">Sport Wear</option> -->
+
+              <!-- Add more options as needed -->
+            </select>
+          </div>
+
+           <!-- Type -->
+           <div class="form-group">
+            <label for="type">Type</label>
+            <select class="form-control" id="type" name="type" [(ngModel)]="typeId" required>
+              <option value="" disabled selected>Select Type</option>
+              <option value="1">T shirt</option>
+              <option value="2">shirt</option>
+              <option value="3">Denim</option>
               <option value="4">Accessories</option>
 
               <!-- Add more options as needed -->

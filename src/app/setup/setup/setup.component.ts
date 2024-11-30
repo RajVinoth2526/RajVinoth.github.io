@@ -15,13 +15,34 @@ export const Categories= [
   {
       category : 'Girl',
       id : 2
+  }
+];
+
+export const subCategories= [
+  {
+      subCategory : 'Casual',
+      id : 1
   },
   {
-      category : 'Shoe',
+    subCategory : 'Formal',
+      id : 2
+  }
+];
+
+export const type= [
+  {
+      type : 'T-Shirt',
+      id : 1
+  },
+  {
+    type : 'Shirt',
+      id : 2
+  },
+  {
+    type : 'Denim',
       id : 3
-  },
-  {
-      category : 'Accessories',
+  }, {
+    type : 'Accessories',
       id : 4
   }
 ];
@@ -48,6 +69,8 @@ export class SetupComponent implements OnInit {
   label: string = '';
   description: string = '';
   categoryId: number = 0;
+  subCategoryId: number = 0;
+  typeId: number = 0;
   primaryColor: string = '#ff0000';  // Default primary color (red)
   secondaryColor: string = '#00ff00';  // Default secondary color (green)
   shopName: string = '';
@@ -197,11 +220,29 @@ export class SetupComponent implements OnInit {
    findCategoryById(id: number) {
     for (let i = 0; i < Categories.length; i++) {
         if (Categories[i].id == id) {
-            return Categories[i];
+            return Categories[i].category;
         }
     }
     return null; // Return null if no category with the given id is found
-}
+  }
+
+  findSubCategoryId(id: number) {
+    for (let i = 0; i < subCategories.length; i++) {
+        if (subCategories[i].id == id) {
+            return subCategories[i].subCategory;
+        }
+    }
+    return null; // Return null if no category with the given id is found
+  }
+
+  findTypeId(id: number) {
+    for (let i = 0; i < type.length; i++) {
+        if (type[i].id == id) {
+            return type[i].type;
+        }
+    }
+    return null; // Return null if no category with the given id is found
+  }
 
 
 
@@ -288,6 +329,8 @@ export class SetupComponent implements OnInit {
         description : this.description,
         price : this.price,
         category : this.findCategoryById(this.categoryId),
+        subCategory: this.findSubCategoryId(this.subCategoryId),
+        type: this.findTypeId(this.typeId),
         imageUrl: imageURLs,
         productId : productId
 

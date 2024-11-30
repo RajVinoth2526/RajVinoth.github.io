@@ -21,11 +21,15 @@ export class HeaderComponent implements OnInit,OnDestroy {
   signInForm!: FormGroup;
   signUpForm!: FormGroup;
   user$!: Observable<any>;
+  isSideSliderOpen = false;
   currentUser: any;
   loginUserDetails: any;
   theme:any;
   userSubscription: Subscription | undefined;
   shopName!: string;
+  activeCategory: string | null = null;
+  activeSubCategory: string | null = null;
+  subMenuOpen: { [key: string]: boolean } = {};  
   constructor(private dataService: DataService,
     private firestore: AngularFirestore,
     private afAuth: AngularFireAuth,
@@ -290,5 +294,31 @@ export class HeaderComponent implements OnInit,OnDestroy {
   naviagteToProfile() {
     this.router.navigate(['profile']);
   }
+
+   
+
+    toggleSideSlider() {
+        this.isSideSliderOpen = !this.isSideSliderOpen;
+    }
+
+    toggleCategory(category: string) {
+        this.activeCategory = this.activeCategory === category ? null : category;
+        this.activeSubCategory = null; // Reset subcategory when switching categories
+    }
+
+    toggleSubCategory(subCategory: string) {
+        this.activeSubCategory = this.activeSubCategory === subCategory ? null : subCategory;
+    }
+
+    filterProducts(category: string, subCategory: string, product: string): void {
+      console.log(`Filtering products for:
+        Category: ${category},
+        SubCategory: ${subCategory},
+        Product: ${product}`);
+      // Add your filtering logic here
+      // Example: emit an event or call a service to fetch filtered products
+    }
+
+  
 
 }
