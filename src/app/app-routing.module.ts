@@ -29,8 +29,8 @@ const routes: Routes = [
   { path: 'payment', component: PaymentComponent },
   { path: 'confirm-order-details/:id', component: ConfirmOrderDetailsComponent },
   { path: 'my-orders', component: MyOrdersComponent },
-  { path: 'login', component: LoginComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'signUp', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent }
 

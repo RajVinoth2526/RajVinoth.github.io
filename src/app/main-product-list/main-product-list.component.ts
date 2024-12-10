@@ -7,11 +7,12 @@ import { ConfirmationComponent } from 'src/app/confirmation/confirmation/confirm
 import { DataService } from 'src/app/service/dataService/data.service';
 
 @Component({
-  selector: 'app-product-list',
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  selector: 'app-main-product-list',
+  templateUrl: './main-product-list.component.html',
+  styleUrls: ['./main-product-list.component.css']
 })
-export class ProductListComponent implements OnInit {
+export class MainProductListComponent implements OnInit {
+
   products: any = [];
   userData: any =[];
   @Input() fromShopSingle = false;
@@ -24,7 +25,7 @@ export class ProductListComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog
   ) { 
-    this. subscriptionForProducts();
+    this.subscriptionForProducts();
   }
 
   async ngOnInit() {
@@ -34,7 +35,7 @@ export class ProductListComponent implements OnInit {
     this.userData = data;
    });
   
-    this.dataService.productsData.subscribe((products: any) => {
+    this.dataService.productsDataMainList.subscribe((products: any) => {
       if (products === null) return
 
       this.products = products;
@@ -42,18 +43,17 @@ export class ProductListComponent implements OnInit {
     })
   }
 
-
   subscriptionForProducts() {
-    this.dataService.hasMore.next(false);
-    this.dataService.lastDoc.next(null);
-    this.dataService.limit.next(8);
-    this.dataService.getProducts(this.dataService.limit.getValue(), null, {}, "Product-List").subscribe((data : any) => {
+    this.dataService.hasMoreMain.next(false);
+    this.dataService.lastDocMain.next(null);
+    this.dataService.limitMain.next(8);
+    this.dataService.getProducts(this.dataService.limitMain.getValue(), null , {}, "Main").subscribe((data : any) => {
       if(data == null) return;
-      this.dataService.updateProductsData(data);
+      this.dataService.productsDataMainList.next(data);
         localStorage.setItem('Products', JSON.stringify(data));
       // Save the last document for pagination
-      if (data.length < this.dataService.limit.getValue()) {
-        this.dataService.hasMore.next(false);
+      if (data.length < this.dataService.limitMain.getValue()) {
+        this.dataService.hasMoreMain.next(false);
       }
 
     })
@@ -90,18 +90,18 @@ export class ProductListComponent implements OnInit {
   }
 
   disabledLoadMoreButton() {
-    return this.products.length < this.dataService.limit.getValue();
+    return this.products.length < this.dataService.limitMain.getValue();
   }
 
   loadMore() {
-    if (!this.dataService.hasMore.getValue()) {
+    if (!this.dataService.hasMoreMain.getValue()) {
       this.toster.info('No more products to load'); // Notify user
       return;
     }
-    this.dataService.limit.next(this.dataService.limit.getValue() + 8);
-    this.dataService.getProducts(this.dataService.limit.getValue() , this.dataService.lastDoc.getValue(), this.dataService.filter.getValue(), "Product-List").subscribe((newProducts) => {
+    this.dataService.limit.next(this.dataService.limitMain.getValue() + 8);
+    this.dataService.getProducts(this.dataService.limitMain.getValue() , this.dataService.lastDocMain.getValue(), {}, "Main").subscribe((newProducts) => {
       this.products = [...this.products, ...newProducts]; // Append new products
-      this.dataService.productsData.next(this.products);
+      this.dataService.productsDataMainList.next(this.products);
     });
   }
 

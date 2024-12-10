@@ -41,6 +41,8 @@ import { ProfileComponent } from './profile/profile/profile.component';
 import { RegisterComponent } from './Auth/register/register.component';
 import { ForgotPasswordComponent } from './Auth/forgot-password/forgot-password.component';
 import { ProductListComponent } from './product/product-list/product-list.component';
+import { FilterComponent } from './filter/filter.component';
+import { MainProductListComponent } from './main-product-list/main-product-list.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +66,9 @@ import { ProductListComponent } from './product/product-list/product-list.compon
     ProfileComponent,
     RegisterComponent,
     ForgotPasswordComponent,
-    ProductListComponent
+    ProductListComponent,
+    FilterComponent,
+    MainProductListComponent
   ],
   imports: [
     BrowserModule,

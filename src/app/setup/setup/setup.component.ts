@@ -9,40 +9,40 @@ import { DataService } from 'src/app/service/dataService/data.service';
 import { Router } from '@angular/router';
 export const Categories= [
   {
-      category : 'Male',
+      category : 'men',
       id : 1
   },
   {
-      category : 'Girl',
+      category : 'women',
       id : 2
   }
 ];
 
 export const subCategories= [
   {
-      subCategory : 'Casual',
+      subCategory : 'casual',
       id : 1
   },
   {
-    subCategory : 'Formal',
+    subCategory : 'formal',
       id : 2
   }
 ];
 
-export const type= [
+export const type = [
   {
-      type : 'T-Shirt',
+      type : 't-shirt',
       id : 1
   },
   {
-    type : 'Shirt',
+    type : 'shirt',
       id : 2
   },
   {
-    type : 'Denim',
+    type : 'denim',
       id : 3
   }, {
-    type : 'Accessories',
+    type : 'accessories',
       id : 4
   }
 ];

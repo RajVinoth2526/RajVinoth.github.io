@@ -62,3 +62,9 @@
     background-color: var(--primary-color);
     color: #fff;
 }
+
+@media (max-width: 576px) {
+  .status-name {
+    font-size: 15px !important;
+  }
+}

@@ -4,6 +4,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { Filter } from 'src/app/Model/x-mart.model';
 
 export enum Category {
   Men = 1,
@@ -38,6 +39,24 @@ export class DataService {
   public lastDoc = new BehaviorSubject<any>(null);
   public hasMore = new BehaviorSubject<boolean>(true);
   public limit = new BehaviorSubject<number>(8);
+  public filter = new BehaviorSubject<any>(null);
+  public filterFromSidePanel = new BehaviorSubject<any>(null);
+
+
+
+  public lastDocMain = new BehaviorSubject<any>(null);
+  public hasMoreMain = new BehaviorSubject<boolean>(true);
+  public limitMain = new BehaviorSubject<number>(8);
+  public filterMain = new BehaviorSubject<any>(null);
+  public productsDataMainList = new BehaviorSubject<any>(null);
+
+
+  public lastDocFilter = new BehaviorSubject<any>(null);
+  public hasMoreFilter = new BehaviorSubject<boolean>(true);
+  public limitFilter = new BehaviorSubject<number>(8);
+  public filterFilter = new BehaviorSubject<any>(null);
+  public productsDataFilterList = new BehaviorSubject<any>(null);
+
 
 
   
@@ -304,28 +323,61 @@ export class DataService {
     }
   }
 
-  getProducts(limit: number, lastDoc?: any): Observable<any[]> {
+  getProducts(limit: number, lastDoc?: any,  filters?: Record<string, any>, component?: string): Observable<any[]> {
     this.spinner.show(); // Show loader
     return this.firestore.collection('products').doc('product').collection('product', ref => {
       let queryRef = ref.limit(limit);
+      if (filters) {
+        Object.keys(filters).forEach((key: any) => {
+          const value: any = filters[key];
+          if (value !== '') {
+            queryRef = queryRef.where(key, '==', value);
+          }
+        });
+      }
       if (lastDoc) {
         queryRef = queryRef.startAfter(lastDoc);
       }
+
       return queryRef;
     }).get({ source: 'server' }).pipe(
       map((productsSnapshot: any) => {
         const products = productsSnapshot.docs.map((doc : any) => doc.data());
-        if (productsSnapshot.docs.length > 0) {
-          lastDoc = productsSnapshot.docs[productsSnapshot.docs.length - 1]; // Update lastDoc
-          this.hasMore.next(true);
-        } else {
-          lastDoc = null;
-          this.hasMore.next(false);
-          this.toastr.info('No more products to load'); // Notify use
+        if(component && component == "Main") {
+          if (productsSnapshot.docs.length > 0) {
+            lastDoc = productsSnapshot.docs[productsSnapshot.docs.length - 1]; // Update lastDoc
+            this.hasMoreMain.next(true);
+          } else {
+            lastDoc = null;
+            this.hasMoreMain.next(false);
+            this.toastr.info('No more products to load'); // Notify use
+          }
+          this.lastDocMain.next(lastDoc);
+          return products;
+        } else if (component && component == "Product-List") {
+          if (productsSnapshot.docs.length > 0) {
+            lastDoc = productsSnapshot.docs[productsSnapshot.docs.length - 1]; // Update lastDoc
+            this.hasMore.next(true);
+          } else {
+            lastDoc = null;
+            this.hasMore.next(false);
+            this.toastr.info('No more products to load'); // Notify use
+          }
+          this.lastDoc.next(lastDoc);
+          return products;
+        } else if(component && component == "Filter-List") {
+          if (productsSnapshot.docs.length > 0) {
+            lastDoc = productsSnapshot.docs[productsSnapshot.docs.length - 1]; // Update lastDoc
+            this.hasMoreFilter.next(true);
+          } else {
+            lastDoc = null;
+            this.hasMoreFilter.next(false);
+            this.toastr.info('No more products to load'); // Notify use
+          }
+          this.lastDocFilter.next(lastDoc);
+          return products;
         }
-      this.lastDoc.next(lastDoc);
-
-        return products;
+       
       }),
       catchError((error: Error) => {
         this.toastr.error('Failed to load orders');

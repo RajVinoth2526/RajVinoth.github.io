@@ -21,4 +21,21 @@ export interface User {
     postalCode?: string | null;
     password?: string | null;
 }
+
+export class Filter {
+    category: string;
+    subCategory: string;
+    type: string;
+  
+    constructor(
+      category: string = '',
+      subCategory: string = '',
+      type: string = ''
+    ) {
+      this.category = category;
+      this.subCategory = subCategory;
+      this.type = type;
+    }
+  }
+  
   

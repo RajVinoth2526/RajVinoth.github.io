@@ -17,11 +17,11 @@
         </button>
 
         <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between"
-            id="templatemo_main_nav">
+            id="templatemo_main_nav"  #templatemo_main_nav>
             <div class="flex-fill">
                 <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                     <li class="nav-item">
-                        <a class="nav-link theme-color" routerLink="/home">Home</a>
+                        <a class="nav-link theme-color" routerLink="/home"(click)="closeMenu();">Home</a>
                     </li>
 
 
@@ -33,13 +33,13 @@
                                 <a class="nav-link theme-color" (click)="toggleSubCategory('casual')">Casual</a>
                                 <ul *ngIf="activeSubCategory === 'casual'" class="child-level">
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('men', 'casual', 'T-shirt')"
+                                            (click)="filterProducts('men', 'casual', 't-shirt');closeMenu();"
                                             class="theme-color">T-shirt</a></li>
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('men', 'casual', 'Shirt')"
+                                            (click)="filterProducts('men', 'casual', 'shirt'); closeMenu();"
                                             class="theme-color">Shirt</a></li>
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('men', 'casual', 'Denim')"
+                                            (click)="filterProducts('men', 'casual', 'denim');closeMenu();"
                                             class="theme-color">Denim</a></li>
                                 </ul>
                             </li>
@@ -47,13 +47,13 @@
                                 <a class="nav-link theme-color" (click)="toggleSubCategory('formal')">Formal</a>
                                 <ul *ngIf="activeSubCategory === 'formal'" class="child-level">
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('men', 'formal', 'Suit')"
+                                            (click)="filterProducts('men', 'formal', 'suit'); closeMenu();"
                                             class="theme-color">Suit</a></li>
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('men', 'formal', 'Blazer')"
+                                            (click)="filterProducts('men', 'formal', 'blazer'); closeMenu();"
                                             class="theme-color">Blazer</a></li>
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('men', 'formal', 'Shirt')"
+                                            (click)="filterProducts('men', 'formal', 'shirt'); closeMenu();"
                                             class="theme-color">Shirt</a></li>
                                 </ul>
 
@@ -69,13 +69,13 @@
                                 <a class="nav-link theme-color" (click)="toggleSubCategory('casual')">Casual</a>
                                 <ul *ngIf="activeSubCategory === 'casual'" class="child-level">
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('women', 'casual', 'Dress')"
+                                            (click)="filterProducts('women', 'casual', 'Dress');closeMenu();"
                                             class="theme-color">Dress</a></li>
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('women', 'casual', 'Tops')"
+                                            (click)="filterProducts('women', 'casual', 'Tops');closeMenu();"
                                             class="theme-color">Tops</a></li>
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('women', 'casual', 'Skirts')"
+                                            (click)="filterProducts('women', 'casual', 'Skirts');closeMenu();"
                                             class="theme-color">Skirts</a></li>
                                 </ul>
                             </li>
@@ -83,13 +83,13 @@
                                 <a class="nav-link theme-color" (click)="toggleSubCategory('formal')">Formal</a>
                                 <ul *ngIf="activeSubCategory === 'formal'" class="child-level">
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('women', 'formal', 'Evening Gown')"
+                                            (click)="filterProducts('women', 'formal', 'Evening Gown');closeMenu();"
                                             class="theme-color">Evening Gown</a></li>
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('women', 'formal', 'Suit')"
+                                            (click)="filterProducts('women', 'formal', 'Suit');closeMenu();"
                                             class="theme-color">Suit</a></li>
                                     <li class="nav-item theme-color"><a
-                                            (click)="filterProducts('women', 'formal', 'Blouse')"
+                                            (click)="filterProducts('women', 'formal', 'Blouse');closeMenu();"
                                             class="theme-color">Blouse</a></li>
                                 </ul>
                             </li>
@@ -123,13 +123,13 @@
                     <i class="fa fa-fw fa-search text-dark mr-2 theme-color"></i>
                 </a>
                 <a class="nav-icon position-relative text-decoration-none" routerLink="/Admin-order-details">
-                    <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1 theme-color"></i>
+                    <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1 theme-color" (click)="closeMenu();"></i>
                     <span
                         class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark theme-color">7</span>
                 </a>
                 <!-- Button to Open the Modal -->
                 <a class="nav-icon position-relative text-decoration-none">
-                    <i class="fa fa-fw fa-user text-dark mr-3 theme-color" (click)="naviagteToProfile()"></i>
+                    <i class="fa fa-fw fa-user text-dark mr-3 theme-color" (click)="naviagteToProfile();closeMenu();"></i>
                     <span
                         class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark theme-color">+99</span>
                 </a>
@@ -155,7 +155,7 @@
                         <li class="subcategory">
                             <a (click)="toggleSubCategory('casual')">Casual</a>
                             <ul *ngIf="activeSubCategory === 'casual'" class="child-level">
-                                <li><a (click)="filterProducts('men', 'casual', 'T-shirt')">T-shirt</a></li>
+                                <li><a (click)="filterProducts('men', 'casual', 't-shirt')">T-shirt</a></li>
                                 <li><a (click)="filterProducts('men', 'casual', 'Shirt')">Shirt</a></li>
                                 <li><a (click)="filterProducts('men', 'casual', 'Denim')">Denim</a></li>
                             </ul>

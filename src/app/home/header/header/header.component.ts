@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataService } from 'src/app/service/dataService/data.service';
@@ -8,7 +8,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable, Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { User } from 'firebase/auth';
-import { User as loginUser } from 'src/app/Model/x-mart.model';
+import { Filter, User as loginUser } from 'src/app/Model/x-mart.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -29,7 +29,9 @@ export class HeaderComponent implements OnInit,OnDestroy {
   shopName!: string;
   activeCategory: string | null = null;
   activeSubCategory: string | null = null;
-  subMenuOpen: { [key: string]: boolean } = {};  
+  subMenuOpen: { [key: string]: boolean } = {}; 
+  filters = new Filter(); 
+  @ViewChild('templatemo_main_nav', { static: false }) navbar!: ElementRef;
   constructor(private dataService: DataService,
     private firestore: AngularFirestore,
     private afAuth: AngularFireAuth,
@@ -77,6 +79,21 @@ export class HeaderComponent implements OnInit,OnDestroy {
     });
 
   }
+  closeMenu(): void {
+    const navbarElement = this.navbar.nativeElement;
+  
+    // Check if the navbar is expanded
+    if (navbarElement.classList.contains('show')) {
+      // Use Bootstrap collapse toggle logic
+      navbarElement.classList.remove('show');
+      navbarElement.classList.add('collapsing');
+      setTimeout(() => {
+        navbarElement.classList.remove('collapsing');
+        navbarElement.classList.add('collapse');
+      }, 300); // Match Bootstrap transition duration
+    }
+  }
+  
 
   subscriptionForProducts() {
     this.dataService.getProducts(this.dataService.limit.getValue()).subscribe((data : any) => {
@@ -311,10 +328,12 @@ export class HeaderComponent implements OnInit,OnDestroy {
     }
 
     filterProducts(category: string, subCategory: string, product: string): void {
-      console.log(`Filtering products for:
-        Category: ${category},
-        SubCategory: ${subCategory},
-        Product: ${product}`);
+        this.filters.category = category;
+        this.filters.subCategory = subCategory;
+        this.filters.type = product;
+        this.dataService.filterFromSidePanel.next(this.filters);
+        this.router.navigate(['shop']);
+        
       // Add your filtering logic here
       // Example: emit an event or call a service to fetch filtered products
     }

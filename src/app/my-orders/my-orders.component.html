@@ -18,20 +18,28 @@
                 <mat-expansion-panel *ngFor="let order of orders">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
+                          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 10px;">
+                            <!-- Order ID -->
                             <span class="badge badge-light" style="color: rgb(79, 77, 77) !important;">
-                                <strong>Order ID: {{ order.orderId }}</strong>
+                              <strong>Order ID: {{ order.orderId }}</strong>
                             </span>
+                      
+                            <!-- Date -->
                             <span class="badge badge-light" style="color: rgb(152, 147, 147) !important;">
-                                {{ convertToDate(order.createdAt) | date }} 
+                              {{ convertToDate(order.createdAt) | date }} 
                             </span>
-                            <div style="display: flex; justify-content: flex-end !important; width: 100%;">
-                                <strong>Status: </strong>
-                                <span [class]="'badge ' + getStatusBadgeClass(order.card[0].status)">
-                                    {{ order.card[0].status }}
-                                </span>
+                      
+                            <!-- Status -->
+                            <div class="status-name" style="display: flex; align-items: center; gap: 5px;">
+                              <strong>Status: </strong>
+                              <span [class]="'badge ' + getStatusBadgeClass(order.card[0].status)">
+                                {{ order.card[0].status }}
+                              </span>
                             </div>
+                          </div>
                         </mat-panel-title>
-                    </mat-expansion-panel-header>
+                      </mat-expansion-panel-header>
+                      
 
                     <div class="row mb-4">
                         <div class="col-md-6">

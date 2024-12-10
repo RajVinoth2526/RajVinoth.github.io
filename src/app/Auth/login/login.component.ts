@@ -22,7 +22,12 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService // Your spinner service
-  ) { }
+  ) {
+    this.dataService.currentUser.subscribe((data: any) => {
+      if(data == null) return;
+      this.router.navigate(['profile']);
+    })
+   }
 
   ngOnInit(): void {
 
