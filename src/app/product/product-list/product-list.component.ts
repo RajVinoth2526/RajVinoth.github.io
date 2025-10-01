@@ -44,19 +44,22 @@ export class ProductListComponent implements OnInit {
 
 
   subscriptionForProducts() {
-    this.dataService.hasMore.next(false);
-    this.dataService.lastDoc.next(null);
-    this.dataService.limit.next(8);
-    this.dataService.getProducts(this.dataService.limit.getValue(), null, {}, "Product-List").subscribe((data : any) => {
-      if(data == null) return;
-      this.dataService.updateProductsData(data);
-        localStorage.setItem('Products', JSON.stringify(data));
-      // Save the last document for pagination
-      if (data.length < this.dataService.limit.getValue()) {
-        this.dataService.hasMore.next(false);
-      }
-
-    })
+    if(!this.dataService.isSidePanelFilterClicked$.value) {
+      this.dataService.hasMore.next(false);
+      this.dataService.lastDoc.next(null);
+      this.dataService.limit.next(8);
+      this.dataService.getProducts(this.dataService.limit.getValue(), null, {}, "Product-List").subscribe((data : any) => {
+        if(data == null) return;
+        this.dataService.updateProductsData(data);
+          localStorage.setItem('Products', JSON.stringify(data));
+        // Save the last document for pagination
+        if (data.length < this.dataService.limit.getValue()) {
+          this.dataService.hasMore.next(false);
+        }
+  
+      })
+    }
+   
   }
 
   navigateWithObject(product: any) {

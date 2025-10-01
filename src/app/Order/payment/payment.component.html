@@ -17,8 +17,9 @@
                   </div>
                   <input type="text" id="cardNumber" formControlName="cardNumber" class="form-control" placeholder="1234 5678 9012 3456" [ngClass]="{'is-invalid': cardNumber?.invalid && cardNumber?.touched}" />
                 </div>
-                <div *ngIf="cardNumber?.invalid && cardNumber?.touched" class="text-danger small">
-                  Card number is required and must be 16 digits.
+                <div *ngIf="cardNumber?.touched && cardNumber?.invalid" class="error">
+                  <p *ngIf="cardNumber?.errors?.['required']">Card number is required.</p>
+                  <p *ngIf="cardNumber?.errors?.['pattern']">Card number must be 16 digits.</p>
                 </div>
               </div>
               

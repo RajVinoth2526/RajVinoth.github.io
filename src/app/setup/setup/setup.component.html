@@ -1,67 +1,162 @@
-<div class="container">
-  <h1 class="mt-4 theme-color">Product Details Upload</h1>
-  <form #productForm="ngForm">
-
-    <div class="form-group">
-      <label for="setupOption" class="theme-color">Setup Option</label>
-      <select class="form-control" id="setupOption" name="setupOption" [(ngModel)]="setupOption" required>
-        <option value="" class="theme-color">Select Setup Option</option>
-        <option value="SliderShow" class="theme-color">Main Slider Show</option>
-        <option value="catergories" class="theme-color">Categories</option>
-        <option value="product" class="theme-color">Add product</option>
-        <option value="themeColor" class="theme-color">Set Theme color</option>
-        <option value="shopName" class="theme-color">Set company name</option>
-        <option value="contactDetails" class="theme-color">Set contact details</option>
-      </select>
+<div class="modern-setup-container">
+  <!-- Header Section -->
+  <div class="setup-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <i class="fas fa-cog"></i>
+      </div>
+      <div class="header-text">
+        <h1 class="setup-title">Admin Dashboard</h1>
+        <p class="setup-subtitle">Manage your store settings and content</p>
+      </div>
     </div>
+    <div class="header-actions">
+      <button class="theme-toggle-button" (click)="toggleTheme()" [title]="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <i [class]="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+        <span>{{ isDarkMode ? 'Light' : 'Dark' }}</span>
+      </button>
+    </div>
+  </div>
 
-     <!-- Contact Details Form Group -->
-     <div *ngIf="setupOption == 'contactDetails'" class="contact-details-form">
-      <h2 class="mt-4 theme-color">Contact Details</h2>
-
-      <!-- Email -->
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" [(ngModel)]="email" required>
-      </div>
-
-      <!-- Phone Number -->
-      <div class="form-group">
-        <label for="phoneNumber">Phone Number</label>
-        <input type="number" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Enter Phone Number" [(ngModel)]="phoneNumber" required>
-      </div>
-
-      <!-- Address -->
-      <div class="form-group">
-        <label for="address">Address</label>
-        <input type="text" class="form-control" id="address" name="address" placeholder="Enter Address" [(ngModel)]="address" required>
-      </div>
-
-      <!-- City -->
-      <div class="form-group">
-        <label for="city">City</label>
-        <input type="text" class="form-control" id="city" name="city" placeholder="Enter City" [(ngModel)]="city" required>
-      </div>
-
-      <!-- State -->
-      <div class="form-group">
-        <label for="state">State</label>
-        <input type="text" class="form-control" id="state" name="state" placeholder="Enter State" [(ngModel)]="state" required>
-      </div>
-
-      <!-- Postal Code -->
-      <div class="form-group">
-        <label for="postalCode">Postal Code</label>
-        <input type="text" class="form-control" id="postalCode" name="postalCode" placeholder="Enter Postal Code" [(ngModel)]="postalCode" required>
-      </div>
-
-      <div class="form-group">
-        <label for="country">country</label>
-        <input type="text" class="form-control" id="country" name="country" placeholder="Enter country" [(ngModel)]="country" required>
-      </div>
-
+  <!-- Main Content -->
+  <div class="setup-content">
+    <form #productForm="ngForm">
       
-    </div>
+      <!-- Setup Option Selector -->
+      <div class="setup-option-section">
+        <div class="section-header">
+          <h3 class="section-title">Choose Setup Option</h3>
+          <p class="section-description">Select what you want to configure</p>
+        </div>
+        
+        <div class="option-grid">
+          <div class="option-card" [class.selected]="setupOption === 'SliderShow'" (click)="setupOption = 'SliderShow'">
+            <div class="option-icon">
+              <i class="fas fa-images"></i>
+            </div>
+            <div class="option-content">
+              <h4>Main Slider</h4>
+              <p>Configure homepage banners</p>
+            </div>
+          </div>
+
+          <div class="option-card" [class.selected]="setupOption === 'catergories'" (click)="setupOption = 'catergories'">
+            <div class="option-icon">
+              <i class="fas fa-th-large"></i>
+            </div>
+            <div class="option-content">
+              <h4>Categories</h4>
+              <p>Manage product categories</p>
+            </div>
+          </div>
+
+          <div class="option-card" [class.selected]="setupOption === 'product'" (click)="setupOption = 'product'">
+            <div class="option-icon">
+              <i class="fas fa-box"></i>
+            </div>
+            <div class="option-content">
+              <h4>Add Product</h4>
+              <p>Create new products</p>
+            </div>
+          </div>
+
+          <div class="option-card" [class.selected]="setupOption === 'themeColor'" (click)="setupOption = 'themeColor'">
+            <div class="option-icon">
+              <i class="fas fa-palette"></i>
+            </div>
+            <div class="option-content">
+              <h4>Theme Colors</h4>
+              <p>Customize brand colors</p>
+            </div>
+          </div>
+
+          <div class="option-card" [class.selected]="setupOption === 'shopName'" (click)="setupOption = 'shopName'">
+            <div class="option-icon">
+              <i class="fas fa-store"></i>
+            </div>
+            <div class="option-content">
+              <h4>Shop Name</h4>
+              <p>Set your store name</p>
+            </div>
+          </div>
+
+          <div class="option-card" [class.selected]="setupOption === 'contactDetails'" (click)="setupOption = 'contactDetails'">
+            <div class="option-icon">
+              <i class="fas fa-address-book"></i>
+            </div>
+            <div class="option-content">
+              <h4>Contact Details</h4>
+              <p>Update contact information</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Details Form -->
+      <div *ngIf="setupOption == 'contactDetails'" class="form-section">
+        <div class="section-header">
+          <h3 class="section-title">Contact Details</h3>
+          <p class="section-description">Update your store's contact information</p>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group modern-input">
+            <label for="email">Email Address</label>
+            <div class="input-wrapper">
+              <i class="fas fa-envelope input-icon"></i>
+              <input type="email" class="modern-input-field" id="email" name="email" placeholder="Enter email address" [(ngModel)]="email" required>
+            </div>
+          </div>
+
+          <div class="form-group modern-input">
+            <label for="phoneNumber">Phone Number</label>
+            <div class="input-wrapper">
+              <i class="fas fa-phone input-icon"></i>
+              <input type="tel" class="modern-input-field" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number" [(ngModel)]="phoneNumber" required>
+            </div>
+          </div>
+
+          <div class="form-group modern-input full-width">
+            <label for="address">Street Address</label>
+            <div class="input-wrapper">
+              <i class="fas fa-map-marker-alt input-icon"></i>
+              <input type="text" class="modern-input-field" id="address" name="address" placeholder="Enter street address" [(ngModel)]="address" required>
+            </div>
+          </div>
+
+          <div class="form-group modern-input">
+            <label for="city">City</label>
+            <div class="input-wrapper">
+              <i class="fas fa-city input-icon"></i>
+              <input type="text" class="modern-input-field" id="city" name="city" placeholder="Enter city" [(ngModel)]="city" required>
+            </div>
+          </div>
+
+          <div class="form-group modern-input">
+            <label for="state">State/Province</label>
+            <div class="input-wrapper">
+              <i class="fas fa-map input-icon"></i>
+              <input type="text" class="modern-input-field" id="state" name="state" placeholder="Enter state" [(ngModel)]="state" required>
+            </div>
+          </div>
+
+          <div class="form-group modern-input">
+            <label for="postalCode">Postal Code</label>
+            <div class="input-wrapper">
+              <i class="fas fa-mail-bulk input-icon"></i>
+              <input type="text" class="modern-input-field" id="postalCode" name="postalCode" placeholder="Enter postal code" [(ngModel)]="postalCode" required>
+            </div>
+          </div>
+
+          <div class="form-group modern-input">
+            <label for="country">Country</label>
+            <div class="input-wrapper">
+              <i class="fas fa-globe input-icon"></i>
+              <input type="text" class="modern-input-field" id="country" name="country" placeholder="Enter country" [(ngModel)]="country" required>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <!-- Category Form Group -->
     <div *ngIf="setupOption == 'catergories' " class="category-form">
@@ -115,147 +210,431 @@
 
     </div>
 
-    <!-- Product Form Group -->
-    <div *ngIf="setupOption == 'product' " class="product-form">
-      <!-- Product Details -->
-      <div class="row">
-        <div class="col-md-6">
-          <!-- Title -->
-          <div class="form-group">
-            <label for="title">Product Name</label>
-            <input type="text" class="form-control" id="title" name="title" placeholder="Product Name"
-              [(ngModel)]="title" required>
-          </div>
-          <!-- Sub Title -->
-          <!-- <div class="form-group">
-            <label for="subTitle">Sub Title</label>
-            <input type="text" class="form-control" id="subTitle" name="subTitle" placeholder="Enter subTitle"
-              [(ngModel)]="subTitle" required>
-          </div> -->
-
-          <!-- Available colors -->
-          <div class="form-group">
-            <label for="colors">Available Colors</label>
-            <input type="text" class="form-control" id="colors" name="colors" placeholder="Blue/Red/Purple"
-              [(ngModel)]="colors" required>
-          </div>
-          <!-- Description -->
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea class="form-control" id="description" name="description" placeholder="Enter description"
-              [(ngModel)]="description" rows="4" required></textarea>
-          </div>
-
-           
-
-
-          <!-- Price -->
-          <div class="form-group">
-            <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" name="price" placeholder="Enter price"
-              [(ngModel)]="price" required>
-          </div>
-
-        </div>
-        <div class="col-md-6">
-          <!-- Label -->
-          <div class="form-group">
-            <label for="label">Brand</label>
-            <input type="text" class="form-control" id="label" name="label" placeholder="Enter Brand"
-              [(ngModel)]="label" required>
-          </div>
-          <!-- Size -->
-          <div class="form-group">
-            <label for="size">Size</label>
-            <input type="text" class="form-control" id="size" name="size" placeholder="S/M/L/XL" [(ngModel)]="size"
-              required>
-          </div>
-
-          <!-- Description -->
-          <div class="form-group">
-            <label for="specification">Specification</label>
-            <textarea class="form-control" id="specification" name="specification" placeholder="Enter specification"
-              [(ngModel)]="specification" rows="4" required></textarea>
-          </div>
-          <!-- category -->
-          <div class="form-group">
-            <label for="category">Category</label>
-            <select class="form-control" id="category" name="category" [(ngModel)]="categoryId" required>
-              <option value="" disabled selected>Select Category</option>
-              <option value="1">Men</option>
-              <option value="2">Women</option>
-
-              <!-- Add more options as needed -->
-            </select>
-          </div>
-
-           <!-- sub category -->
-           <div class="form-group">
-            <label for="subCategory">Sub Category</label>
-            <select class="form-control" id="subCategory" name="subCategory" [(ngModel)]="subCategoryId" required>
-              <option value="" disabled selected>Select Sub Category</option>
-              <option value="1">Casual</option>
-              <option value="2">Formal</option>
-              <!-- <option value="3">Sport Wear</option> -->
-
-              <!-- Add more options as needed -->
-            </select>
-          </div>
-
-           <!-- Type -->
-           <div class="form-group">
-            <label for="type">Type</label>
-            <select class="form-control" id="type" name="type" [(ngModel)]="typeId" required>
-              <option value="" disabled selected>Select Type</option>
-              <option value="1">T shirt</option>
-              <option value="2">shirt</option>
-              <option value="3">Denim</option>
-              <option value="4">Accessories</option>
-
-              <!-- Add more options as needed -->
-            </select>
-          </div>
-
-
-
-        </div>
-      </div>
-      <!-- Product Image -->
-      <div class="form-group" (drop)="onFilesDropped($event)" (dragover)="onDragOver($event)">
-        <label for="sliderShowImage">Product Images</label>
-
-        <!-- Hidden file input -->
-        <input #fileInput type="file" class="form-control-file" id="sliderShowImage" name="productImage"
-          (change)="onFilesSelected($event)" multiple style="display: none;">
-
-        <!-- Custom drag-drop area with a button to select images -->
-        <div class="drag-drop-area" style="text-align: center;" (click)="fileInput.click()">
-          <p>Drag & drop images here</p>
-          <i class="fas fa-plus"></i>
-          <p>or</p>
-          <button type="button" class="btn btn-primary custom-file-btn">Select Images</button>
+      <!-- Product Form -->
+      <div *ngIf="setupOption == 'product'" class="form-section">
+        <div class="section-header">
+          <h3 class="section-title">Add New Product</h3>
+          <p class="section-description">Fill in the product details below</p>
         </div>
 
-        <!-- Image container to show selected images and set default -->
-        <div class="image-container mt-2">
-          <div *ngFor="let image of showSelectedFiles; let i = index" class="image-wrapper">
-            <img [src]="image.content" alt="Selected Image" class="img-fluid" style="max-width: 200px;">
-
-            <!-- Radio button for setting the default image -->
-            <div class="select-button">
-              <input type="radio" name="defaultImage" [value]="i" [(ngModel)]="selectedIndex"> Default
+        <!-- Basic Information -->
+        <div class="form-section-sub">
+          <h4 class="subsection-title">Basic Information</h4>
+          <div class="form-grid">
+            <div class="form-group modern-input">
+              <label for="title">Product Name</label>
+              <div class="input-wrapper">
+                <i class="fas fa-box input-icon"></i>
+                <input type="text" class="modern-input-field" id="title" name="title" 
+                       placeholder="Enter product name" [(ngModel)]="title" required>
+              </div>
             </div>
 
-            <!-- Delete button for each image -->
-            <button type="button" class="btn btn-danger btn-sm deselect-btn" (click)="deselectImage(i)">
-              <i class="fas fa-times"></i>
-            </button>
+            <div class="form-group modern-input">
+              <label for="sku">SKU (Stock Keeping Unit)</label>
+              <div class="input-wrapper">
+                <i class="fas fa-barcode input-icon"></i>
+                <input type="text" class="modern-input-field" id="sku" name="sku" 
+                       placeholder="e.g., SHIRT-001" [(ngModel)]="sku" required>
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="label">Brand</label>
+              <div class="input-wrapper">
+                <i class="fas fa-tag input-icon"></i>
+                <input type="text" class="modern-input-field" id="label" name="label" 
+                       placeholder="Enter brand name" [(ngModel)]="label" required>
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="stockQuantity">Stock Quantity</label>
+              <div class="input-wrapper">
+                <i class="fas fa-warehouse input-icon"></i>
+                <input type="number" class="modern-input-field" id="stockQuantity" name="stockQuantity" 
+                       placeholder="Available quantity" [(ngModel)]="stockQuantity" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing Information -->
+        <div class="form-section-sub">
+          <h4 class="subsection-title">Pricing</h4>
+          <div class="form-grid">
+            <div class="form-group modern-input">
+              <label for="price">Selling Price</label>
+              <div class="input-wrapper">
+                <i class="fas fa-dollar-sign input-icon"></i>
+                <input type="number" class="modern-input-field" id="price" name="price" 
+                       placeholder="0.00" [(ngModel)]="price" step="0.01" required>
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="compareAtPrice">Compare At Price (Original Price)</label>
+              <div class="input-wrapper">
+                <i class="fas fa-tag input-icon"></i>
+                <input type="number" class="modern-input-field" id="compareAtPrice" name="compareAtPrice" 
+                       placeholder="0.00" [(ngModel)]="compareAtPrice" step="0.01">
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="discountPercentage">Discount Percentage</label>
+              <div class="input-wrapper">
+                <i class="fas fa-percentage input-icon"></i>
+                <input type="number" class="modern-input-field" id="discountPercentage" name="discountPercentage" 
+                       placeholder="0" [(ngModel)]="discountPercentage" min="0" max="100">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="form-section-sub">
+          <h4 class="subsection-title">Product Details</h4>
+          <div class="form-grid">
+            <!-- Multiple Colors Section -->
+            <div class="form-group modern-input full-width">
+              <label>Available Colors</label>
+              
+              <!-- Add New Color Form -->
+              <div class="add-color-form">
+                <div class="color-input-row">
+                  <div class="color-name-input">
+                    <div class="input-wrapper">
+                      <i class="fas fa-tag input-icon"></i>
+                      <input type="text" class="modern-input-field" 
+                             placeholder="Color name (e.g., Navy Blue)" 
+                             [(ngModel)]="newColorName">
+                    </div>
+                  </div>
+                  
+                  <div class="color-picker-input">
+                    <div class="input-wrapper">
+                      <i class="fas fa-palette input-icon"></i>
+                      <input [(colorPicker)]="newColorHex" (colorPickerChange)="newColorHex = $event"
+                             [style.background]="newColorHex" type="text" class="color-picker-field" 
+                             placeholder="Select color">
+                      <span class="color-hex-display">{{newColorHex}}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="color-quantity-input">
+                    <div class="input-wrapper">
+                      <i class="fas fa-box input-icon"></i>
+                      <input type="number" class="modern-input-field" 
+                             placeholder="Quantity" 
+                             [(ngModel)]="newColorQuantity"
+                             min="0" max="999">
+                    </div>
+                  </div>
+                  
+                  <button type="button" class="add-color-btn" (click)="addColor()" 
+                          [disabled]="!newColorName.trim() || newColorQuantity <= 0">
+                    <i class="fas fa-plus"></i>
+                    Add Color
+                  </button>
+                </div>
+              </div>
+
+              <!-- Colors Display -->
+              <div class="colors-display" *ngIf="productColors.length > 0">
+                <div class="colors-grid">
+                  <div *ngFor="let color of productColors" class="color-item">
+                    <div class="color-preview" [style.background]="color.hex"></div>
+                    <div class="color-details">
+                      <div class="color-name-input-small">
+                        <input type="text" class="color-name-field" 
+                               [value]="color.name" 
+                               (blur)="updateColorName(color.id, $any($event.target).value)"
+                               placeholder="Color name">
+                      </div>
+                      <div class="color-quantity-input-small">
+                        <input type="number" class="color-quantity-field" 
+                               [value]="color.quantity" 
+                               (blur)="updateColorQuantity(color.id, +$any($event.target).value)"
+                               placeholder="Qty" min="0" max="999">
+                        <span class="quantity-label">pcs</span>
+                      </div>
+                      <div class="color-actions">
+                        <input [(colorPicker)]="color.hex" (colorPickerChange)="updateColorHex(color.id, $event)"
+                               [style.background]="color.hex" type="text" class="color-picker-small" 
+                               title="Change color">
+                        <button type="button" class="remove-color-btn" (click)="removeColor(color.id)" 
+                                title="Remove color">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- No colors message -->
+              <div class="no-colors-message" *ngIf="productColors.length === 0">
+                <i class="fas fa-palette"></i>
+                <p>No colors added yet. Add colors above to get started.</p>
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="size">Available Sizes</label>
+              <div class="input-wrapper">
+                <i class="fas fa-ruler input-icon"></i>
+                <input type="text" class="modern-input-field" id="size" name="size" 
+                       placeholder="S, M, L, XL" [(ngModel)]="size">
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="material">Material</label>
+              <div class="input-wrapper">
+                <i class="fas fa-leaf input-icon"></i>
+                <input type="text" class="modern-input-field" id="material" name="material" 
+                       placeholder="e.g., Cotton, Polyester" [(ngModel)]="material">
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="weight">Weight (grams)</label>
+              <div class="input-wrapper">
+                <i class="fas fa-weight input-icon"></i>
+                <input type="number" class="modern-input-field" id="weight" name="weight" 
+                       placeholder="0" [(ngModel)]="weight" step="0.1">
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="dimensions">Dimensions (L x W x H cm)</label>
+              <div class="input-wrapper">
+                <i class="fas fa-cube input-icon"></i>
+                <input type="text" class="modern-input-field" id="dimensions" name="dimensions" 
+                       placeholder="e.g., 30 x 20 x 5" [(ngModel)]="dimensions">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Descriptions -->
+        <div class="form-section-sub">
+          <h4 class="subsection-title">Descriptions</h4>
+          <div class="form-grid">
+            <div class="form-group modern-input full-width">
+              <label for="description">Product Description</label>
+              <div class="input-wrapper">
+                <i class="fas fa-align-left input-icon"></i>
+                <textarea class="modern-input-field" id="description" name="description" 
+                          placeholder="Detailed product description..." rows="4" [(ngModel)]="description"></textarea>
+              </div>
+            </div>
+
+            <div class="form-group modern-input full-width">
+              <label for="specification">Specifications</label>
+              <div class="input-wrapper">
+                <i class="fas fa-list input-icon"></i>
+                <textarea class="modern-input-field" id="specification" name="specification" 
+                          placeholder="Technical specifications..." rows="3" [(ngModel)]="specification"></textarea>
+              </div>
+            </div>
+
+            <div class="form-group modern-input full-width">
+              <label for="careInstructions">Care Instructions</label>
+              <div class="input-wrapper">
+                <i class="fas fa-hand-holding-heart input-icon"></i>
+                <textarea class="modern-input-field" id="careInstructions" name="careInstructions" 
+                          placeholder="Washing and care instructions..." rows="2" [(ngModel)]="careInstructions"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="form-section-sub">
+          <h4 class="subsection-title">Categories</h4>
+          <div class="form-grid">
+            <div class="form-group modern-input">
+              <label for="category">Category</label>
+              <div class="input-wrapper">
+                <i class="fas fa-th-large input-icon"></i>
+                <select class="modern-input-field" id="category" name="category" [(ngModel)]="categoryId" required>
+                  <option value="" disabled selected>Select Category</option>
+                  <option value="1">Men</option>
+                  <option value="2">Women</option>
+                  <option value="3">Accessories</option>
+                  <option value="4">Shoes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="subCategory">Sub Category</label>
+              <div class="input-wrapper">
+                <i class="fas fa-layer-group input-icon"></i>
+                <select class="modern-input-field" id="subCategory" name="subCategory" [(ngModel)]="subCategoryId" required>
+                  <option value="" disabled selected>Select Sub Category</option>
+                  <option value="1">Casual</option>
+                  <option value="2">Formal</option>
+                  <option value="3">Sports</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="type">Product Type</label>
+              <div class="input-wrapper">
+                <i class="fas fa-tags input-icon"></i>
+                <select class="modern-input-field" id="type" name="type" [(ngModel)]="typeId" required>
+                  <option value="" disabled selected>Select Type</option>
+                  <option value="1">T-Shirt</option>
+                  <option value="2">Shirt</option>
+                  <option value="3">Denim</option>
+                  <option value="4">Jacket</option>
+                  <option value="5">Accessories</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO & Marketing -->
+        <div class="form-section-sub">
+          <h4 class="subsection-title">SEO & Marketing</h4>
+          <div class="form-grid">
+            <div class="form-group modern-input">
+              <label for="tags">Search Tags</label>
+              <div class="input-wrapper">
+                <i class="fas fa-hashtag input-icon"></i>
+                <input type="text" class="modern-input-field" id="tags" name="tags" 
+                       placeholder="summer, casual, trendy" [(ngModel)]="tags">
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <label for="seoTitle">SEO Title</label>
+              <div class="input-wrapper">
+                <i class="fas fa-search input-icon"></i>
+                <input type="text" class="modern-input-field" id="seoTitle" name="seoTitle" 
+                       placeholder="SEO optimized title" [(ngModel)]="seoTitle">
+              </div>
+            </div>
+
+            <div class="form-group modern-input full-width">
+              <label for="seoDescription">SEO Description</label>
+              <div class="input-wrapper">
+                <i class="fas fa-file-alt input-icon"></i>
+                <textarea class="modern-input-field" id="seoDescription" name="seoDescription" 
+                          placeholder="SEO meta description..." rows="2" [(ngModel)]="seoDescription"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Status -->
+        <div class="form-section-sub">
+          <h4 class="subsection-title">Product Status</h4>
+          <div class="form-grid">
+            <div class="form-group modern-input">
+              <div class="checkbox-wrapper">
+                <input type="checkbox" id="isActive" name="isActive" [(ngModel)]="isActive">
+                <label for="isActive" class="checkbox-label">
+                  <i class="fas fa-toggle-on"></i>
+                  Active Product
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group modern-input">
+              <div class="checkbox-wrapper">
+                <input type="checkbox" id="isFeatured" name="isFeatured" [(ngModel)]="isFeatured">
+                <label for="isFeatured" class="checkbox-label">
+                  <i class="fas fa-star"></i>
+                  Featured Product
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
+      <!-- Product Images -->
+      <div class="form-section-sub" *ngIf="setupOption == 'product'">
+        <h4 class="subsection-title">Product Images</h4>
+        <div class="image-upload-section" (drop)="onFilesDropped($event)" (dragover)="onDragOver($event)">
+          <!-- Hidden file input -->
+          <input #fileInput type="file" class="form-control-file" id="productImages" name="productImages"
+            (change)="onFilesSelected($event)" multiple accept="image/*" style="display: none;">
 
-    </div>
+          <!-- Modern drag-drop area -->
+          <div class="modern-drag-drop-area" (click)="fileInput.click()">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">
+              <h4>Upload Product Images</h4>
+              <p>Drag & drop images here or click to browse</p>
+              <small>Supports: JPG, PNG, GIF (Max 10MB each)</small>
+            </div>
+            <button type="button" class="upload-button">
+              <i class="fas fa-plus"></i>
+              Select Images
+            </button>
+          </div>
+
+          <!-- Image preview grid -->
+          <div class="modern-image-container" *ngIf="showSelectedFiles.length > 0">
+            <div *ngFor="let image of showSelectedFiles; let i = index" class="modern-image-wrapper" 
+                 [class.default-image]="selectedIndex === i">
+              <div class="image-preview">
+                <img [src]="image.content" alt="Product Image" class="preview-image">
+                
+                <!-- Image number badge -->
+                <div class="image-number">{{ i + 1 }}</div>
+                
+                <!-- Default indicator -->
+                <div class="default-indicator" *ngIf="selectedIndex === i">
+                  <i class="fas fa-star"></i>
+                  <span>Default</span>
+                </div>
+                
+                <!-- Image overlay -->
+                <div class="image-overlay">
+                  <div class="overlay-actions">
+                    <button type="button" class="delete-image-btn" (click)="deselectImage(i)" title="Remove Image">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                    
+                    <button type="button" class="set-default-btn" 
+                            [class.active]="selectedIndex === i"
+                            (click)="setDefaultImage(i)" 
+                            title="Set as Default">
+                      <i class="fas fa-star"></i>
+                    </button>
+                  </div>
+                  
+                  <div class="image-info">
+                    <span class="image-name">{{ image.name || 'Image ' + (i + 1) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Default image info -->
+          <div class="default-image-info" *ngIf="showSelectedFiles.length > 0">
+            <div class="info-card">
+              <i class="fas fa-info-circle"></i>
+              <div class="info-content">
+                <h5>Default Image Selected</h5>
+                <p>Image {{ selectedIndex + 1 }} is set as the default display image for this product.</p>
+                <small>This image will appear first in the product gallery and as the main thumbnail.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <!-- SliderShow Form Group -->
     <div *ngIf="setupOption == 'SliderShow' " class="slider-show-form">
@@ -306,29 +685,96 @@
 
     </div>
 
-    <div *ngIf="setupOption == 'themeColor'" class="slider-show-form">
-      <div class="color-picker-container">
-        <label for="primaryColor">Primary Color:</label>
-        <input [(colorPicker)]="primaryColor" (colorPickerChange)="onPrimaryColorChange($event)"
-          [style.background]="primaryColor" type="text" id="primaryColor" />
+      <!-- Theme Colors Form -->
+      <div *ngIf="setupOption == 'themeColor'" class="form-section">
+        <div class="section-header">
+          <h3 class="section-title">Theme Colors</h3>
+          <p class="section-description">Customize your store's brand colors</p>
+        </div>
+        
+        <!-- Predefined Palettes -->
+        <div class="palette-section">
+          <h4>Quick Palette Selection</h4>
+          <div class="palette-grid">
+            <div class="palette-card" *ngFor="let palette of predefinedPalettes" (click)="applyPalette(palette)">
+              <div class="palette-preview">
+                <div class="palette-primary" [style.background]="palette.primary"></div>
+                <div class="palette-secondary" [style.background]="palette.secondary"></div>
+              </div>
+              <span class="palette-name">{{palette.name}}</span>
+            </div>
+          </div>
+        </div>
 
-        <label for="secondaryColor">Secondary Color:</label>
-        <input [(colorPicker)]="secondaryColor" (colorPickerChange)="onSecondaryColorChange($event)"
-          [style.background]="secondaryColor" type="text" id="secondaryColor" />
+        <div class="color-picker-section">
+          <div class="color-picker-card">
+            <div class="color-preview" [style.background]="primaryColor"></div>
+            <div class="color-info">
+              <h4>Primary Color</h4>
+              <p>Main brand color used throughout the site</p>
+              <div class="color-input-wrapper">
+                <input [(colorPicker)]="primaryColor" (colorPickerChange)="onPrimaryColorChange($event)"
+                  [style.background]="primaryColor" type="text" class="color-input" />
+                <span class="color-value">{{primaryColor}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="color-picker-card">
+            <div class="color-preview" [style.background]="secondaryColor"></div>
+            <div class="color-info">
+              <h4>Secondary Color</h4>
+              <p>Accent color for highlights and buttons</p>
+              <div class="color-input-wrapper">
+                <input [(colorPicker)]="secondaryColor" (colorPickerChange)="onSecondaryColorChange($event)"
+                  [style.background]="secondaryColor" type="text" class="color-input" />
+                <span class="color-value">{{secondaryColor}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="color-preview-section">
+          <h4>Preview</h4>
+          <div class="preview-elements">
+            <button class="preview-button primary">Primary Button</button>
+            <button class="preview-button secondary">Secondary Button</button>
+            <div class="preview-card">
+              <div class="preview-header">Sample Card</div>
+              <div class="preview-content">This is how your colors will look</div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div *ngIf="setupOption == 'shopName'" class="slider-show-form">
-      <div class="form-group">
-        <label for="shopName">Enter Shop Name:</label>
-        <input type="text" class="form-control" id="shopName" name="shopName" placeholder="Enter shopName" [(ngModel)]="shopName" required>
+      <!-- Shop Name Form -->
+      <div *ngIf="setupOption == 'shopName'" class="form-section">
+        <div class="section-header">
+          <h3 class="section-title">Shop Name</h3>
+          <p class="section-description">Set your store's display name</p>
+        </div>
+        
+        <div class="form-group modern-input full-width">
+          <label for="shopName">Store Name</label>
+          <div class="input-wrapper">
+            <i class="fas fa-store input-icon"></i>
+            <input type="text" class="modern-input-field" id="shopName" name="shopName" 
+                   placeholder="Enter your store name" [(ngModel)]="shopName" required>
+          </div>
+        </div>
       </div>
-    </div>
 
-
-    <button *ngIf="this.setupOption!=''" type="button" class="btn theme-color-button" [disabled]="!productForm.valid"
-      (click)="uploadProduct()">Save</button>
-  </form>
+      <!-- Action Button -->
+      <div *ngIf="setupOption != ''" class="action-section">
+        <button type="button" class="modern-save-button" 
+                [disabled]="!productForm.valid" (click)="uploadProduct()">
+          <i class="fas fa-save"></i>
+          <span>Save Changes</span>
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-scale-multiple">
   <p style="color: white"> Loading... </p>

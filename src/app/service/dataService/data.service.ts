@@ -41,6 +41,8 @@ export class DataService {
   public limit = new BehaviorSubject<number>(8);
   public filter = new BehaviorSubject<any>(null);
   public filterFromSidePanel = new BehaviorSubject<any>(null);
+  public isSidePanelFilterClicked$ = new BehaviorSubject<boolean>(false);
+
 
 
 

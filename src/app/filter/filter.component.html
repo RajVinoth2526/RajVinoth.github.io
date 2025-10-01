@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
       <ul class="list-inline shop-top-menu pb-3 pt-1">
         <li class="list-inline-item">
           <a 
@@ -27,6 +27,14 @@
         </li>
       </ul>
     </div>
+    <div class="col-md-4 text-right">
+      <button 
+        class="btn btn-outline-secondary btn-sm" 
+        (click)="clearAllFilters()"
+        *ngIf="activeCategory !== 'all' || activeSubCategory || activeType">
+        Clear Filters
+      </button>
+    </div>
   </div>
   
 
@@ -44,8 +52,10 @@
 <ng-container *ngIf="activeSubCategory">
   <div class="col-3 col-sm-3 col-md-1 fade-in" *ngFor="let item of items">
     <div class="text-center" (click)="selectType(item)">
-      <img [src]="item.image" alt="{{ item.name }}" class="img-fluid rounded-circle mb-2 border-with-padding img-responsive" />
-      <p class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 nav-link theme-color-text">{{ item.name }}</p>
+      <img [src]="item.image" alt="{{ item.name }}" class="img-fluid rounded-circle mb-2 border-with-padding img-responsive" 
+           [ngClass]="{'selected-item': activeType?.name === item.name}" />
+      <p class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 nav-link theme-color-text"
+         [ngClass]="{'selected-text': activeType?.name === item.name}">{{ item.name }}</p>
     </div>
   </div>
 </ng-container>

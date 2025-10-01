@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { DataService } from 'src/app/service/dataService/data.service';
 import { ConfirmationComponent } from 'src/app/confirmation/confirmation/confirmation.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Filter } from 'src/app/Model/x-mart.model';
 // carousel-item.model.ts
 export interface CarouselItem {
   imgSrc: string;
@@ -26,6 +27,7 @@ export class HomeComponent implements OnInit {
   mainSliders: any = [];
   isAdmin: boolean = true;
   userData: any;
+  filters: Filter = new Filter();
   categories: any = [
     // { name: 'Dresses', image: './assets/img/category_img_01.jpg' },
     // { name: 'Shoes', image: './assets/img/category_img_02.jpg' },
@@ -205,6 +207,18 @@ export class HomeComponent implements OnInit {
     });
 
   }
+
+  filterProducts(category: string): void {
+    this.filters.category = category.toString();
+    this.filters.subCategory = "";
+    this.filters.type = "";
+    this.dataService.filterFromSidePanel.next(this.filters);
+    this.router.navigate(['shop']);
+    
+  // Add your filtering logic here
+  // Example: emit an event or call a service to fetch filtered products
+  }
+
 
 
 }

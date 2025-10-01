@@ -5,12 +5,12 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyATT2LmEHzzXvgi8XEVmQA9abCQcCD5-70",
-  authDomain: "hello-world-e4a65.firebaseapp.com",
-  projectId: "hello-world-e4a65",
-  storageBucket: "hello-world-e4a65.appspot.com",
-  messagingSenderId: "358144022050",
-  appId: "1:358144022050:web:9fe01bebc67c2cf691dc7b"
+    apiKey: "AIzaSyAdgxn3fne8jRBxMewRi0G7MviQNzZ7btk",
+    authDomain: "easyclassroom2.firebaseapp.com",
+    projectId: "easyclassroom2",
+    storageBucket: "easyclassroom2.appspot.com",
+    messagingSenderId: "137399360308",
+    appId: "1:137399360308:web:f89e3830ff9a58bb1a6361"
   }
 };
 

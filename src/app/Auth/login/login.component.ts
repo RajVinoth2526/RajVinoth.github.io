@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from 'src/app/service/dataService/data.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   shopName!: string;
   signInForm!: FormGroup;
+  private subscriptions: Subscription[] = [];
   constructor(
     private dataService: DataService,
     private fb: FormBuilder,
@@ -23,11 +24,13 @@ export class LoginComponent implements OnInit {
     private toastr: ToastrService,
     private spinner: NgxSpinnerService // Your spinner service
   ) {
-    this.dataService.currentUser.subscribe((data: any) => {
-      if(data == null) return;
-      this.router.navigate(['profile']);
-    })
-   }
+    this.subscriptions.push(
+      this.dataService.currentUser.subscribe((data: any) => {
+        if (data == null) return;
+        this.router.navigate(['profile']);
+      })
+    );
+  }
 
   ngOnInit(): void {
 
@@ -35,11 +38,17 @@ export class LoginComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-    
-    this.dataService.shopName.subscribe((data) => {
-      if(data == null) return;
-      this.shopName = data[0].shopName;
-    });
+
+    this.subscriptions.push(
+      this.dataService.shopName.subscribe((data) => {
+        if (data == null) return;
+        this.shopName = data[0].shopName;
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
 
@@ -56,9 +65,9 @@ export class LoginComponent implements OnInit {
       if (result) {
         this.toastr.success('Login Successfully');
         this.dataService.syncLocalStorageToFirebase();
-        
+
         this.router.navigate(['home']);
-        
+
         this.spinner.hide();
       }
     } catch (error) {

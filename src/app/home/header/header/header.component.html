@@ -122,11 +122,15 @@
                     data-bs-target="#templatemo_search">
                     <i class="fa fa-fw fa-search text-dark mr-2 theme-color"></i>
                 </a>
-                <a class="nav-icon position-relative text-decoration-none" routerLink="/Admin-order-details">
+                <a class="nav-icon position-relative text-decoration-none" routerLink="/Admin-order-details" *ngIf="(loginUserDetails  && !loginUserDetails.isAdmin) || !currentUser">
                     <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1 theme-color" (click)="closeMenu();"></i>
                     <span
                         class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark theme-color">7</span>
                 </a>
+                <a class="nav-icon position-relative text-decoration-none" matTooltip="Manage Orders" routerLink="/Admin-order-details" *ngIf="loginUserDetails  && loginUserDetails.isAdmin && currentUser">
+                    <i class="fa-solid fa-box theme-color"></i>
+                </a>
+                  
                 <!-- Button to Open the Modal -->
                 <a class="nav-icon position-relative text-decoration-none">
                     <i class="fa fa-fw fa-user text-dark mr-3 theme-color" (click)="naviagteToProfile();closeMenu();"></i>

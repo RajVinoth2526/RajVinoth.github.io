@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, HostListener } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
@@ -57,6 +57,7 @@ export class SetupComponent implements OnInit {
   selectedFiles: any [] = [];
   showSelectedFiles: any [] = [];
   selectedIndex: number = 0;
+  defaultImageId: string = '';
   title: string = '';
   subTitle: string = '';
   specification: string = '';  
@@ -71,8 +72,17 @@ export class SetupComponent implements OnInit {
   categoryId: number = 0;
   subCategoryId: number = 0;
   typeId: number = 0;
-  primaryColor: string = '#ff0000';  // Default primary color (red)
-  secondaryColor: string = '#00ff00';  // Default secondary color (green)
+  primaryColor: string = '#6366f1';  // Modern default primary color
+  secondaryColor: string = '#ec4899';  // Modern default secondary color
+  predefinedPalettes = [
+    { name: 'Indigo Pink', primary: '#6366f1', secondary: '#ec4899' },
+    { name: 'Blue Amber', primary: '#3b82f6', secondary: '#f59e0b' },
+    { name: 'Green Purple', primary: '#10b981', secondary: '#8b5cf6' },
+    { name: 'Red Blue', primary: '#ef4444', secondary: '#3b82f6' },
+    { name: 'Teal Rose', primary: '#14b8a6', secondary: '#f43f5e' },
+    { name: 'Purple Green', primary: '#8b5cf6', secondary: '#22c55e' },
+    { name: 'Monochrome', primary: '#1f2937', secondary: '#6b7280' }
+  ];
   shopName: string = '';
   email!: string;
   phoneNumber!: string;
@@ -81,6 +91,30 @@ export class SetupComponent implements OnInit {
   state!: string;
   postalCode!: string;
   country!: string;
+  isDarkMode: boolean = false;
+  systemTheme: 'light' | 'dark' = 'light';
+  
+  // Additional Product Fields
+  sku: string = '';  // Stock Keeping Unit
+  stockQuantity: number = 0;  // Available stock
+  weight: number = 0;  // Product weight
+  dimensions: string = '';  // L x W x H
+  material: string = '';  // Product material
+  careInstructions: string = '';  // Care instructions
+  tags: string = '';  // Search tags
+  isActive: boolean = true;  // Product status
+  isFeatured: boolean = false;  // Featured product
+  discountPercentage: number = 0;  // Discount percentage
+  compareAtPrice: number = 0;  // Original price for comparison
+  seoTitle: string = '';  // SEO meta title
+  seoDescription: string = '';  // SEO meta description
+  
+  // Multiple Colors Support
+  productColors: Array<{id: string, name: string, hex: string, quantity: number, image?: string}> = [];
+  newColorName: string = '';
+  newColorHex: string = '#000000';
+  newColorQuantity: number = 0;
+  showColorPicker: boolean = false;
 
 
   
@@ -97,9 +131,47 @@ export class SetupComponent implements OnInit {
     })
    }
   ngOnInit(): void {
-    this.primaryColor = this.dataService.getThemeColor()[0].primaryColor;
-    this.secondaryColor = this.dataService.getThemeColor()[0].secondaryColor;
+    this.primaryColor = this.dataService.getThemeColor()[0]?.primaryColor || '#6366f1';
+    this.secondaryColor = this.dataService.getThemeColor()[0]?.secondaryColor || '#ec4899';
+    
+    // Detect system theme
+    this.detectSystemTheme();
+    this.applySystemTheme();
+  }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.detectSystemTheme();
+  }
+
+  private detectSystemTheme(): void {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      this.systemTheme = 'dark';
+      this.isDarkMode = true;
+    } else {
+      this.systemTheme = 'light';
+      this.isDarkMode = false;
+    }
+  }
+
+  private applySystemTheme(): void {
+    const root = document.documentElement;
+    
+    if (this.isDarkMode) {
+      root.classList.add('dark-theme');
+      root.style.setProperty('--background-color', '#0f172a');
+      root.style.setProperty('--surface-color', '#1e293b');
+      root.style.setProperty('--text-primary', '#f1f5f9');
+      root.style.setProperty('--text-secondary', '#94a3b8');
+      root.style.setProperty('--border-color', '#334155');
+    } else {
+      root.classList.remove('dark-theme');
+      root.style.setProperty('--background-color', '#f8fafc');
+      root.style.setProperty('--surface-color', '#ffffff');
+      root.style.setProperty('--text-primary', '#1e293b');
+      root.style.setProperty('--text-secondary', '#64748b');
+      root.style.setProperty('--border-color', '#e2e8f0');
+    }
   }
   onFilesDropped(event: any): void {
 
@@ -140,6 +212,118 @@ export class SetupComponent implements OnInit {
 
   onSecondaryColorChange(event: string) {
     this.secondaryColor = event;
+  }
+
+  toggleTheme(): void {
+    this.isDarkMode = !this.isDarkMode;
+    this.systemTheme = this.isDarkMode ? 'dark' : 'light';
+    this.applySystemTheme();
+  }
+
+  applyPalette(palette: any): void {
+    this.primaryColor = palette.primary;
+    this.secondaryColor = palette.secondary;
+  }
+
+  clearProductForm(): void {
+    // Reset all product fields
+    this.title = '';
+    this.sku = '';
+    this.label = '';
+    this.stockQuantity = 0;
+    this.price = 0;
+    this.compareAtPrice = 0;
+    this.discountPercentage = 0;
+    this.colors = '';
+    this.size = '';
+    this.material = '';
+    this.weight = 0;
+    this.dimensions = '';
+    this.description = '';
+    this.specification = '';
+    this.careInstructions = '';
+    this.tags = '';
+    this.seoTitle = '';
+    this.seoDescription = '';
+    this.isActive = true;
+    this.isFeatured = false;
+    this.categoryId = 0;
+    this.subCategoryId = 0;
+    this.typeId = 0;
+    this.selectedIndex = 0;
+    this.defaultImageId = '';
+    
+    // Reset colors
+    this.productColors = [];
+    this.newColorName = '';
+    this.newColorHex = '#000000';
+    this.newColorQuantity = 0;
+    this.showColorPicker = false;
+  }
+
+  // Color Management Methods
+  addColor(): void {
+    if (this.newColorName.trim() && this.newColorHex && this.newColorQuantity > 0) {
+      const colorId = uuidv4();
+      this.productColors.push({
+        id: colorId,
+        name: this.newColorName.trim(),
+        hex: this.newColorHex,
+        quantity: this.newColorQuantity
+      });
+      
+      // Reset form
+      this.newColorName = '';
+      this.newColorHex = '#000000';
+      this.newColorQuantity = 0;
+      this.showColorPicker = false;
+      
+      this.toastr.success('Color added successfully!');
+    } else {
+      this.toastr.warning('Please enter color name, select a color, and specify quantity');
+    }
+  }
+
+  removeColor(colorId: string): void {
+    this.productColors = this.productColors.filter(color => color.id !== colorId);
+    this.toastr.info('Color removed');
+  }
+
+  updateColorHex(colorId: string, newHex: string): void {
+    const color = this.productColors.find(c => c.id === colorId);
+    if (color) {
+      color.hex = newHex;
+    }
+  }
+
+  updateColorName(colorId: string, newName: string): void {
+    const color = this.productColors.find(c => c.id === colorId);
+    if (color) {
+      color.name = newName;
+    }
+  }
+
+  updateColorQuantity(colorId: string, newQuantity: number): void {
+    const color = this.productColors.find(c => c.id === colorId);
+    if (color) {
+      color.quantity = newQuantity;
+    }
+  }
+
+  toggleColorPicker(): void {
+    this.showColorPicker = !this.showColorPicker;
+  }
+
+  getColorsAsString(): string {
+    return this.productColors.map(color => color.name).join(', ');
+  }
+
+  getColorsAsArray(): Array<{name: string, hex: string, quantity: number}> {
+    return this.productColors.map(color => ({
+      name: color.name,
+      hex: color.hex,
+      quantity: color.quantity
+    }));
   }
 
 
@@ -185,7 +369,48 @@ export class SetupComponent implements OnInit {
   deselectImage(index: number): void {
     this.showSelectedFiles.splice(index, 1);
     this.selectedFiles.splice(index, 1);
+    
+    // Adjust selectedIndex if needed
+    if (this.selectedIndex >= this.showSelectedFiles.length) {
+      this.selectedIndex = Math.max(0, this.showSelectedFiles.length - 1);
+    }
+    
+    // Update default image ID if needed
+    this.updateDefaultImageId();
+  }
 
+  setDefaultImage(index: number): void {
+    this.selectedIndex = index;
+    this.updateDefaultImageId();
+    this.toastr.info(`Image ${index + 1} set as default`);
+  }
+
+  updateDefaultImageId(): void {
+    if (this.showSelectedFiles.length > 0 && this.selectedIndex < this.showSelectedFiles.length) {
+      this.defaultImageId = `default_${this.selectedIndex}`;
+    } else {
+      this.defaultImageId = '';
+    }
+  }
+
+  reorderImages(fromIndex: number, toIndex: number): void {
+    // Move image in the array
+    const image = this.showSelectedFiles.splice(fromIndex, 1)[0];
+    const file = this.selectedFiles.splice(fromIndex, 1)[0];
+    
+    this.showSelectedFiles.splice(toIndex, 0, image);
+    this.selectedFiles.splice(toIndex, 0, file);
+    
+    // Update selectedIndex if it was affected by the reorder
+    if (this.selectedIndex === fromIndex) {
+      this.selectedIndex = toIndex;
+    } else if (fromIndex < this.selectedIndex && toIndex >= this.selectedIndex) {
+      this.selectedIndex--;
+    } else if (fromIndex > this.selectedIndex && toIndex <= this.selectedIndex) {
+      this.selectedIndex++;
+    }
+    
+    this.updateDefaultImageId();
   }
   // onFilesSelected(event: any) {
   //   const files: FileList = event.target.files;
@@ -320,29 +545,63 @@ export class SetupComponent implements OnInit {
     } else if(this.setupOption == 'product') {
       const productId = uuidv4();
       this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).doc(productId).set({
+        // Basic Information
         title: this.title,
-        subTitle: this.subTitle,
+        sku: this.sku,
+        label: this.label,
+        stockQuantity: this.stockQuantity,
+        
+        // Pricing
+        price: this.price,
+        compareAtPrice: this.compareAtPrice,
+        discountPercentage: this.discountPercentage,
+        
+        // Product Details
+        colors: this.getColorsAsString(), // Backward compatibility
+        colorsArray: this.getColorsAsArray(), // New structured colors
+        size: this.size,
+        material: this.material,
+        weight: this.weight,
+        dimensions: this.dimensions,
+        
+        // Descriptions
+        description: this.description,
         specification: this.specification,
-        colors: this.colors,
-        label : this.label,
-        size : this.size,
-        description : this.description,
-        price : this.price,
-        category : this.findCategoryById(this.categoryId),
+        careInstructions: this.careInstructions,
+        
+        // Categories
+        category: this.findCategoryById(this.categoryId),
         subCategory: this.findSubCategoryId(this.subCategoryId),
         type: this.findTypeId(this.typeId),
+        
+        // SEO & Marketing
+        tags: this.tags,
+        seoTitle: this.seoTitle,
+        seoDescription: this.seoDescription,
+        
+        // Product Status
+        isActive: this.isActive,
+        isFeatured: this.isFeatured,
+        
+        // Images
         imageUrl: imageURLs,
-        productId : productId
+        defaultImageIndex: this.selectedIndex,
+        
+        // Metadata
+        productId: productId,
+        createdAt: new Date(),
+        updatedAt: new Date()
 
       }).then(() => {
         this.spinner.hide();
         this.selectedFiles = [];
         this.showSelectedFiles = [];
-        this.toastr.success(this.setupOption + ' details uploaded successfully.');
+        this.toastr.success('Product uploaded successfully!');
         console.log('Product details uploaded successfully.');
+        this.clearProductForm();
       }).catch(error => {
         this.spinner.hide();
-        this.toastr.warning(error);
+        this.toastr.warning('Failed to upload product: ' + error);
         console.error('Error uploading product details:', error);
       });
     } else if(this.setupOption == 'themeColor') {

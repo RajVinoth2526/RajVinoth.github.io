@@ -17,11 +17,13 @@ export class ShopSingleComponent implements OnInit {
   selectedImageAlt: string = "";
   products: any[] = [];
   items: any = [];
-  availableColors = [];
+  availableColors: string[] = [];
+  availableColorsArray: Array<{name: string, hex: string, quantity: number}> = [];
   selectedProduct: any;
   quantity: number = 1;
   productSize: string = '';
   selectedColor: string = '';
+  selectedColorObject: {name: string, hex: string, quantity: number} | null = null;
   productId = 'S';
 
   @ViewChild('targetElement', { static: true }) targetElement!: ElementRef;
@@ -65,6 +67,7 @@ export class ShopSingleComponent implements OnInit {
 
   async getProductByParamId(productId?: string) {
     this.availableColors = [];
+    this.availableColorsArray = [];
     if(productId) {
       this.productId = productId;
     } else {
@@ -72,12 +75,34 @@ export class ShopSingleComponent implements OnInit {
     }
 
     this.selectedProduct =  await this.dataService.getProductById(this.productId);
-    this.availableColors = this.selectedProduct?.colors?.split("/");
-    this.selectedColor = this.availableColors && this.availableColors?.length > 0 ? this.availableColors[0]: '' ;
+    
+    // Handle both old and new color formats
+    if (this.selectedProduct?.colorsArray && this.selectedProduct.colorsArray.length > 0) {
+      // New structured format
+      this.availableColorsArray = this.selectedProduct.colorsArray;
+      this.selectedColorObject = this.availableColorsArray[0];
+      this.selectedColor = this.selectedColorObject.name;
+      this.availableColors = this.availableColorsArray.map(color => color.hex);
+    } else if (this.selectedProduct?.colors) {
+      // Old format - backward compatibility
+      this.availableColors = this.selectedProduct.colors.split(",").map((c: string) => c.trim());
+      this.selectedColor = this.availableColors[0];
+      // Convert to new format for consistency
+      this.availableColorsArray = this.availableColors.map((color: string, index: number) => ({
+        name: color,
+        hex: this.getDefaultColorHex(color, index),
+        quantity: 0 // Default quantity for old format
+      }));
+      this.selectedColorObject = this.availableColorsArray[0];
+    }
+    
     this.items = this.selectedProduct.imageUrl;
     this.generateSlides();
-    this.selectedImageSrc = this.items[0];
-    this.selectedImageAlt = this.items[0];
+    
+    // Set default image based on defaultImageIndex
+    const defaultIndex = this.selectedProduct.defaultImageIndex || 0;
+    this.selectedImageSrc = this.items[defaultIndex] || this.items[0];
+    this.selectedImageAlt = this.items[defaultIndex] || this.items[0];
     this.scrollToElement();
     
   }
@@ -95,6 +120,47 @@ export class ShopSingleComponent implements OnInit {
     this.selectedColor = color;
     product.color = color;
     console.log('Selected Color:', this.selectedColor);
+  }
+
+  selectColorFromArray(colorObject: {name: string, hex: string, quantity: number}) {
+    this.selectedColorObject = colorObject;
+    this.selectedColor = colorObject.name;
+    this.selectedProduct.color = colorObject.name;
+    console.log('Selected Color Object:', this.selectedColorObject);
+  }
+
+  // Helper method to check if color is in stock
+  isColorInStock(colorObject: {name: string, hex: string, quantity: number}): boolean {
+    return colorObject.quantity > 0;
+  }
+
+  // Helper method to provide default hex colors for old format
+  getDefaultColorHex(colorName: string, index: number): string {
+    const colorMap: {[key: string]: string} = {
+      'red': '#ef4444',
+      'blue': '#3b82f6', 
+      'green': '#22c55e',
+      'yellow': '#eab308',
+      'black': '#000000',
+      'white': '#ffffff',
+      'gray': '#6b7280',
+      'grey': '#6b7280',
+      'navy': '#1e3a8a',
+      'navy blue': '#1e3a8a',
+      'purple': '#8b5cf6',
+      'pink': '#ec4899',
+      'orange': '#f97316',
+      'brown': '#a3a3a3'
+    };
+
+    const lowerColor = colorName.toLowerCase();
+    if (colorMap[lowerColor]) {
+      return colorMap[lowerColor];
+    }
+
+    // Default color palette for unknown colors
+    const defaultColors = ['#ef4444', '#3b82f6', '#22c55e', '#eab308', '#8b5cf6', '#ec4899', '#f97316', '#6b7280'];
+    return defaultColors[index % defaultColors.length];
   }
   
   navigateWithObjectToConfirmOrder() {

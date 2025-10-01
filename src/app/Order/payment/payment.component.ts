@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators  } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-payment',
   templateUrl: './payment.component.html',
@@ -17,7 +17,7 @@ export class PaymentComponent implements OnInit {
     // Initialize the form with form controls and validation
     // Initialize form with controls using FormBuilder
     this.paymentForm = this.formBuilder.group({
-      cardNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{16}$/)]],
+      cardNumber: ['', [Validators.required, Validators.pattern(/^\d{4}(?:\s\d{4}){3}$/)]],
       expirationDate: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]],
       cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]],
       cardHolderName: ['', [Validators.required, Validators.minLength(2)]]
@@ -48,7 +48,12 @@ export class PaymentComponent implements OnInit {
 
       // Mock Payment processing or service call
       console.log('Processing payment:', paymentDetails);
-
+      Swal.fire({
+        icon: 'success',
+        title: 'Payment Successful!',
+        text: 'Thank you for your purchase.',
+        showConfirmButton: true,
+      });
       // Navigate to payment success or confirmation page
       this.router.navigate(['/payment-success']);
     } else {

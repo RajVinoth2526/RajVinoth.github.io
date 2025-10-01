@@ -89,17 +89,55 @@
                             <li class="list-inline-item">
                                 <h6>Available Colors:</h6>
                             </li>
-                            <li class="list-inline-item" *ngFor="let color of availableColors"
-                                (click)="selectColor(color, selectedProduct)">
-                                <span class="btn btn-color" [ngStyle]="{'background-color': color}"
-                                [ngStyle]="{
-                                    'background-color': color,
-                                    'box-shadow': selectedColor === color ? '0px 4px 8px rgba(0, 0, 0, 0.8)' : 'none'
-                                }">
-                                </span>
-                                
-                            </li>
                         </ul>
+                        
+                        <!-- New Color Selection Interface -->
+                        <div class="color-selection-container" *ngIf="availableColorsArray.length > 0">
+                            <div class="color-swatches">
+                                <div *ngFor="let colorObj of availableColorsArray" 
+                                     class="color-swatch" 
+                                     [class.selected]="selectedColorObject?.name === colorObj.name"
+                                     [class.out-of-stock]="!isColorInStock(colorObj)"
+                                     (click)="selectColorFromArray(colorObj)"
+                                     [title]="colorObj.name + ' - ' + (isColorInStock(colorObj) ? colorObj.quantity + ' in stock' : 'Out of stock')">
+                                    <div class="color-circle" [style.background-color]="colorObj.hex"></div>
+                                    <span class="color-name">{{colorObj.name}}</span>
+                                    <div class="quantity-info">
+                                        <span class="quantity-badge" 
+                                              [class.in-stock]="isColorInStock(colorObj)"
+                                              [class.out-of-stock]="!isColorInStock(colorObj)">
+                                            {{isColorInStock(colorObj) ? colorObj.quantity + ' pcs' : 'Out of stock'}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Selected Color Display -->
+                            <div class="selected-color-info" *ngIf="selectedColorObject">
+                                <span class="selected-label">Selected: </span>
+                                <span class="selected-color-name">{{selectedColorObject.name}}</span>
+                                <span class="color-hex">{{selectedColorObject.hex}}</span>
+                                <span class="selected-quantity" 
+                                      [class.in-stock]="isColorInStock(selectedColorObject)"
+                                      [class.out-of-stock]="!isColorInStock(selectedColorObject)">
+                                    {{isColorInStock(selectedColorObject) ? selectedColorObject.quantity + ' available' : 'Out of stock'}}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Fallback for old format -->
+                        <div class="color-selection-container" *ngIf="availableColorsArray.length === 0 && availableColors.length > 0">
+                            <div class="color-swatches">
+                                <div *ngFor="let color of availableColors; let i = index" 
+                                     class="color-swatch" 
+                                     [class.selected]="selectedColor === color"
+                                     (click)="selectColor(color, selectedProduct)"
+                                     [title]="color">
+                                    <div class="color-circle" [style.background-color]="getDefaultColorHex(color, i)"></div>
+                                    <span class="color-name">{{color}}</span>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <h6>Specification:</h6>

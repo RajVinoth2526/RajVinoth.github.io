@@ -332,6 +332,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
         this.filters.subCategory = subCategory;
         this.filters.type = product;
         this.dataService.filterFromSidePanel.next(this.filters);
+        this.dataService.isSidePanelFilterClicked$.next(true);
         this.router.navigate(['shop']);
         
       // Add your filtering logic here

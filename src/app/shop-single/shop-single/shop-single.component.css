@@ -77,3 +77,207 @@
     bottom: -8px; /* Adjust distance below the color */
     left: 0;
 }
+
+/* New Color Selection Interface Styles */
+.color-selection-container {
+    margin: 1rem 0;
+}
+
+.color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.color-swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid transparent;
+}
+
+.color-swatch:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+.color-swatch.selected {
+    background-color: rgba(var(--primary-color), 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.color-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.color-swatch.selected .color-circle {
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.color-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    min-width: 60px;
+}
+
+.color-swatch.selected .color-name {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Quantity Information */
+.quantity-info {
+  margin-top: 0.25rem;
+}
+
+.quantity-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.quantity-badge.in-stock {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.quantity-badge.out-of-stock {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Out of Stock Styles */
+.color-swatch.out-of-stock {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.color-swatch.out-of-stock .color-circle {
+  filter: grayscale(50%);
+  opacity: 0.7;
+}
+
+.color-swatch.out-of-stock .color-name {
+  color: #999;
+  text-decoration: line-through;
+}
+
+.color-swatch.out-of-stock:hover {
+  background-color: rgba(239, 68, 68, 0.05);
+  transform: none;
+}
+
+/* Selected Color Quantity */
+.selected-quantity {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.selected-quantity.in-stock {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+}
+
+.selected-quantity.out-of-stock {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.selected-color-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.selected-label {
+    font-weight: 600;
+    color: #666;
+}
+
+.selected-color-name {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.color-hex {
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.875rem;
+    color: #666;
+    background-color: #fff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .color-swatches {
+    justify-content: center;
+  }
+  
+  .color-swatch {
+    min-width: 90px;
+  }
+  
+  .color-circle {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .selected-color-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .quantity-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+    .color-swatches {
+        gap: 0.75rem;
+    }
+    
+    .color-swatch {
+        min-width: 70px;
+    }
+    
+    .color-circle {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .color-name {
+        font-size: 0.75rem;
+        min-width: 50px;
+    }
+}
