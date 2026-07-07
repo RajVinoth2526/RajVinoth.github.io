@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DataService } from 'src/app/service/dataService/data.service';
 import { ToastrService } from 'ngx-toastr';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AuthService } from 'src/app/service/auth/auth.service';
 // Define an interface for credit card details
 interface CreditCardDetails {
   cardNumber: string;
@@ -80,8 +80,8 @@ export class ConfirmOrderComponent implements OnInit {
     cvv: ''
   };
 
-  constructor(private router: Router,private  dataService: DataService, private spinner: NgxSpinnerService,  private toastr: ToastrService,
-    private afAuth: AngularFireAuth,) {}
+  constructor(private router: Router, private dataService: DataService, private spinner: NgxSpinnerService, private toastr: ToastrService,
+    private authService: AuthService) {}
 
   ngOnInit(): void {
     this.userData = this.dataService.getUSerData();
@@ -100,10 +100,9 @@ export class ConfirmOrderComponent implements OnInit {
      // Access the passed state data
     const receivedData = history.state.data;
 
-    this.afAuth.authState.subscribe(user => {
+    this.authService.authState.subscribe(user => {
       if (user && !receivedData) {
         this.loadCart(user);
-
       } else if (!receivedData) {
         this.loadCart(null);
       } else {

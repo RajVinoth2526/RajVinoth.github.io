@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from 'src/app/service/dataService/data.service';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AuthService } from 'src/app/service/auth/auth.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 
@@ -36,11 +36,11 @@ export class UserOrderDetailComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private router: Router,
-    private afAuth: AngularFireAuth,
+    private authService: AuthService,
   ){}
 
   ngOnInit(): void {
-    this.afAuth.authState.subscribe(user => {
+    this.authService.authState.subscribe(user => {
       if (user) {
         this.currentUser = user;
         this.loadCart(user);

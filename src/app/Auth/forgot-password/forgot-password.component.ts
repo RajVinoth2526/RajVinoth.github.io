@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth'; 
+import { AuthService } from 'src/app/service/auth/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -11,7 +11,7 @@ export class ForgotPasswordComponent implements OnInit {
   forgotPasswordForm: FormGroup;
   message: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService) {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });
@@ -25,8 +25,8 @@ export class ForgotPasswordComponent implements OnInit {
     const email = this.forgotPasswordForm.value.email;
 
     try {
-      const auth = getAuth(); // Get the auth instance from Firebase
-      await sendPasswordResetEmail(auth, email);
+      const { error } = await this.authService.resetPassword(email);
+      if (error) throw error;
       this.message = 'Password reset email sent. Please check your inbox.';
     } catch (error: any) {
       this.message = 'Error: ' + error.message;

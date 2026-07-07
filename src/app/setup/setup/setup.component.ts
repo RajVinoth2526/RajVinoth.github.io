@@ -1,12 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild, HostListener } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { v4 as uuidv4 } from 'uuid';
-import { ToastrService } from 'ngx-toastr';  
+import { ToastrService } from 'ngx-toastr';
 import { DataService } from 'src/app/service/dataService/data.service';
+import { ApiService } from 'src/app/service/api/api.service';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 export const Categories= [
   {
       category : 'men',
@@ -118,13 +117,13 @@ export class SetupComponent implements OnInit {
 
 
   
-  constructor(private firestore: AngularFirestore,
-    private db: AngularFireDatabase,
+  constructor(
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
-    private storage: AngularFireStorage,
-  private dataService: DataService,
-  private router: Router  ) {
+    private api: ApiService,
+    private dataService: DataService,
+    private router: Router
+  ) {
     this.dataService.currentUser.subscribe((data) => {
       if(data ==null)   
         this.router.navigate(['']);
@@ -472,213 +471,94 @@ export class SetupComponent implements OnInit {
 
 
   async uploadProduct(): Promise<void> {
-    // Step 1: Upload image to Firebase Storage
     this.spinner.show();
-   let imageURLs : any [] = [];
-   const promises = this.selectedFiles.map(async (img) => {
-    const filePath = `product-images/${Date.now()}_${img.name}`;
-    const fileRef = this.storage.ref(filePath);
-    const task = this.storage.upload(filePath, img);
+    try {
+      let imageURLs: string[] = [];
+      if (this.selectedFiles.length > 0) {
+        const uploadResult = await firstValueFrom(this.api.uploadImages(this.selectedFiles));
+        imageURLs = uploadResult.urls;
+      }
 
-    // Get the download URL of the uploaded image
-    const imageUrl = await task.snapshotChanges().toPromise().then(async () => {
-        return await fileRef.getDownloadURL().toPromise();
-    }).catch(error => {
-        console.error('Error uploading image:', error);
-        throw error;
-    });
-
-    return imageUrl;
-});
-   // Wait for all promises to resolve
-   const resolvedURLs = await Promise.all(promises);
-   imageURLs.push(...resolvedURLs);
-
-
-    // Step 3: Save product details to Firebase Firestore
-
-    if (this.setupOption == 'catergories') {
-      
-      const productId = uuidv4();
-      this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).doc(productId).set({
-        title: this.title,
-        category : this.findCategoryById(this.categoryId),
-        imageUrl: imageURLs,
-        productId : productId
-
-      }).then(() => {
-        this.spinner.hide();
-        this.selectedFiles = [];
-        this.showSelectedFiles = [];
-        this.toastr.success(this.setupOption + 'details uploaded successfully.');
-        console.log('Product details uploaded successfully.');
-      }).catch(error => {
-        this.spinner.hide();
-        this.toastr.warning(error);
-        console.error('Error uploading product details:', error);
-      });
-
-    } else if(this.setupOption == 'SliderShow') {
-      // Inside your component:
-      const productId = uuidv4();
-      this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).doc(productId).set({
-        title: this.title,
-        subTitle: this.subTitle,
-        specification: this.specification,
-        colors: this.colors,
-        category : this.findCategoryById(this.categoryId),
-        contant: '',
-        imageUrl: imageURLs,
-        productId : productId
-
-      }).then(() => {
-        this.spinner.hide();
-        this.selectedFiles = [];
-        this.showSelectedFiles = [];
-        this.toastr.success(this.setupOption + 'details uploaded successfully.');
-        console.log('Product details uploaded successfully.');
-      }).catch(error => {
-        this.spinner.hide();
-        this.toastr.warning(error);
-        console.error('Error uploading product details:', error);
-      });
-    } else if(this.setupOption == 'product') {
-      const productId = uuidv4();
-      this.firestore.collection('products').doc(this.setupOption).collection(this.setupOption).doc(productId).set({
-        // Basic Information
-        title: this.title,
-        sku: this.sku,
-        label: this.label,
-        stockQuantity: this.stockQuantity,
-        
-        // Pricing
-        price: this.price,
-        compareAtPrice: this.compareAtPrice,
-        discountPercentage: this.discountPercentage,
-        
-        // Product Details
-        colors: this.getColorsAsString(), // Backward compatibility
-        colorsArray: this.getColorsAsArray(), // New structured colors
-        size: this.size,
-        material: this.material,
-        weight: this.weight,
-        dimensions: this.dimensions,
-        
-        // Descriptions
-        description: this.description,
-        specification: this.specification,
-        careInstructions: this.careInstructions,
-        
-        // Categories
-        category: this.findCategoryById(this.categoryId),
-        subCategory: this.findSubCategoryId(this.subCategoryId),
-        type: this.findTypeId(this.typeId),
-        
-        // SEO & Marketing
-        tags: this.tags,
-        seoTitle: this.seoTitle,
-        seoDescription: this.seoDescription,
-        
-        // Product Status
-        isActive: this.isActive,
-        isFeatured: this.isFeatured,
-        
-        // Images
-        imageUrl: imageURLs,
-        defaultImageIndex: this.selectedIndex,
-        
-        // Metadata
-        productId: productId,
-        createdAt: new Date(),
-        updatedAt: new Date()
-
-      }).then(() => {
-        this.spinner.hide();
-        this.selectedFiles = [];
-        this.showSelectedFiles = [];
+      if (this.setupOption === 'catergories') {
+        await firstValueFrom(this.api.createCategory({
+          title: this.title,
+          category: this.findCategoryById(this.categoryId),
+          imageUrl: imageURLs
+        }));
+        this.toastr.success(this.setupOption + ' details uploaded successfully.');
+      } else if (this.setupOption === 'SliderShow') {
+        await firstValueFrom(this.api.createSlider({
+          title: this.title,
+          subTitle: this.subTitle,
+          specification: this.specification,
+          colors: this.colors,
+          category: this.findCategoryById(this.categoryId),
+          contant: '',
+          imageUrl: imageURLs
+        }));
+        this.toastr.success(this.setupOption + ' details uploaded successfully.');
+      } else if (this.setupOption === 'product') {
+        await firstValueFrom(this.api.createProduct({
+          title: this.title,
+          sku: this.sku,
+          label: this.label,
+          stockQuantity: this.stockQuantity,
+          price: this.price,
+          compareAtPrice: this.compareAtPrice,
+          discountPercentage: this.discountPercentage,
+          colors: this.getColorsAsString(),
+          colorsArray: this.getColorsAsArray(),
+          size: this.size,
+          material: this.material,
+          weight: this.weight,
+          dimensions: this.dimensions,
+          description: this.description,
+          specification: this.specification,
+          careInstructions: this.careInstructions,
+          category: this.findCategoryById(this.categoryId),
+          subCategory: this.findSubCategoryId(this.subCategoryId),
+          type: this.findTypeId(this.typeId),
+          tags: this.tags,
+          seoTitle: this.seoTitle,
+          seoDescription: this.seoDescription,
+          isActive: this.isActive,
+          isFeatured: this.isFeatured,
+          imageUrl: imageURLs,
+          defaultImageIndex: this.selectedIndex
+        }));
         this.toastr.success('Product uploaded successfully!');
-        console.log('Product details uploaded successfully.');
         this.clearProductForm();
-      }).catch(error => {
-        this.spinner.hide();
-        this.toastr.warning('Failed to upload product: ' + error);
-        console.error('Error uploading product details:', error);
-      });
-    } else if(this.setupOption == 'themeColor') {
-      const productId = uuidv4();
-      this.firestore.collection('Theme').doc('Theme-colors').set({
-        primaryColor: this.primaryColor,
-        secondaryColor: this.secondaryColor
-
-      }).then(async () => {
-        let theme;
-        const getThemePromise = new Promise<any[]>((resolve, reject) => {
-          this.firestore.collection('Theme').valueChanges().subscribe({
-            next: (data) => resolve(data as any[]),
-            error: (err) => reject(err)
-          });
-        });
-        theme = await getThemePromise;
+      } else if (this.setupOption === 'themeColor') {
+        const theme = await firstValueFrom(this.api.updateTheme({
+          primaryColor: this.primaryColor,
+          secondaryColor: this.secondaryColor
+        }));
         this.dataService.updateThemeColor(theme);
         document.documentElement.style.setProperty('--primary-color', this.dataService.getThemeColor()[0].primaryColor);
         document.documentElement.style.setProperty('--secondary-color', this.dataService.getThemeColor()[0].secondaryColor);
-        this.spinner.hide();
-    
-      }).catch(error => {
-        this.spinner.hide();
-        this.toastr.warning(error);
-        console.error('Error uploading product details:', error);
-      });
-    } else if(this.setupOption == 'shopName') {
-      this.firestore.collection('ShopName').doc('Shop-Name').set({
-        shopName: this.shopName,
-        secondaryColor: this.secondaryColor
-
-      }).then(async () => {
-        let shopName;
-        const getShopName = new Promise<any[]>((resolve, reject) => {
-          this.firestore.collection('ShopName').valueChanges().subscribe({
-            next: (data) => resolve(data as any[]),
-            error: (err) => reject(err)
-          });
-        });
-        shopName = await getShopName;
+      } else if (this.setupOption === 'shopName') {
+        const shopName = await firstValueFrom(this.api.updateShopName({ shopName: this.shopName }));
         this.dataService.shopName.next(shopName);
-        this.spinner.hide();
-    
-      }).catch(error => {
-        this.spinner.hide();
-        this.toastr.warning(error);
-        console.error('Error uploading product details:', error);
-      });
-    } else if(this.setupOption == 'contactDetails') {
-      this.firestore.collection('contactDetail').doc('contactDetail').set({
-        email : this.email,
-        phoneNumber: this.phoneNumber,
-        address: this.address,
-        city: this.city,
-        state: this.state,
-        postalCode: this.postalCode,
-        country: this.country
-
-      }).then(async () => {
-        let contactDetail;
-        const contactDetails = new Promise<any[]>((resolve, reject) => {
-          this.firestore.collection('contactDetail').valueChanges().subscribe({
-            next: (data) => resolve(data as any[]),
-            error: (err) => reject(err)
-          });
-        });
-        contactDetail = await contactDetails;
+      } else if (this.setupOption === 'contactDetails') {
+        const contactDetail = await firstValueFrom(this.api.updateContactDetails({
+          email: this.email,
+          phoneNumber: this.phoneNumber,
+          address: this.address,
+          city: this.city,
+          state: this.state,
+          postalCode: this.postalCode,
+          country: this.country
+        }));
         this.dataService.shopContactDetails$.next(contactDetail);
+      }
 
-        this.spinner.hide();
-    
-      }).catch(error => {
-        this.spinner.hide();
-        this.toastr.warning(error);
-        console.error('Error uploading product details:', error);
-      });
+      this.selectedFiles = [];
+      this.showSelectedFiles = [];
+    } catch (error: any) {
+      this.toastr.warning(error?.message || 'Upload failed');
+      console.error('Error uploading:', error);
+    } finally {
+      this.spinner.hide();
     }
-  } 
+  }
 }

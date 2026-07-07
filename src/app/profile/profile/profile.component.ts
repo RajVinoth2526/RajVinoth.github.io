@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthService } from 'src/app/service/auth/auth.service';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/service/dataService/data.service';
 
@@ -12,35 +11,30 @@ import { DataService } from 'src/app/service/dataService/data.service';
 export class ProfileComponent implements OnInit {
   userData: any;
   constructor(
-    private afAuth: AngularFireAuth,
+    private authService: AuthService,
     private router: Router,
     private dataService: DataService
   ) { }
 
-  async ngOnInit(){
-    const user = await this.afAuth.currentUser;
+  async ngOnInit() {
+    const user = await this.authService.getCurrentUser();
     if (user) {
       this.userData = this.dataService.currentUser.getValue();
-      console.log(this.userData)
     } else {
-      this.router.navigate(['login']);   
+      this.router.navigate(['login']);
     }
   }
 
   goToOrders() {
-    this.router.navigate(['/my-orders']); // Adjust the route as needed
+    this.router.navigate(['/my-orders']);
   }
 
   logout() {
-    this.afAuth.signOut().then(() => {
-      console.log('User signed out successfully');
+    this.authService.signOut().then(() => {
       this.dataService.currentUser.next(null);
-      this.router.navigate(['login']);   
+      this.router.navigate(['login']);
     }).catch((error) => {
       console.error('Error signing out:', error);
     });
   }
-
-
-
 }

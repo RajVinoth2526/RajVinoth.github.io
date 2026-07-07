@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from 'src/app/service/dataService/data.service';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AuthService } from 'src/app/service/auth/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -19,10 +19,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private dataService: DataService,
     private fb: FormBuilder,
-    private afAuth: AngularFireAuth,
+    private authService: AuthService,
     private router: Router,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService // Your spinner service
+    private spinner: NgxSpinnerService
   ) {
     this.subscriptions.push(
       this.dataService.currentUser.subscribe((data: any) => {
@@ -33,7 +33,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.signInForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
@@ -51,7 +50,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-
   async onSubmitSignIn() {
     if (this.signInForm.invalid) {
       this.signInForm.markAllAsTouched();
@@ -61,29 +59,24 @@ export class LoginComponent implements OnInit, OnDestroy {
     try {
       this.spinner.show();
       const { email, password } = this.signInForm.value;
-      const result = await this.afAuth.signInWithEmailAndPassword(email, password);
-      if (result) {
-        this.toastr.success('Login Successfully');
-        this.dataService.syncLocalStorageToFirebase();
+      const { error } = await this.authService.signInWithEmailAndPassword(email, password);
+      if (error) throw error;
 
-        this.router.navigate(['home']);
-
-        this.spinner.hide();
-      }
-    } catch (error) {
+      this.toastr.success('Login Successfully');
+      this.dataService.syncLocalStorageToSupabase();
+      this.router.navigate(['home']);
+    } catch (error: any) {
+      this.toastr.warning(error?.message || '' + error);
+    } finally {
       this.spinner.hide();
-      this.toastr.warning('' + error);
-
     }
   }
 
   navigateToSignUp() {
     this.router.navigate(['signUp']);
-
   }
 
   handleForgotPassword() {
     this.router.navigate(['forgot-password']);
   }
-
 }

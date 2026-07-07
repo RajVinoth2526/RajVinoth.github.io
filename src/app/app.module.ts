@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,11 +12,6 @@ import { HomeComponent } from './home/home/home.component';
 import { AboutComponent } from './about/about/about.component';
 import { ShopComponent } from './shop/shop/shop.component';
 import { ShopSingleComponent } from './shop-single/shop-single/shop-single.component';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { AngularFireStorageModule } from '@angular/fire/compat/storage';
-import { environment } from '../environments/environment';
 import { SetupComponent } from './setup/setup/setup.component';
 import { FormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -73,21 +68,17 @@ import { MainProductListComponent } from './main-product-list/main-product-list.
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     NgxSpinnerModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireDatabaseModule,
-    AngularFirestoreModule,
-    AngularFireStorageModule,
-    AngularFirestoreModule.enablePersistence(),
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatDialogModule,
     ReactiveFormsModule,
     ColorPickerModule,
-    MatExpansionModule,      // For mat-accordion and mat-expansion-panel
-    MatTableModule,          // For mat-table
+    MatExpansionModule,
+    MatTableModule,
     MatIconModule,
     ToastrModule.forRoot()  
   ],
